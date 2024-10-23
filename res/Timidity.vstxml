@@ -1,0 +1,38 @@
+<VSTPluginProperties>
+	<VSTParametersStructure>
+		<Param name="Volume" id="0"/>
+		<Param name="VolumeDisplay" id="1" numberOfStates="2"/>
+		<ValueType name="VolumeDisplay">
+			<Entry name="dB" value="[0, 0.5["/> 
+			<Entry name="%" value="[0.5, 1]"/> 
+		</ValueType>
+		<Param name="ImmediatePan" id="2" numberOfStates="2"/>
+		<ValueType name="ImmediatePan">
+			<Entry name="OFF" value="[0, 0.5["/> 
+			<Entry name="ON" value="[0.5, 1]"/> 
+		</ValueType>
+		<Param name="Mono" id="3" numberOfStates="2"/>
+		<ValueType name="Mono">
+			<Entry name="OFF" value="[0, 0.5["/> 
+			<Entry name="ON" value="[0.5, 1]"/> 
+		</ValueType>
+		<Param name="Transpose" id="4" numberOfStates="25" label="Semitones"/>
+		<Param name="Voices" id="5"/>
+		<Param name="FastDecay" id="6" numberOfStates="2"/>
+		<ValueType name="FastDecay">
+			<Entry name="OFF" value="[0, 0.5["/> 
+			<Entry name="ON" value="[0.5, 1]"/> 
+		</ValueType>
+		<Param name="Antialiasing" id="7" numberOfStates="2"/>
+		<ValueType name="Antialiasing">
+			<Entry name="OFF" value="[0, 0.5["/> 
+			<Entry name="ON" value="[0.5, 1]"/> 
+		</ValueType>
+		<Param name="ControlRate" id="8"/>
+		<Param name="PushMidi" id="9" numberOfStates="2"/>
+		<ValueType name="PushMidi">
+			<Entry name="OFF" value="[0, 0.5["/> 
+			<Entry name="ON" value="[0.5, 1]"/> 
+		</ValueType>
+	</VSTParametersStructure>
+</VSTPluginProperties>

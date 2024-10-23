@@ -1,0 +1,13 @@
+Timidity_VSTi\.gitignore
+Timidity_VSTi\build.bat
+Timidity_VSTi\builddemo.bat
+Timidity_VSTi\include
+Timidity_VSTi\install.iss
+Timidity_VSTi\license.txt
+Timidity_VSTi\readme.md
+Timidity_VSTi\res
+Timidity_VSTi\scripts
+Timidity_VSTi\src
+Timidity_VSTi\timidity
+Timidity_VSTi\zip-src.lst
+Timidity_VSTi\zip.lst
