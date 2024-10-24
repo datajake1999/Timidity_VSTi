@@ -74,5 +74,5 @@ After installing, just run build.bat. You may need to change the paths defined i
 * Y.Nagamidori, for creating GSPlayer.
 * HIMS, for using GSPlayer as the underlying playback engine for media files on their older Braille Sense note takers that ran Windows CE. This is how I was introduced to Timidity in the first place, however I didn't know it at the time.
 * Me, for writing the VST interface for this synth. It is about time someone did so.
-* Gravis, for creating the Ultrasound Series of sound cards back in the 90s.
+* Gravis, for creating the Ultrasound series of sound cards back in the 90s.
 * Old blogs and forums, for tips on VST development.

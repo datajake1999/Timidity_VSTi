@@ -48,7 +48,7 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Based on Timidity 0.2I\0"
+            VALUE "Comments", "Based on Timidity 0.2i\0"
             VALUE "CompanyName", "Datajake\0"
             VALUE "FileDescription", "Timidity VSTi\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
