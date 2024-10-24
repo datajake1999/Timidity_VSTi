@@ -785,6 +785,18 @@ void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
     }
 }
 
+void timid_write_midi_packed(Timid *tm, uint32 data)
+{
+    uint8 byte1 = data & 0xff;
+    uint8 byte2 = (data >> 8) & 0x7f;
+    uint8 byte3 = (data >> 16) & 0x7f;
+    if (!tm)
+    {
+        return;
+    }
+    timid_write_midi(tm, byte1, byte2, byte3);
+}
+
 void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count)
 {
     const uint8 reset_array[6] = {0xF0, 0x7E, 0x7F, 0x09, 0x01, 0xF7};

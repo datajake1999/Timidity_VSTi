@@ -231,6 +231,7 @@ int timid_load_config(Timid *tm, char *filename);
 void timid_unload_config(Timid *tm);
 void timid_reload_config(Timid *tm);
 void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3);
+void timid_write_midi_packed(Timid *tm, uint32 data);
 void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count);
 void timid_render(Timid *tm, int32 *buffer, int32 count);
 void timid_panic(Timid *tm);
