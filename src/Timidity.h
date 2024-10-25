@@ -166,7 +166,7 @@ private:
 	void sendMidi (char* data);
 	void fillProgram (VstInt32 channel, VstInt32 prg, MidiProgramName* mpn);
 	Timid synth;
-	long* buffer;
+	float* buffer;
 	EventQueue MidiQueue;
 #if REAPER_EXTENSIONS
 	EventQueue ParameterQueue;

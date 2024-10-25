@@ -600,6 +600,18 @@ static void play_midi(Timid *tm, MidiEvent *el)
     }
 }
 
+static void do_compute_data(Timid *tm, int32 *buffer, int32 count)
+{
+    int i;
+    memset(buffer, 0,
+    (tm->play_mode.encoding & PE_MONO) ? (count * 4) : (count * 8));
+    for (i=0; i<tm->voices; i++)
+    {
+        if(tm->voice[i].status != VOICE_FREE)
+            mix_voice(tm, buffer, i, count);
+    }
+}
+
 void timid_init(Timid *tm)
 {
     if (!tm)
@@ -814,22 +826,6 @@ void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count)
     }
 }
 
-void timid_render(Timid *tm, int32 *buffer, int32 count)
-{
-    int i;
-    if (!tm || !buffer)
-    {
-        return;
-    }
-    memset(buffer, 0,
-    (tm->play_mode.encoding & PE_MONO) ? (count * 4) : (count * 8));
-    for (i=0; i<tm->voices; i++)
-    {
-        if(tm->voice[i].status != VOICE_FREE)
-            mix_voice(tm, buffer, i, count);
-    }
-}
-
 void timid_render_short(Timid *tm, int16 *buffer, int32 count)
 {
     int i;
@@ -842,7 +838,7 @@ void timid_render_short(Timid *tm, int16 *buffer, int32 count)
         for (i=0; i<count; i++)
         {
             int32 temp[2];
-            timid_render(tm, &temp[0], 1);
+            do_compute_data(tm, &temp[0], 1);
             temp[0] = temp[0] >> (32 - 16 - GUARD_BITS);
             if (temp[0] > 32767)
             {
@@ -870,7 +866,7 @@ void timid_render_short(Timid *tm, int16 *buffer, int32 count)
         for (i=0; i<count; i++)
         {
             int32 temp;
-            timid_render(tm, &temp, 1);
+            do_compute_data(tm, &temp, 1);
             temp = temp >> (32 - 16 - GUARD_BITS);
             if (temp > 32767)
             {
@@ -881,6 +877,34 @@ void timid_render_short(Timid *tm, int16 *buffer, int32 count)
                 temp = -32768;
             }
             buffer[i] = (int16)temp;
+        }
+    }
+}
+
+void timid_render_float(Timid *tm, float *buffer, int32 count)
+{
+    int i;
+    if (!tm || !buffer)
+    {
+        return;
+    }
+    if (!(tm->play_mode.encoding & PE_MONO))
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp[2];
+            do_compute_data(tm, &temp[0], 1);
+            buffer[i*2+0] = temp[0] / (float)268435456;
+            buffer[i*2+1] = temp[1] / (float)268435456;
+        }
+    }
+    else
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp;
+            do_compute_data(tm, &temp, 1);
+            buffer[i] = temp / (float)268435456;
         }
     }
 }

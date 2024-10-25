@@ -93,10 +93,10 @@ void Timidity::initSynth ()
 
 void Timidity::initBuffer ()
 {
-	buffer = new long[2*blockSize];
+	buffer = new float[2*blockSize];
 	if (buffer)
 	{
-		memset(buffer, 0, (2*blockSize)*sizeof(long));
+		memset(buffer, 0, (2*blockSize)*sizeof(float));
 	}
 }
 
@@ -109,7 +109,7 @@ void Timidity::clearBuffer ()
 {
 	if (buffer)
 	{
-		memset(buffer, 0, (2*blockSize)*sizeof(long));
+		memset(buffer, 0, (2*blockSize)*sizeof(float));
 		delete[] buffer;
 		buffer = NULL;
 	}
@@ -236,15 +236,14 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 			processEvent (ParameterQueue.GetNextEvent());
 		}
 #endif
-		timid_render(&synth, &buffer[i*2], 1);
+		timid_render_float(&synth, &buffer[i*2], 1);
 		if (Mono >= 0.5)
 		{
 			buffer[i*2+1] = buffer[i*2+0];
 		}
 		if (out1)
 		{
-			buffer[i*2+0] = buffer[i*2+0] >> (32 - 24 - GUARD_BITS);
-			out1[i] = buffer[i*2+0] / (sampletype)8388608;
+			out1[i] = buffer[i*2+0];
 			out1[i] = out1[i] * Volume;
 #ifdef DEMO
 			if (time(NULL) >= startTime + 600)
@@ -260,8 +259,7 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 		}
 		if (out2)
 		{
-			buffer[i*2+1] = buffer[i*2+1] >> (32 - 24 - GUARD_BITS);
-			out2[i] = buffer[i*2+1] / (sampletype)8388608;
+			out2[i] = buffer[i*2+1];
 			out2[i] = out2[i] * Volume;
 #ifdef DEMO
 			if (time(NULL) >= startTime + 600)
@@ -420,7 +418,7 @@ VstInt32 Timidity::startProcess ()
 	lock.acquire();
 	if (buffer)
 	{
-		memset(buffer, 0, (2*blockSize)*sizeof(long));
+		memset(buffer, 0, (2*blockSize)*sizeof(float));
 		lock.release();
 		return 1;
 	}
@@ -433,7 +431,7 @@ VstInt32 Timidity::stopProcess ()
 	lock.acquire();
 	if (buffer)
 	{
-		memset(buffer, 0, (2*blockSize)*sizeof(long));
+		memset(buffer, 0, (2*blockSize)*sizeof(float));
 		lock.release();
 		return 1;
 	}
