@@ -48,6 +48,7 @@ static void reset_controllers(Timid *tm, int c)
     tm->channel[c].volume=90; /* Some standard says, although the SCC docs say 0. */
     tm->channel[c].expression=127; /* SCC-1 does this. */
     tm->channel[c].sustain=0;
+    tm->channel[c].mono=0;
     tm->channel[c].pitchbend=0x2000;
     tm->channel[c].pitchfactor=0; /* to be computed */
 }
@@ -587,6 +588,16 @@ static void play_midi(Timid *tm, MidiEvent *el)
             all_sounds_off(tm, el->channel);
             break;
             
+        case ME_MONO:
+            tm->channel[el->channel].mono=1;
+            all_notes_off(tm, el->channel);
+            break;
+            
+        case ME_POLY:
+            tm->channel[el->channel].mono=0;
+            all_notes_off(tm, el->channel);
+            break;
+            
         case ME_TONE_BANK:
             if (!ISDRUMCHANNEL(tm, el->channel))
             {
@@ -790,6 +801,16 @@ void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
             break;
         case 0x7b:
             ev.type = ME_ALL_NOTES_OFF;
+            ev.a = byte3;
+            play_midi(tm, &ev);
+            break;
+        case 0x7e:
+            ev.type = ME_MONO;
+            ev.a = byte3;
+            play_midi(tm, &ev);
+            break;
+        case 0x7f:
+            ev.type = ME_POLY;
             ev.a = byte3;
             play_midi(tm, &ev);
             break;

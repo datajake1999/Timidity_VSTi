@@ -116,7 +116,7 @@ typedef struct {
 #define ME_EXPRESSION	7
 #define ME_PITCHWHEEL	8
 #define ME_PROGRAM	9
-#define ME_TEMPO	10
+#define ME_MONO	10
 #define ME_PITCH_SENS	11
 
 #define ME_ALL_SOUNDS_OFF	12
@@ -124,12 +124,12 @@ typedef struct {
 #define ME_ALL_NOTES_OFF	14
 #define ME_TONE_BANK	15
 
-#define ME_LYRIC	16
+#define ME_POLY	16
 
 typedef struct {
   int
     bank, program, volume, sustain, panning, pitchbend, expression, 
-    mono, /* one note only on this channel -- not implemented yet */
+    mono, /* one note only on this channel */
     pitchsens;
   /* chorus, reverb... Coming soon to a 300-MHz, eight-way superscalar
      processor near you */
