@@ -499,111 +499,111 @@ static void adjust_volume(Timid *tm, int c)
     }
 }
 
-static void play_midi(Timid *tm, MidiEvent *el)
+static void play_midi(Timid *tm, MidiEvent *e)
 {
-    if (el)
+    if (e)
     {
-        switch(el->type)
+        switch(e->type)
         {
             
             /* Effects affecting a single note */
             
         case ME_NOTEON:
-            if (!(el->b)) /* Velocity 0? */
-            note_off(tm, el);
+            if (!(e->b)) /* Velocity 0? */
+            note_off(tm, e);
             else
-            note_on(tm, el);
+            note_on(tm, e);
             break;
             
         case ME_NOTEOFF:
-            note_off(tm, el);
+            note_off(tm, e);
             break;
             
         case ME_KEYPRESSURE:
-            adjust_pressure(tm, el);
+            adjust_pressure(tm, e);
             break;
             
             /* Effects affecting a single channel */
             
         case ME_PITCH_SENS:
-            tm->channel[el->channel].pitchsens=
-            el->a;
-            tm->channel[el->channel].pitchfactor=0;
+            tm->channel[e->channel].pitchsens=
+            e->a;
+            tm->channel[e->channel].pitchfactor=0;
             break;
             
         case ME_PITCHWHEEL:
-            tm->channel[el->channel].pitchbend=
-            el->a + el->b * 128;
-            tm->channel[el->channel].pitchfactor=0;
+            tm->channel[e->channel].pitchbend=
+            e->a + e->b * 128;
+            tm->channel[e->channel].pitchfactor=0;
             /* Adjust pitch for notes already playing */
-            adjust_pitchbend(tm, el->channel);
+            adjust_pitchbend(tm, e->channel);
             break;
             
         case ME_MAINVOLUME:
-            tm->channel[el->channel].volume=el->a;
-            adjust_volume(tm, el->channel);
+            tm->channel[e->channel].volume=e->a;
+            adjust_volume(tm, e->channel);
             break;
             
         case ME_PAN:
-            tm->channel[el->channel].panning=el->a;
+            tm->channel[e->channel].panning=e->a;
             if (tm->adjust_panning_immediately)
-            adjust_panning(tm, el->channel);
+            adjust_panning(tm, e->channel);
             break;
             
         case ME_EXPRESSION:
-            tm->channel[el->channel].expression=el->a;
-            adjust_volume(tm, el->channel);
+            tm->channel[e->channel].expression=e->a;
+            adjust_volume(tm, e->channel);
             break;
             
         case ME_PROGRAM:
-            if (ISDRUMCHANNEL(tm, el->channel))
+            if (ISDRUMCHANNEL(tm, e->channel))
             {
                 /* Change drum set */
-                if (tm->drumset[el->a])
+                if (tm->drumset[e->a])
                 {
-                    tm->channel[el->channel].bank=el->a;
+                    tm->channel[e->channel].bank=e->a;
                 }
             }
             else
             {
-                tm->channel[el->channel].program=el->a;
+                tm->channel[e->channel].program=e->a;
             }
             break;
             
         case ME_SUSTAIN:
-            tm->channel[el->channel].sustain=el->a;
-            if (!el->a)
-            drop_sustain(tm, el->channel);
+            tm->channel[e->channel].sustain=e->a;
+            if (!e->a)
+            drop_sustain(tm, e->channel);
             break;
             
         case ME_RESET_CONTROLLERS:
-            reset_controllers(tm, el->channel);
+            reset_controllers(tm, e->channel);
             break;
             
         case ME_ALL_NOTES_OFF:
-            all_notes_off(tm, el->channel);
+            all_notes_off(tm, e->channel);
             break;
             
         case ME_ALL_SOUNDS_OFF:
-            all_sounds_off(tm, el->channel);
+            all_sounds_off(tm, e->channel);
             break;
             
         case ME_MONO:
-            tm->channel[el->channel].mono=1;
-            all_notes_off(tm, el->channel);
+            tm->channel[e->channel].mono=1;
+            all_notes_off(tm, e->channel);
             break;
             
         case ME_POLY:
-            tm->channel[el->channel].mono=0;
-            all_notes_off(tm, el->channel);
+            tm->channel[e->channel].mono=0;
+            all_notes_off(tm, e->channel);
             break;
             
         case ME_TONE_BANK:
-            if (!ISDRUMCHANNEL(tm, el->channel))
+            if (!ISDRUMCHANNEL(tm, e->channel))
             {
-                if (tm->tonebank[el->a])
+                if (tm->tonebank[e->a])
                 {
-                    tm->channel[el->channel].bank=el->a;
+                    tm->channel[e->channel].bank=e->a;
                 }
             }
             break;
