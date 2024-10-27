@@ -949,6 +949,24 @@ void timid_reset(Timid *tm)
     reset_midi(tm);
 }
 
+void timid_set_amplification(Timid *tm, int amplification)
+{
+    if (!tm)
+    {
+        return;
+    }
+    if (amplification > MAX_AMPLIFICATION)
+    {
+        amplification=MAX_AMPLIFICATION;
+    }
+    else if (amplification < 0)
+    {
+        amplification=0;
+    }
+    reset_voices(tm);
+    adjust_amplification(tm, amplification);
+}
+
 void timid_set_max_voices(Timid *tm, int voices)
 {
     if (!tm)
@@ -1071,6 +1089,15 @@ void timid_set_control_rate(Timid *tm, int rate)
         tm->control_ratio=1;
     }
     timid_reload_config(tm);
+}
+
+int timid_set_default_instrument(Timid *tm, char *name)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return set_default_instrument(tm, name);
 }
 
 int timid_get_active_voices(Timid *tm)
