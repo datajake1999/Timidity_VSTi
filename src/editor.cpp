@@ -1583,6 +1583,7 @@ void Editor::idle ()
 		ZeroMemory(text, sizeof(text));
 		VstInt32 numvoices = ((Timidity*)effect)->getActiveVoices ();
 		VstInt32 maxvoices = ((Timidity*)effect)->getMaxVoices ();
+		VstInt32 voicealert = maxvoices - (maxvoices / 6);
 		sprintf(text, "%d/%d", numvoices, maxvoices);
 		SetDlgItemText((HWND)dlg, IDC_VOICECOUNT, text);
 		float vu = ((Timidity*)effect)->getVu ();
@@ -1595,7 +1596,19 @@ void Editor::idle ()
 		sprintf(text, "%lf %%", cpu);
 		SetDlgItemText((HWND)dlg, IDC_CPU, text);
 		COLORREF color = 0;
-		HDC hDc = GetDC(GetDlgItem((HWND)dlg, IDC_VU));
+		HDC hDc = GetDC(GetDlgItem((HWND)dlg, IDC_VOICECOUNT));
+		if (hDc)
+		{
+			if (numvoices > voicealert)
+			{
+				color = RGB(255, 0, 0);
+			}
+			SetTextColor(hDc, color);
+			ReleaseDC(GetDlgItem((HWND)dlg, IDC_VOICECOUNT), hDc);
+			hDc = NULL;
+		}
+		color = 0;
+		hDc = GetDC(GetDlgItem((HWND)dlg, IDC_VU));
 		if (hDc)
 		{
 			if (vu > 1)
