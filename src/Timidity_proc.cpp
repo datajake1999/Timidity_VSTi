@@ -63,6 +63,14 @@ void Timidity::initSynth ()
 	{
 		timid_set_immediate_panning(&synth, 0);
 	}
+	if (Mono >= 0.5)
+	{
+		timid_set_mono(&synth, 1);
+	}
+	else
+	{
+		timid_set_mono(&synth, 0);
+	}
 	if (FastDecay >= 0.5)
 	{
 		timid_set_fast_decay(&synth, 1);
