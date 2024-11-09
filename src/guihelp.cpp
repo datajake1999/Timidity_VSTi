@@ -44,6 +44,14 @@ void Timidity::initializeSettings (bool resetSynth)
 	{
 		suspend ();
 		timid_unload_config(&synth);
+		if (Voices > MAX_VOICES)
+		{
+			Voices = MAX_VOICES;
+		}
+		else if (Voices < 1)
+		{
+			Voices = 1;
+		}
 		timid_set_max_voices(&synth, (VstInt32)Voices);
 		if (ImmediatePan >= 0.5)
 		{
