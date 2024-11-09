@@ -4,10 +4,10 @@
 ..\src\lock.cpp
 ..\src\main.cpp
 ..\src\midiprog.cpp
-..\src\Timidity.cpp
-..\src\Timidity_proc.cpp
 ..\src\queue.cpp
 ..\src\reaper.cpp
+..\src\Timidity.cpp
+..\src\Timidity_proc.cpp
 ..\timidity\common.c
 ..\timidity\filter.c
 ..\timidity\instrum.c
