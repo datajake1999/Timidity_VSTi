@@ -24,10 +24,6 @@
 #ifndef TIMID_H
 #define TIMID_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "config.h"
 
 typedef struct {
@@ -228,6 +224,13 @@ int set_default_instrument(Timid *tm, char *name);
 void mix_voice(Timid *tm, int32 *buf, int v, int32 c);
 int recompute_envelope(Timid *tm, int v);
 void apply_envelope_to_amp(Timid *tm, int v);
+sample_t *resample_voice(Timid *tm, int v, int32 *countptr);
+void pre_resample(Timid *tm, Sample *sp);
+int read_config_file(Timid *tm, char *name);
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 void timid_init(Timid *tm);
 int timid_load_config(Timid *tm, char *filename);
 void timid_unload_config(Timid *tm);
@@ -255,10 +258,6 @@ int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 int timid_get_current_program(Timid *tm, int c);
 void timid_close(Timid *tm);
-sample_t *resample_voice(Timid *tm, int v, int32 *countptr);
-void pre_resample(Timid *tm, Sample *sp);
-int read_config_file(Timid *tm, char *name);
-
 #ifdef __cplusplus
 }
 #endif
