@@ -1166,13 +1166,13 @@ void timid_set_control_rate(Timid *tm, int rate)
     timid_reload_config(tm);
 }
 
-int timid_set_default_instrument(Timid *tm, char *name)
+int timid_set_default_instrument(Timid *tm, char *filename)
 {
-    if (!tm || !name)
+    if (!tm || !filename)
     {
         return 0;
     }
-    if (set_default_instrument(tm, name) == 0)
+    if (set_default_instrument(tm, filename) == 0)
     {
         return 1;
     }
