@@ -204,6 +204,8 @@ typedef struct {
 	int32 control_ratio;
 	FLOAT_T master_volume;
 	int32 drumchannels;
+	int32 lost_notes;
+	int32 cut_notes;
 	int adjust_panning_immediately;
 	int voices;
 	uint8 rpn_msb[16];
@@ -248,6 +250,8 @@ void timid_set_control_rate(Timid *tm, int rate);
 int timid_set_default_instrument(Timid *tm, char *name);
 int timid_get_active_voices(Timid *tm);
 int timid_get_max_voices(Timid *tm);
+int timid_get_lost_notes(Timid *tm);
+int timid_get_cut_notes(Timid *tm);
 int timid_get_current_program(Timid *tm, int c);
 void timid_close(Timid *tm);
 sample_t *resample_voice(Timid *tm, int v, int32 *countptr);

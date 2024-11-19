@@ -68,6 +68,8 @@ static void reset_midi(Timid *tm)
         tm->rpn_lsb[i]=0xff;
     }
     reset_voices(tm);
+    tm->lost_notes = 0;
+    tm->cut_notes = 0;
 }
 
 static void select_sample(Timid *tm, int v, Instrument *ip)
@@ -369,9 +371,12 @@ static void note_on(Timid *tm, MidiEvent *e)
         in the first place... Still, this needs to be fixed. Perhaps
         we could use a reserve of voices to play dying notes only. */
         
+        tm->cut_notes++;
         tm->voice[lowest].status=VOICE_FREE;
         start_note(tm,e,lowest);
     }
+    else
+    tm->lost_notes++;
 }
 
 static void finish_note(Timid *tm, int i)
@@ -1123,6 +1128,24 @@ int timid_get_max_voices(Timid *tm)
         return 0;
     }
     return tm->voices;
+}
+
+int timid_get_lost_notes(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->lost_notes;
+}
+
+int timid_get_cut_notes(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->cut_notes;
 }
 
 int timid_get_current_program(Timid *tm, int c)
