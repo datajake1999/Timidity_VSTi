@@ -853,6 +853,61 @@ void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count)
     }
 }
 
+void timid_render_char(Timid *tm, uint8 *buffer, int32 count)
+{
+    int i;
+    if (!tm || !buffer)
+    {
+        return;
+    }
+    if (!(tm->play_mode.encoding & PE_MONO))
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp[2];
+            do_compute_data(tm, &temp[0], 1);
+            temp[0] = temp[0] >> (32 - 8 - GUARD_BITS);
+            if (temp[0] > 127)
+            {
+                temp[0] = 127;
+            }
+            else if (temp[0] < -128)
+            {
+                temp[0] = -128;
+            }
+            buffer[i*2+0] = (uint8)temp[0] + 128;
+            temp[1] = temp[1] >> (32 - 8 - GUARD_BITS);
+            if (temp[1] > 127)
+            {
+                temp[1] = 127;
+            }
+            else if (temp[1] < -128)
+            {
+                temp[1] = -128;
+            }
+            buffer[i*2+1] = (uint8)temp[1] + 128;
+        }
+    }
+    else
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp;
+            do_compute_data(tm, &temp, 1);
+            temp = temp >> (32 - 8 - GUARD_BITS);
+            if (temp > 127)
+            {
+                temp = 127;
+            }
+            else if (temp < -128)
+            {
+                temp = -128;
+            }
+            buffer[i] = (uint8)temp + 128;
+        }
+    }
+}
+
 void timid_render_short(Timid *tm, int16 *buffer, int32 count)
 {
     int i;
