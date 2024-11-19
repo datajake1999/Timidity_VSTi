@@ -838,7 +838,10 @@ void timid_write_midi_packed(Timid *tm, uint32 data)
 
 void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count)
 {
-    const uint8 reset_array[6] = {0xF0, 0x7E, 0x7F, 0x09, 0x01, 0xF7};
+    const uint8 gm_reset_array[6] = {0xF0, 0x7E, 0x7F, 0x09, 0x01, 0xF7};
+    const uint8 gm2_reset_array[6] = {0xF0, 0x7E, 0x7F, 0x09, 0x03, 0xF7};
+    const uint8 gs_reset_array[11] = {0xF0, 0x41, 0x10, 0x42, 0x12, 0x40, 0x00, 0x7F, 0x00, 0x41, 0xF7};
+    const uint8 xg_reset_array[9] = {0xF0, 0x43, 0x10, 0x4C, 0x00, 0x00, 0x7E, 0x00, 0xF7};
     if (!tm || !buffer)
     {
         return;
@@ -847,7 +850,19 @@ void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count)
     {
         return;
     }
-    if (count == 6 && memcmp(&reset_array[0], buffer, 6) == 0)
+    if (count == 6 && memcmp(&gm_reset_array[0], buffer, 6) == 0)
+    {
+        reset_midi(tm);
+    }
+    else if (count == 6 && memcmp(&gm2_reset_array[0], buffer, 6) == 0)
+    {
+        reset_midi(tm);
+    }
+    else if (count == 11 && memcmp(&gs_reset_array[0], buffer, 11) == 0)
+    {
+        reset_midi(tm);
+    }
+    else if (count == 9 && memcmp(&xg_reset_array[0], buffer, 9) == 0)
     {
         reset_midi(tm);
     }
