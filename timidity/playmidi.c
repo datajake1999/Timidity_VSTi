@@ -1168,7 +1168,7 @@ void timid_set_control_rate(Timid *tm, int rate)
 
 int timid_set_default_instrument(Timid *tm, char *name)
 {
-    if (!tm)
+    if (!tm || !name)
     {
         return 0;
     }
