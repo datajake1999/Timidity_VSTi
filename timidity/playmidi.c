@@ -1102,7 +1102,11 @@ int timid_set_default_instrument(Timid *tm, char *name)
     {
         return 0;
     }
-    return set_default_instrument(tm, name);
+    if (set_default_instrument(tm, name) == 0)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 int timid_get_active_voices(Timid *tm)
