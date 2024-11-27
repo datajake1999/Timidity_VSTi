@@ -1006,6 +1006,34 @@ void timid_render_float(Timid *tm, float *buffer, int32 count)
     }
 }
 
+void timid_render_double(Timid *tm, double *buffer, int32 count)
+{
+    int i;
+    if (!tm || !buffer)
+    {
+        return;
+    }
+    if (!(tm->play_mode.encoding & PE_MONO))
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp[2];
+            do_compute_data(tm, &temp[0], 1);
+            buffer[i*2+0] = temp[0] / (double)268435456;
+            buffer[i*2+1] = temp[1] / (double)268435456;
+        }
+    }
+    else
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp;
+            do_compute_data(tm, &temp, 1);
+            buffer[i] = temp / (double)268435456;
+        }
+    }
+}
+
 void timid_panic(Timid *tm)
 {
     if (!tm)
