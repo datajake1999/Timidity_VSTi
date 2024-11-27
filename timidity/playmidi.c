@@ -1207,6 +1207,18 @@ int timid_set_default_instrument(Timid *tm, char *filename)
     return 0;
 }
 
+void timid_get_config_name(Timid *tm, char *buffer, int32 count)
+{
+    if (!tm || !buffer)
+    {
+        return;
+    }
+    if (strlen(tm->last_config))
+    {
+        strncpy(buffer, tm->last_config, count);
+    }
+}
+
 int timid_get_amplification(Timid *tm)
 {
     if (!tm)

@@ -255,6 +255,7 @@ void timid_set_antialiasing(Timid *tm, int value);
 void timid_set_sample_rate(Timid *tm, int rate);
 void timid_set_control_rate(Timid *tm, int rate);
 int timid_set_default_instrument(Timid *tm, char *filename);
+void timid_get_config_name(Timid *tm, char *buffer, int32 count);
 int timid_get_amplification(Timid *tm);
 int timid_get_active_voices(Timid *tm);
 int timid_get_max_voices(Timid *tm);
