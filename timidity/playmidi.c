@@ -1179,6 +1179,15 @@ int timid_set_default_instrument(Timid *tm, char *filename)
     return 0;
 }
 
+int timid_get_amplification(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return (int)(tm->master_volume * 100.0L);
+}
+
 int timid_get_active_voices(Timid *tm)
 {
     int count = 0;
@@ -1202,6 +1211,60 @@ int timid_get_max_voices(Timid *tm)
         return 0;
     }
     return tm->voices;
+}
+
+int timid_get_immediate_panning(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->adjust_panning_immediately;
+}
+
+int timid_get_mono(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->play_mode.encoding;
+}
+
+int timid_get_fast_decay(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->fast_decay;
+}
+
+int timid_get_antialiasing(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->antialiasing_allowed;
+}
+
+int timid_get_sample_rate(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->play_mode.rate;
+}
+
+int timid_get_control_rate(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->control_rate;
 }
 
 int timid_get_lost_notes(Timid *tm)
