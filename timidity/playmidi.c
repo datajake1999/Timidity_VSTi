@@ -978,6 +978,61 @@ void timid_render_short(Timid *tm, int16 *buffer, int32 count)
     }
 }
 
+void timid_render_long(Timid *tm, int32 *buffer, int32 count)
+{
+    int i;
+    if (!tm || !buffer)
+    {
+        return;
+    }
+    if (!(tm->play_mode.encoding & PE_MONO))
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp[2];
+            do_compute_data(tm, &temp[0], 1);
+            if (temp[0] > 268435455)
+            {
+                temp[0] = 268435455;
+            }
+            else if (temp[0] < -268435456)
+            {
+                temp[0] = -268435456;
+            }
+            temp[0] = temp[0] << GUARD_BITS;
+            buffer[i*2+0] = temp[0];
+            if (temp[1] > 268435455)
+            {
+                temp[1] = 268435455;
+            }
+            else if (temp[1] < -268435456)
+            {
+                temp[1] = -268435456;
+            }
+            temp[1] = temp[1] << GUARD_BITS;
+            buffer[i*2+1] = temp[1];
+        }
+    }
+    else
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp;
+            do_compute_data(tm, &temp, 1);
+            if (temp > 268435455)
+            {
+                temp = 268435455;
+            }
+            else if (temp < -268435456)
+            {
+                temp = -268435456;
+            }
+            temp = temp << GUARD_BITS;
+            buffer[i] = temp;
+        }
+    }
+}
+
 void timid_render_float(Timid *tm, float *buffer, int32 count)
 {
     int i;
