@@ -213,6 +213,10 @@ typedef struct {
 	char last_config[1024];
 } Timid;
 
+typedef struct {
+	int8 data[3];
+} int24;
+
 FILE *open_file(Timid *tm, char *name, int decompress, int noise_mode);
 void add_to_pathlist(Timid *tm, char *s);
 void free_pathlist(Timid *tm);
@@ -242,6 +246,7 @@ void timid_write_midi_packed(Timid *tm, uint32 data);
 void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count);
 void timid_render_char(Timid *tm, uint8 *buffer, int32 count);
 void timid_render_short(Timid *tm, int16 *buffer, int32 count);
+void timid_render_24(Timid *tm, int24 *buffer, int32 count);
 void timid_render_long(Timid *tm, int32 *buffer, int32 count);
 void timid_render_float(Timid *tm, float *buffer, int32 count);
 void timid_render_double(Timid *tm, double *buffer, int32 count);

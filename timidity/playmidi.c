@@ -978,6 +978,67 @@ void timid_render_short(Timid *tm, int16 *buffer, int32 count)
     }
 }
 
+void timid_render_24(Timid *tm, int24 *buffer, int32 count)
+{
+    int i;
+    if (!tm || !buffer)
+    {
+        return;
+    }
+    if (!(tm->play_mode.encoding & PE_MONO))
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp[2];
+            do_compute_data(tm, &temp[0], 1);
+            temp[0] = temp[0] >> (32 - 24 - GUARD_BITS);
+            if (temp[0] > 8388607)
+            {
+                temp[0] = 8388607;
+            }
+            else if (temp[0] < -8388608)
+            {
+                temp[0] = -8388608;
+            }
+            buffer[i*2+0].data[0] = temp[0] & 0xff;
+            buffer[i*2+0].data[1] = (temp[0] >> 8) & 0xff;
+            buffer[i*2+0].data[2] = (temp[0] >> 16) & 0xff;
+            temp[1] = temp[1] >> (32 - 24 - GUARD_BITS);
+            if (temp[1] > 8388607)
+            {
+                temp[1] = 8388607;
+            }
+            else if (temp[1] < -8388608)
+            {
+                temp[1] = -8388608;
+            }
+            buffer[i*2+1].data[0] = temp[1] & 0xff;
+            buffer[i*2+1].data[1] = (temp[1] >> 8) & 0xff;
+            buffer[i*2+1].data[2] = (temp[1] >> 16) & 0xff;
+        }
+    }
+    else
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp;
+            do_compute_data(tm, &temp, 1);
+            temp = temp >> (32 - 24 - GUARD_BITS);
+            if (temp > 8388607)
+            {
+                temp = 8388607;
+            }
+            else if (temp < -8388608)
+            {
+                temp = -8388608;
+            }
+            buffer[i].data[0] = temp & 0xff;
+            buffer[i].data[1] = (temp >> 8) & 0xff;
+            buffer[i].data[2] = (temp >> 16) & 0xff;
+        }
+    }
+}
+
 void timid_render_long(Timid *tm, int32 *buffer, int32 count)
 {
     int i;
