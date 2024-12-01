@@ -634,6 +634,7 @@ void timid_init(Timid *tm)
     {
         return;
     }
+    tm->default_program=DEFAULT_PROGRAM;
     tm->antialiasing_allowed=1;
     tm->fast_decay=1;
     tm->voices=DEFAULT_VOICES;
