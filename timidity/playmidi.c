@@ -1390,6 +1390,7 @@ void timid_free_default_instrument(Timid *tm)
     {
         return;
     }
+    reset_voices(tm);
     free_default_instrument(tm);
 }
 
