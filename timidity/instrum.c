@@ -579,3 +579,13 @@ int set_default_instrument(Timid *tm, char *name)
     tm->default_program=SPECIAL_PROGRAM;
     return 0;
 }
+
+void free_default_instrument(Timid *tm)
+{
+    if (tm->default_instrument)
+    {
+        free_instrument(tm->default_instrument);
+        tm->default_instrument=0;
+        tm->default_program=DEFAULT_PROGRAM;
+    }
+}

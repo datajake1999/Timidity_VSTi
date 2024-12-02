@@ -1329,6 +1329,15 @@ int timid_set_default_instrument(Timid *tm, char *filename)
     return 0;
 }
 
+void timid_free_default_instrument(Timid *tm)
+{
+    if (!tm)
+    {
+        return;
+    }
+    free_default_instrument(tm);
+}
+
 void timid_get_config_name(Timid *tm, char *buffer, int32 count)
 {
     if (!tm || !buffer)
@@ -1472,5 +1481,6 @@ void timid_close(Timid *tm)
     }
     reset_midi(tm);
     timid_unload_config(tm);
+    free_default_instrument(tm);
     free_tables(tm);
 }
