@@ -166,7 +166,7 @@
    on your machine/compiler/libm, uncomment this. It doesn't make much
    difference either way, but hey -- it was on the TODO list, so it
    got done. */
-//#define USE_LDEXP
+#define USE_LDEXP
 
 #define FLOAT_T  double
 
