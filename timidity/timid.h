@@ -178,13 +178,22 @@ typedef struct {
 
 #define ISDRUMCHANNEL(tm, c) ((tm->drumchannels & (1<<(c))))
 
+#ifdef LOOKUP_SINE
+FLOAT_T sine(int x);
+#else
 #define sine(x) (sin((2*PI/1024.0) * (x)))
+#endif
 
 #define SINE_CYCLE_LENGTH 1024
 extern int32 freq_table[];
 extern FLOAT_T vol_table[];
 extern FLOAT_T bend_fine[];
 extern FLOAT_T bend_coarse[];
+extern uint8 *_l2u; /* 13-bit PCM to 8-bit u-law */
+extern uint8 _l2u_[]; /* used in LOOKUP_HACK */
+#ifdef LOOKUP_HACK
+extern int16 _u2l[];
+#endif
 
 typedef struct {
 	char current_filename[1024];
@@ -209,6 +218,12 @@ typedef struct {
 	uint8 rpn_msb[16];
 	uint8 rpn_lsb[16];
 	sample_t resample_buffer[AUDIO_BUFFER_SIZE];
+#ifdef LOOKUP_HACK
+	int32 *mixup;
+#ifdef LOOKUP_INTERPOLATION
+	int8 *iplookup;
+#endif
+#endif
 	char def_instr_name[256];
 	char last_config[1024];
 } Timid;
@@ -232,6 +247,8 @@ int recompute_envelope(Timid *tm, int v);
 void apply_envelope_to_amp(Timid *tm, int v);
 sample_t *resample_voice(Timid *tm, int v, int32 *countptr);
 void pre_resample(Timid *tm, Sample *sp);
+void init_tables(Timid *tm);
+void free_tables(Timid *tm);
 int read_config_file(Timid *tm, char *name);
 
 #ifdef __cplusplus

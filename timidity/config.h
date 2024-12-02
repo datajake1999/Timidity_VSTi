@@ -59,6 +59,7 @@
    try to play music on it. This is now a runtime option, so this isn't
    a critical choice anymore. */
 #define DEFAULT_DRUMCHANNELS (1<<9)
+//#define DEFAULT_DRUMCHANNELS ((1<<9) | (1<<15))
 
 /* A somewhat arbitrary frequency range. The low end of this will
    sound terrible as no lowpass filtering is performed on most
@@ -99,6 +100,29 @@
    of envelopes and tremolo. The cost is CPU time. */
 #define CONTROLS_PER_SECOND 1000
 
+/* Strongly recommended. This option increases CPU usage by half, but
+   without it sound quality is very poor. */
+#define LINEAR_INTERPOLATION
+
+/* This is an experimental kludge that needs to be done right, but if
+   you've got an 8-bit sound card, or cheap multimedia speakers hooked
+   to your 16-bit output device, you should definitely give it a try.
+
+   Defining LOOKUP_HACK causes table lookups to be used in mixing
+   instead of multiplication. We convert the sample data to 8 bits at
+   load time and volumes to logarithmic 7-bit values before looking up
+   the product, which degrades sound quality noticeably.
+
+   Defining LOOKUP_HACK should save ~20% of CPU on an Intel machine.
+   LOOKUP_INTERPOLATION might give another ~5% */
+/* #define LOOKUP_HACK
+   #define LOOKUP_INTERPOLATION */
+
+/* Make envelopes twice as fast. Saves ~20% CPU time (notes decay
+   faster) and sounds more like a GUS. There is now a command line
+   option to toggle this as well. */
+#define FAST_DECAY
+
 /* How many bits to use for the fractional part of sample positions.
    This affects tonal accuracy. The entire position counter must fit
    in 32 bits, so with FRACTION_BITS equal to 12, the maximum size of
@@ -127,6 +151,22 @@
 /* The number of samples to use for ramping out a dying note. Affects
    click removal. */
 #define MAX_DIE_TIME 20
+
+/* On some machines (especially PCs without math coprocessors),
+   looking up sine values in a table will be significantly faster than
+   computing them on the fly. Uncomment this to use lookups. */
+/* #define LOOKUP_SINE */
+
+/* Shawn McHorse's resampling optimizations. These may not in fact be
+   faster on your particular machine and compiler. You'll have to run
+   a benchmark to find out. */
+#define PRECALC_LOOPS
+
+/* If calling ldexp() is faster than a floating point multiplication
+   on your machine/compiler/libm, uncomment this. It doesn't make much
+   difference either way, but hey -- it was on the TODO list, so it
+   got done. */
+//#define USE_LDEXP
 
 #define FLOAT_T  double
 
@@ -191,13 +231,26 @@ typedef char int8;
 #define GUARD_BITS 3
 #define AMP_BITS (15-GUARD_BITS)
 
+#ifdef LOOKUP_HACK
+   typedef int8 sample_t;
+   typedef uint8 final_volume_t;
+#  define FINAL_VOLUME(v) (~_l2u[v])
+#  define MIXUP_SHIFT 5
+#  define MAX_AMP_VALUE 4095
+#else
    typedef int16 sample_t;
    typedef int32 final_volume_t;
 #  define FINAL_VOLUME(v) (v)
 #  define MAX_AMP_VALUE ((1<<(AMP_BITS+1))-1)
+#endif
 
+#ifdef USE_LDEXP
 #  define FSCALE(a,b) ldexp((double)(a),(b))
 #  define FSCALENEG(a,b) ldexp((double)(a),-(b))
+#else
+#  define FSCALE(a,b) ((a) * (double)(1<<(b)))
+#  define FSCALENEG(a,b) ((a) * (1.0L / (double)(1<<(b))))
+#endif
 
 /* Vibrato and tremolo Choices of the Day */
 #define SWEEP_TUNING 38

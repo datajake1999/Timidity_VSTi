@@ -176,7 +176,11 @@ static int update_signal(Timid *tm, int v)
     return 0;
 }
 
+#ifdef LOOKUP_HACK
+#  define MIXATION(a) *lp++ += tm->mixup[(a<<8) | (uint8)s];
+#else
 #  define MIXATION(a) *lp++ += (a)*s;
+#endif
 
 static void mix_mystery_signal(Timid *tm, sample_t *sp, int32 *lp, int v, int count)
 {

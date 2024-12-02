@@ -636,13 +636,18 @@ void timid_init(Timid *tm)
     }
     tm->default_program=DEFAULT_PROGRAM;
     tm->antialiasing_allowed=1;
+#ifdef FAST_DECAY
     tm->fast_decay=1;
+#else
+    tm->fast_decay=0;
+#endif
     tm->voices=DEFAULT_VOICES;
     tm->play_mode.rate=DEFAULT_RATE;
     tm->control_rate=CONTROLS_PER_SECOND;
     tm->control_ratio = tm->play_mode.rate/tm->control_rate;
     tm->drumchannels=DEFAULT_DRUMCHANNELS;
     tm->adjust_panning_immediately=1;
+    init_tables(tm);
     reset_midi(tm);
     adjust_amplification(tm, DEFAULT_AMPLIFICATION);
 }
@@ -1467,4 +1472,5 @@ void timid_close(Timid *tm)
     }
     reset_midi(tm);
     timid_unload_config(tm);
+    free_tables(tm);
 }
