@@ -1156,6 +1156,61 @@ void timid_render_double(Timid *tm, double *buffer, int32 count)
     }
 }
 
+void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count)
+{
+    int i;
+    if (!tm || !buffer)
+    {
+        return;
+    }
+    if (!(tm->play_mode.encoding & PE_MONO))
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp[2];
+            do_compute_data(tm, &temp[0], 1);
+            temp[0] = temp[0] >> (32 - 13 - GUARD_BITS);
+            if (temp[0] > 4095)
+            {
+                temp[0] = 4095;
+            }
+            else if (temp[0] < -4096)
+            {
+                temp[0] = -4096;
+            }
+            buffer[i*2+0] = _l2u[temp[0]];
+            temp[1] = temp[1] >> (32 - 13 - GUARD_BITS);
+            if (temp[1] > 4095)
+            {
+                temp[1] = 4095;
+            }
+            else if (temp[1] < -4096)
+            {
+                temp[1] = -4096;
+            }
+            buffer[i*2+1] = _l2u[temp[1]];
+        }
+    }
+    else
+    {
+        for (i=0; i<count; i++)
+        {
+            int32 temp;
+            do_compute_data(tm, &temp, 1);
+            temp = temp >> (32 - 13 - GUARD_BITS);
+            if (temp > 4095)
+            {
+                temp = 4095;
+            }
+            else if (temp < -4096)
+            {
+                temp = -4096;
+            }
+            buffer[i] = _l2u[temp];
+        }
+    }
+}
+
 void timid_panic(Timid *tm)
 {
     if (!tm)

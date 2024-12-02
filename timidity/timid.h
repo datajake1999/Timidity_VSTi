@@ -268,6 +268,7 @@ void timid_render_24(Timid *tm, int24 *buffer, int32 count);
 void timid_render_long(Timid *tm, int32 *buffer, int32 count);
 void timid_render_float(Timid *tm, float *buffer, int32 count);
 void timid_render_double(Timid *tm, double *buffer, int32 count);
+void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count);
 void timid_panic(Timid *tm);
 void timid_reset(Timid *tm);
 void timid_set_amplification(Timid *tm, int amplification);
