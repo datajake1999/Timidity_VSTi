@@ -1371,6 +1371,15 @@ void timid_set_control_rate(Timid *tm, int rate)
     timid_reload_config(tm);
 }
 
+void timid_set_default_program(Timid *tm, int program)
+{
+    if (!tm)
+    {
+        return;
+    }
+    tm->default_program = program & 0x7f;
+}
+
 int timid_set_default_instrument(Timid *tm, char *filename)
 {
     if (!tm || !filename)
@@ -1492,6 +1501,15 @@ int timid_get_control_rate(Timid *tm)
         return 0;
     }
     return tm->control_rate;
+}
+
+int timid_get_default_program(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->default_program;
 }
 
 int timid_get_lost_notes(Timid *tm)
