@@ -31,6 +31,7 @@ tables were lifted from the rsynth-2.0 sources.  The README says:
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "timid.h"
 
 int32 freq_table[128]=
