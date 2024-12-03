@@ -1380,6 +1380,17 @@ void timid_set_default_program(Timid *tm, int program)
     tm->default_program = program & 0x7f;
 }
 
+void timid_set_drum_channel(Timid *tm, int c, int enable)
+{
+    if (!tm)
+    {
+        return;
+    }
+    c = c & 0x0f;
+    if (enable) tm->drumchannels |= (1<<c);
+    else tm->drumchannels &= ~(1<<c);
+}
+
 int timid_set_default_instrument(Timid *tm, char *filename)
 {
     if (!tm || !filename)
@@ -1510,6 +1521,15 @@ int timid_get_default_program(Timid *tm)
         return 0;
     }
     return tm->default_program;
+}
+
+int timid_get_drum_channels(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->drumchannels;
 }
 
 int timid_get_lost_notes(Timid *tm)
