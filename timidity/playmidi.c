@@ -1397,6 +1397,7 @@ int timid_set_default_instrument(Timid *tm, char *filename)
     {
         return 0;
     }
+    reset_voices(tm);
     if (set_default_instrument(tm, filename) == 0)
     {
         return 1;
