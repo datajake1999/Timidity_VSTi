@@ -539,7 +539,8 @@ int load_instruments(Timid *tm)
 {
     int errors;
     int i;
-    for (i = 0; i < 128; i++) {
+    for (i=0; i<128; i++)
+    {
         if (tm->tonebank[i])
             errors += fill_bank(tm, 0, i);
         if (tm->drumset[i])
@@ -551,7 +552,7 @@ int load_instruments(Timid *tm)
 void free_instruments(Timid *tm)
 {
     int i;
-    for (i = 0; i < 128; i++)
+    for (i=0; i<128; i++)
     {
         if (tm->tonebank[i])
         {
