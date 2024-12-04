@@ -298,6 +298,7 @@ int timid_get_drum_channels(Timid *tm);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 int timid_get_current_program(Timid *tm, int c);
+int timid_millis2samples(Timid *tm, int millis);
 void timid_close(Timid *tm);
 #ifdef __cplusplus
 }

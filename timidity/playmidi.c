@@ -1568,6 +1568,15 @@ int timid_get_current_program(Timid *tm, int c)
     }
 }
 
+int timid_millis2samples(Timid *tm, int millis)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return (int)((millis/1000.0)*tm->play_mode.rate);
+}
+
 void timid_close(Timid *tm)
 {
     if (!tm)
