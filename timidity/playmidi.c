@@ -624,7 +624,7 @@ static void do_compute_data(Timid *tm, int32 *buffer, int32 count)
     for (i=0; i<tm->voices; i++)
     {
         if(tm->voice[i].status != VOICE_FREE)
-            mix_voice(tm, buffer, i, count);
+			mix_voice(tm, buffer, i, count);
     }
 }
 

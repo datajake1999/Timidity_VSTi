@@ -537,35 +537,35 @@ static int fill_bank(Timid *tm, int dr, int b)
 
 int load_instruments(Timid *tm)
 {
-	int errors;
-	int i;
-	for (i = 0; i < 128; i++) {
-		if (tm->tonebank[i])
-			errors += fill_bank(tm, 0, i);
-		if (tm->drumset[i])
-			errors += fill_bank(tm, 1, i);
-	}
-	return errors;
+    int errors;
+    int i;
+    for (i = 0; i < 128; i++) {
+        if (tm->tonebank[i])
+            errors += fill_bank(tm, 0, i);
+        if (tm->drumset[i])
+            errors += fill_bank(tm, 1, i);
+    }
+    return errors;
 }
 
 void free_instruments(Timid *tm)
 {
-	int i;
-	for (i = 0; i < 128; i++)
-	{
-		if (tm->tonebank[i])
-		{
-			free_bank(tm, 0, i);
-			free(tm->tonebank[i]);
-			tm->tonebank[i] = 0;
-		}
-		if (tm->drumset[i])
-		{
-			free_bank(tm, 1, i);
-			free(tm->drumset[i]);
-			tm->drumset[i] = 0;
-		}
-	}
+    int i;
+    for (i = 0; i < 128; i++)
+    {
+        if (tm->tonebank[i])
+        {
+            free_bank(tm, 0, i);
+            free(tm->tonebank[i]);
+            tm->tonebank[i] = 0;
+        }
+        if (tm->drumset[i])
+        {
+            free_bank(tm, 1, i);
+            free(tm->drumset[i]);
+            tm->drumset[i] = 0;
+        }
+    }
 }
 
 int set_default_instrument(Timid *tm, char *name)
