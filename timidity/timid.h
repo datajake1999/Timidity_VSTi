@@ -181,6 +181,7 @@ typedef struct {
 #ifdef LOOKUP_SINE
 FLOAT_T sine(int x);
 #else
+#include <math.h>
 #define sine(x) (sin((2*PI/1024.0) * (x)))
 #endif
 
