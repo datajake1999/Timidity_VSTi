@@ -661,7 +661,8 @@ int timid_load_config(Timid *tm, char *filename)
         return 0;
     }
     timid_unload_config(tm);
-    strcpy(directory, filename);
+    strncpy(directory, filename, 255);
+    directory[255]='\0';
     separator = strrchr(directory, PATH_SEP);
     if (separator) *separator = '\0';
     add_to_pathlist(tm, directory);
