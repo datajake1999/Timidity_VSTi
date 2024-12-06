@@ -30,9 +30,9 @@ playmidi.c -- random stuff in need of rearrangement
 
 #include "timid.h"
 
-static void adjust_amplification(Timid *tm, int value)
+static void adjust_amplification(Timid *tm, int amplification)
 {
-    tm->master_volume = (double)(value) / 100.0L;
+    tm->master_volume = (double)(amplification) / 100.0L;
 }
 
 static void reset_voices(Timid *tm)
