@@ -553,6 +553,14 @@ static void seek_forward(Timid *tm, int32 until_time)
             reset_controllers(tm, tm->current_event->channel);
             break;
             
+        case ME_MONO:
+            tm->channel[tm->current_event->channel].mono=1;
+            break;
+            
+        case ME_POLY:
+            tm->channel[tm->current_event->channel].mono=0;
+            break;
+            
         case ME_TONE_BANK:
             if (!ISDRUMCHANNEL(tm, tm->current_event->channel))
             tm->channel[tm->current_event->channel].bank=tm->current_event->a;
