@@ -1310,7 +1310,7 @@ void timid_reset(Timid *tm)
 
 int timid_load_smf(Timid *tm, char *filename)
 {
-    if (!tm)
+    if (!tm || !filename)
     {
         return 0;
     }
@@ -1331,7 +1331,7 @@ int timid_load_smf(Timid *tm, char *filename)
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
 {
     int i;
-    if (!tm || !tm->current_event)
+    if (!tm || !buffer || !tm->current_event)
     {
         return 0;
     }
