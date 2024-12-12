@@ -95,11 +95,22 @@ typedef struct {
 
 #define PE_MONO 	0x01  /* versus stereo */
 
+/* Audio format identifiers for timid_play_smf */
+
+#define AU_CHAR	1
+#define AU_SHORT	2
+#define AU_24	3
+#define AU_LONG	4
+#define AU_FLOAT	5
+#define AU_DOUBLE	6
+#define AU_ULAW	7
+
 typedef struct {
   int32 rate, encoding;
 } PlayMode;
 
 typedef struct {
+  int32 time;
   uint8 channel, type, a, b;
 } MidiEvent;
 
@@ -123,6 +134,10 @@ typedef struct {
 #define ME_TONE_BANK	15
 
 #define ME_POLY	16
+
+#define ME_TEMPO	17
+
+#define ME_EOT		99
 
 typedef struct {
   int
@@ -178,6 +193,11 @@ typedef struct {
 
 #define ISDRUMCHANNEL(tm, c) ((tm->drumchannels & (1<<(c))))
 
+typedef struct {
+  MidiEvent event;
+  void *next;
+} MidiEventList;
+
 #ifdef LOOKUP_SINE
 FLOAT_T sine(int x);
 #else
@@ -218,6 +238,18 @@ typedef struct {
 	int voices;
 	uint8 rpn_msb[16];
 	uint8 rpn_lsb[16];
+	MidiEvent *event_list;
+	MidiEvent *current_event;
+	int32 sample_count;
+	int32 current_sample;
+	FILE* fp_midi;
+	int32 events_midi;
+	MidiEventList *evlist;
+	int32 event_count;
+	FILE *fp;
+	int32 at;
+	int32 sample_increment;
+	int32 sample_correction;
 	sample_t resample_buffer[AUDIO_BUFFER_SIZE];
 #ifdef LOOKUP_HACK
 	int32 *mixup;
@@ -247,6 +279,7 @@ void free_default_instrument(Timid *tm);
 void mix_voice(Timid *tm, int32 *buf, int v, int32 c);
 int recompute_envelope(Timid *tm, int v);
 void apply_envelope_to_amp(Timid *tm, int v);
+MidiEvent *read_midi_file(Timid *tm, FILE *mfp, int32 *count, int32 *sp);
 sample_t *resample_voice(Timid *tm, int v, int32 *countptr);
 void pre_resample(Timid *tm, Sample *sp);
 void init_tables(Timid *tm);
@@ -272,6 +305,10 @@ void timid_render_double(Timid *tm, double *buffer, int32 count);
 void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count);
 void timid_panic(Timid *tm);
 void timid_reset(Timid *tm);
+int timid_load_smf(Timid *tm, char *filename);
+int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count);
+void timid_seek_smf(Timid *tm, int32 time);
+void timid_unload_smf(Timid *tm);
 void timid_set_amplification(Timid *tm, int amplification);
 void timid_set_max_voices(Timid *tm, int voices);
 void timid_set_immediate_panning(Timid *tm, int value);
@@ -299,6 +336,8 @@ int timid_get_drum_channels(Timid *tm);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 int timid_get_current_program(Timid *tm, int c);
+int timid_get_event_count(Timid *tm);
+int timid_get_sample_count(Timid *tm);
 int timid_millis2samples(Timid *tm, int millis);
 void timid_close(Timid *tm);
 #ifdef __cplusplus

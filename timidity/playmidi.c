@@ -504,6 +504,84 @@ static void adjust_volume(Timid *tm, int c)
     }
 }
 
+static void seek_forward(Timid *tm, int32 until_time)
+{
+    reset_voices(tm);
+    while (tm->current_event->time < until_time)
+    {
+        switch(tm->current_event->type)
+        {
+            /* All notes stay off. Just handle the parameter changes. */
+            
+        case ME_PITCH_SENS:
+            tm->channel[tm->current_event->channel].pitchsens=
+            tm->current_event->a;
+            tm->channel[tm->current_event->channel].pitchfactor=0;
+            break;
+            
+        case ME_PITCHWHEEL:
+            tm->channel[tm->current_event->channel].pitchbend=
+            tm->current_event->a + tm->current_event->b * 128;
+            tm->channel[tm->current_event->channel].pitchfactor=0;
+            break;
+            
+        case ME_MAINVOLUME:
+            tm->channel[tm->current_event->channel].volume=tm->current_event->a;
+            break;
+            
+        case ME_PAN:
+            tm->channel[tm->current_event->channel].panning=tm->current_event->a;
+            break;
+            
+        case ME_EXPRESSION:
+            tm->channel[tm->current_event->channel].expression=tm->current_event->a;
+            break;
+            
+        case ME_PROGRAM:
+            if (ISDRUMCHANNEL(tm, tm->current_event->channel))
+            /* Change drum set */
+            tm->channel[tm->current_event->channel].bank=tm->current_event->a;
+            else
+            tm->channel[tm->current_event->channel].program=tm->current_event->a;
+            break;
+            
+        case ME_SUSTAIN:
+            tm->channel[tm->current_event->channel].sustain=tm->current_event->a;
+            break;
+            
+        case ME_RESET_CONTROLLERS:
+            reset_controllers(tm, tm->current_event->channel);
+            break;
+            
+        case ME_TONE_BANK:
+            if (!ISDRUMCHANNEL(tm, tm->current_event->channel))
+            tm->channel[tm->current_event->channel].bank=tm->current_event->a;
+            break;
+            
+        case ME_EOT:
+            tm->current_sample=tm->current_event->time;
+            return;
+        }
+        tm->current_event++;
+    }
+    /*current_sample=current_event->time;*/
+    if (tm->current_event != tm->event_list)
+    tm->current_event--;
+    tm->current_sample=until_time;
+}
+
+static void skip_to(Timid *tm, int32 until_time)
+{
+    if (tm->current_sample > until_time)
+    tm->current_sample=0;
+    
+    reset_midi(tm);
+    tm->current_event=tm->event_list;
+    
+    if (until_time)
+    seek_forward(tm, until_time);
+}
+
 static void play_midi(Timid *tm, MidiEvent *e)
 {
     if (e)
@@ -1230,6 +1308,162 @@ void timid_reset(Timid *tm)
     reset_midi(tm);
 }
 
+int timid_load_smf(Timid *tm, char *filename)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    timid_unload_smf(tm);
+    tm->fp_midi = open_file(tm, filename, 1, OF_VERBOSE);
+    if (!tm->fp_midi)
+        return 0;
+    
+    tm->event_list = read_midi_file(tm, tm->fp_midi, &tm->events_midi, &tm->sample_count);
+    if (!tm->event_list || !tm->events_midi || !tm->sample_count) {
+        close_file(tm->fp_midi);
+        return 0;
+    }
+    skip_to(tm, 0);
+    return 1;
+}
+
+int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
+{
+    int i;
+    if (!tm || !tm->current_event)
+    {
+        return 0;
+    }
+    for (i=0; i<count; i++)
+    {
+        /* Handle all events that should happen at this time */
+        while (tm->current_event->time <= tm->current_sample)
+        {
+            if (tm->current_event->type == ME_EOT)
+            {
+                return 0;
+            }
+            play_midi(tm, tm->current_event);
+            tm->current_event++;
+        }
+        switch(type)
+        {
+        case AU_CHAR:
+            timid_render_char(tm, (uint8 *)buffer, 1);
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buffer += 2*sizeof(uint8);
+            }
+            else
+            {
+                buffer += sizeof(uint8);
+            }
+            break;
+        case AU_SHORT:
+            timid_render_short(tm, (int16 *)buffer, 1);
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buffer += 2*sizeof(int16);
+            }
+            else
+            {
+                buffer += sizeof(int16);
+            }
+            break;
+        case AU_24:
+            timid_render_24(tm, (int24 *)buffer, 1);
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buffer += 2*sizeof(int24);
+            }
+            else
+            {
+                buffer += sizeof(int24);
+            }
+            break;
+        case AU_LONG:
+            timid_render_long(tm, (int32 *)buffer, 1);
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buffer += 2*sizeof(int32);
+            }
+            else
+            {
+                buffer += sizeof(int32);
+            }
+            break;
+        case AU_FLOAT:
+            timid_render_float(tm, (float *)buffer, 1);
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buffer += 2*sizeof(float);
+            }
+            else
+            {
+                buffer += sizeof(float);
+            }
+            break;
+        case AU_DOUBLE:
+            timid_render_double(tm, (double *)buffer, 1);
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buffer += 2*sizeof(double);
+            }
+            else
+            {
+                buffer += sizeof(double);
+            }
+            break;
+        case AU_ULAW:
+            timid_render_ulaw(tm, (uint8 *)buffer, 1);
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buffer += 2*sizeof(uint8);
+            }
+            else
+            {
+                buffer += sizeof(uint8);
+            }
+            break;
+        }
+        tm->current_sample++;
+    }
+    return 1;
+}
+
+void timid_seek_smf(Timid *tm, int32 time)
+{
+    if (!tm || !tm->current_event)
+    {
+        return;
+    }
+    skip_to(tm, 0);
+    skip_to(tm, timid_millis2samples(tm, time));
+}
+
+void timid_unload_smf(Timid *tm)
+{
+    if (!tm)
+    {
+        return;
+    }
+    if (tm->event_list)
+    {
+        free(tm->event_list);
+        tm->event_list = NULL;
+    }
+    tm->current_event = NULL;
+    if (tm->fp_midi)
+    {
+        close_file(tm->fp_midi);
+        tm->fp_midi = NULL;
+    }
+    tm->events_midi = 0;
+    tm->sample_count = 0;
+    tm->current_sample = 0;
+}
+
 void timid_set_amplification(Timid *tm, int amplification)
 {
     if (!tm)
@@ -1569,6 +1803,24 @@ int timid_get_current_program(Timid *tm, int c)
     }
 }
 
+int timid_get_event_count(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->events_midi;
+}
+
+int timid_get_sample_count(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->sample_count;
+}
+
 int timid_millis2samples(Timid *tm, int millis)
 {
     if (!tm)
@@ -1585,6 +1837,7 @@ void timid_close(Timid *tm)
         return;
     }
     reset_midi(tm);
+    timid_unload_smf(tm);
     timid_unload_config(tm);
     free_default_instrument(tm);
     free_tables(tm);
