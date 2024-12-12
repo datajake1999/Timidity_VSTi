@@ -338,6 +338,8 @@ int timid_get_cut_notes(Timid *tm);
 int timid_get_current_program(Timid *tm, int c);
 int timid_get_event_count(Timid *tm);
 int timid_get_sample_count(Timid *tm);
+int timid_get_duration(Timid *tm);
+int timid_get_bitrate(Timid *tm);
 int timid_millis2samples(Timid *tm, int millis);
 void timid_close(Timid *tm);
 #ifdef __cplusplus

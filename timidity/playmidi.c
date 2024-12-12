@@ -1821,6 +1821,28 @@ int timid_get_sample_count(Timid *tm)
     return tm->sample_count;
 }
 
+int timid_get_duration(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return (int)((double)tm->sample_count * 1000 / tm->play_mode.rate);
+}
+
+int timid_get_bitrate(Timid *tm)
+{
+    int bitrate;
+    if (!tm || !tm->fp_midi)
+    {
+        return 0;
+    }
+    fseek(tm->fp_midi, 0, SEEK_END);
+    bitrate = ftell(tm->fp_midi) * 8 / (timid_get_duration(tm));
+    fseek(tm->fp_midi, 0, SEEK_SET);
+    return bitrate;
+}
+
 int timid_millis2samples(Timid *tm, int millis)
 {
     if (!tm)
