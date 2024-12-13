@@ -340,6 +340,7 @@ int timid_get_event_count(Timid *tm);
 int timid_get_sample_count(Timid *tm);
 int timid_get_duration(Timid *tm);
 int timid_get_current_time(Timid *tm);
+int timid_get_current_sample_position(Timid *tm);
 int timid_get_bitrate(Timid *tm);
 int timid_millis2samples(Timid *tm, int millis);
 void timid_close(Timid *tm);
