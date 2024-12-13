@@ -1838,6 +1838,15 @@ int timid_get_duration(Timid *tm)
     return (int)((double)tm->sample_count * 1000 / tm->play_mode.rate);
 }
 
+int timid_get_current_time(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return (int)((double)tm->current_sample * 1000 / tm->play_mode.rate);
+}
+
 int timid_get_bitrate(Timid *tm)
 {
     int bitrate;
