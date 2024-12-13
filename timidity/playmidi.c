@@ -1442,9 +1442,19 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
 
 void timid_seek_smf(Timid *tm, int32 time)
 {
+    int total_time;
     if (!tm || !tm->current_event)
     {
         return;
+    }
+    total_time = timid_get_duration(tm);
+    if (time > total_time)
+    {
+        time = total_time;
+    }
+    else if (time < 0)
+    {
+        time = 0;
     }
     skip_to(tm, 0);
     skip_to(tm, timid_millis2samples(tm, time));
