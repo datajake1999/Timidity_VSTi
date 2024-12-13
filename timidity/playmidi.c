@@ -1450,6 +1450,28 @@ void timid_seek_smf(Timid *tm, int32 time)
     skip_to(tm, timid_millis2samples(tm, time));
 }
 
+void timid_fast_forward_smf(Timid *tm, int32 time)
+{
+    int new_time;
+    if (!tm)
+    {
+        return;
+    }
+    new_time = timid_get_current_time(tm) + time;
+    timid_seek_smf(tm, new_time);
+}
+
+void timid_rewind_smf(Timid *tm, int32 time)
+{
+    int new_time;
+    if (!tm)
+    {
+        return;
+    }
+    new_time = timid_get_current_time(tm) - time;
+    timid_seek_smf(tm, new_time);
+}
+
 void timid_unload_smf(Timid *tm)
 {
     if (!tm)
