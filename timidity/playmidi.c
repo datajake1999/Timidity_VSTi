@@ -1498,6 +1498,7 @@ void timid_unload_smf(Timid *tm)
     {
         return;
     }
+    reset_midi(tm);
     if (tm->event_list)
     {
         free(tm->event_list);
