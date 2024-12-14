@@ -345,6 +345,7 @@ int timid_get_current_time(Timid *tm);
 int timid_get_current_sample_position(Timid *tm);
 int timid_get_bitrate(Timid *tm);
 int timid_millis2samples(Timid *tm, int millis);
+int timid_samples2millis(Timid *tm, int samples);
 void timid_close(Timid *tm);
 #ifdef __cplusplus
 }

@@ -1871,7 +1871,7 @@ int timid_get_duration(Timid *tm)
     {
         return 0;
     }
-    return (int)((double)tm->sample_count * 1000 / tm->play_mode.rate);
+    return timid_samples2millis(tm, tm->sample_count);
 }
 
 int timid_get_current_time(Timid *tm)
@@ -1880,7 +1880,7 @@ int timid_get_current_time(Timid *tm)
     {
         return 0;
     }
-    return (int)((double)tm->current_sample * 1000 / tm->play_mode.rate);
+    return timid_samples2millis(tm, tm->current_sample);
 }
 
 int timid_get_current_sample_position(Timid *tm)
@@ -1912,6 +1912,15 @@ int timid_millis2samples(Timid *tm, int millis)
         return 0;
     }
     return (int)((millis/1000.0)*tm->play_mode.rate);
+}
+
+int timid_samples2millis(Timid *tm, int samples)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return (int)((samples*1000.0)/tm->play_mode.rate);
 }
 
 void timid_close(Timid *tm)
