@@ -1350,6 +1350,10 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
         {
             if (tm->current_event->type == ME_EOT)
             {
+                if (timid_get_active_voices(tm))
+                {
+                    break;
+                }
                 return 0;
             }
             play_midi(tm, tm->current_event);
