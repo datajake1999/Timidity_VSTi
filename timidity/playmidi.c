@@ -1352,6 +1352,12 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
             {
                 if (timid_get_active_voices(tm))
                 {
+                    int j;
+                    for (j = 0; j < 16; j++)
+                    {
+                        drop_sustain(tm, j);
+                        all_notes_off(tm, j);
+                    }
                     break;
                 }
                 return 0;
