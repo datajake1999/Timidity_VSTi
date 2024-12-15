@@ -1499,6 +1499,15 @@ void timid_rewind_smf(Timid *tm, int32 time)
     timid_seek_smf(tm, new_time);
 }
 
+void timid_restart_smf(Timid *tm)
+{
+    if (!tm)
+    {
+        return;
+    }
+    timid_seek_smf(tm, 0);
+}
+
 void timid_unload_smf(Timid *tm)
 {
     if (!tm)
