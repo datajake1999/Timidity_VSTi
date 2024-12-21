@@ -754,6 +754,8 @@ int timid_load_config(Timid *tm, char *filename)
     add_to_pathlist(tm, directory);
     if (read_config_file(tm, filename) == 0)
     {
+        if (*tm->def_instr_name)
+        set_default_instrument(tm, tm->def_instr_name);
         if (load_instruments(tm) == 0)
         {
             return 1;
