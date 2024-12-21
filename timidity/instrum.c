@@ -372,12 +372,12 @@ int strip_tail)
         {
             int32 i=sp->data_length;
             uint8 *cp=(uint8 *)(sp->data);
-            uint16 *tmp,*new1;
-            tmp=new1=(uint16 *)safe_malloc(sp->data_length*2);
+            uint16 *tmp,*newdata;
+            tmp=newdata=(uint16 *)safe_malloc(sp->data_length*2);
             while (i--)
             *tmp++ = (uint16)(*cp++) << 8;
             cp=(uint8 *)(sp->data);
-            sp->data = (sample_t *)new1;
+            sp->data = (sample_t *)newdata;
             free(cp);
             sp->data_length *= 2;
             sp->loop_start *= 2;
