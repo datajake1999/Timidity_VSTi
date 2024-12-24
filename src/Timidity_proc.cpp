@@ -54,6 +54,7 @@ void Timidity::initSynth ()
 {
 	memset(&synth, 0, sizeof(synth));
 	timid_init(&synth);
+	timid_set_sample_rate(&synth, (VstInt32)sampleRate);
 	if (Voices > MAX_VOICES)
 	{
 		Voices = MAX_VOICES;

@@ -44,6 +44,7 @@ void Timidity::initializeSettings (bool resetSynth)
 	{
 		suspend ();
 		timid_unload_config(&synth);
+		timid_free_default_instrument(&synth);
 		if (Voices > MAX_VOICES)
 		{
 			Voices = MAX_VOICES;
