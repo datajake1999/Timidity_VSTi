@@ -144,10 +144,10 @@ bool Timidity::string2parameterReplace (VstInt32 index, char* text)
 		value = (value+12.0f)/24.0f;
 		break;
 	case kVoices:
-		value = value*MAX_VOICES;
+		value = value/MAX_VOICES;
 		break;
 	case kControlRate:
-		value = value*sampleRate;
+		value = value/sampleRate;
 		break;
 	}
 	if (index == kVolume)
