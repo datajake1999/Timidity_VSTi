@@ -137,9 +137,9 @@ static BOOL InitDialog(HWND hWnd)
 		SendDlgItemMessage(hWnd, IDC_TRANSPOSE, TBM_SETRANGE, 0, MAKELONG(0, 25));
 		SendDlgItemMessage(hWnd, IDC_TRANSPOSE, TBM_SETPAGESIZE, 0, 2);
 		SendDlgItemMessage(hWnd, IDC_VOICES, TBM_SETRANGE, 0, MAKELONG(1, MAX_VOICES));
-		SendDlgItemMessage(hWnd, IDC_VOICES, TBM_SETPAGESIZE, 0, 10);
+		SendDlgItemMessage(hWnd, IDC_VOICES, TBM_SETPAGESIZE, 0, 50);
 		SendDlgItemMessage(hWnd, IDC_CTRL, TBM_SETRANGE, 0, MAKELONG(DEFAULT_RATE/MAX_CONTROL_RATIO, DEFAULT_RATE));
-		SendDlgItemMessage(hWnd, IDC_CTRL, TBM_SETPAGESIZE, 0, 10);
+		SendDlgItemMessage(hWnd, IDC_CTRL, TBM_SETPAGESIZE, 0, 100);
 		return TRUE;
 	}
 	return FALSE;
