@@ -270,6 +270,8 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
             return; /* No instrument? Then we can't play. */
         }
         
+        if (!ip) return;
+        
         if (ip->sample->note_to_use) /* Fixed-pitch instrument? */
         tm->voice[i].orig_frequency=freq_table[(int)(ip->sample->note_to_use)];
         else
