@@ -778,6 +778,7 @@ void timid_unload_config(Timid *tm)
     free_instruments(tm);
     free_pathlist(tm);
     memset(tm->last_config, 0, sizeof(tm->last_config));
+    memset(tm->def_instr_name, 0, sizeof(tm->def_instr_name));
 }
 
 void timid_reload_config(Timid *tm)
