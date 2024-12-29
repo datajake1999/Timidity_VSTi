@@ -95,16 +95,6 @@ typedef struct {
 
 #define PE_MONO 	0x01  /* versus stereo */
 
-/* Audio format identifiers for timid_play_smf */
-
-#define AU_CHAR	1
-#define AU_SHORT	2
-#define AU_24	3
-#define AU_LONG	4
-#define AU_FLOAT	5
-#define AU_DOUBLE	6
-#define AU_ULAW	7
-
 typedef struct {
   int32 rate, encoding;
 } PlayMode;
@@ -215,6 +205,16 @@ extern uint8 _l2u_[]; /* used in LOOKUP_HACK */
 #ifdef LOOKUP_HACK
 extern int16 _u2l[];
 #endif
+
+/* Audio format identifiers for timid_play_smf */
+
+#define AU_CHAR	1
+#define AU_SHORT	2
+#define AU_24	3
+#define AU_LONG	4
+#define AU_FLOAT	5
+#define AU_DOUBLE	6
+#define AU_ULAW	7
 
 typedef struct {
 	char current_filename[1024];
