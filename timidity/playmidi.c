@@ -716,6 +716,63 @@ static void do_compute_data(Timid *tm, int32 *buffer, int32 count)
     }
 }
 
+//Adapted from ReadMidiText function in gspmidi.cpp
+static void read_midi_text(Timid *tm)
+{
+    uint32 buff;
+    uint32 read;
+
+    fseek(tm->fp_midi, 0, SEEK_SET);
+
+    while (fread(&buff, 1, 4, tm->fp_midi) == 4)
+    {
+        if (buff == 0x6B72544D)
+            break;
+
+        fseek(tm->fp_midi, -3, SEEK_CUR);
+    }
+
+    fseek(tm->fp_midi, 4, SEEK_CUR);
+
+    while (fread(&buff, 1, 4, tm->fp_midi) == 4)
+    {
+        if ((buff & 0x0000FFFF) != 0x0000FF00 || buff == 0x6B72544D)
+            break;
+
+        switch(buff & 0x00FFFF00)
+        {
+        case 0x02FF00: //Copyright
+            buff = (buff&0xFF000000) >> 24;
+            if (!strlen(tm->song_copyright)) {
+                read = fread(tm->song_copyright, 1, buff, tm->fp_midi);
+                *(tm->song_copyright + read) = '\0';
+            }
+            else
+                fseek(tm->fp_midi, buff, SEEK_CUR);
+            break;
+        case 0x03FF00: //Track
+            buff = (buff&0xFF000000) >> 24;
+            if (!strlen(tm->song_title)) {
+                read = fread(tm->song_title, 1, buff, tm->fp_midi);
+                *(tm->song_title + read) = '\0';
+            }
+            else
+                fseek(tm->fp_midi, buff, SEEK_CUR);
+            break;
+        case 0x01FF00: //other text
+        case 0x04FF00: //Instrument
+        case 0x05FF00: //Lyrics
+        case 0x06FF00: //Maker
+        case 0x07FF00: //Cue
+        default:
+            buff = (buff&0xFF000000) >> 24;
+            fseek(tm->fp_midi, buff, SEEK_CUR);
+            break;
+        }
+    }
+    fseek(tm->fp_midi, 0, SEEK_SET);
+}
+
 void timid_init(Timid *tm)
 {
     if (!tm)
@@ -1337,6 +1394,7 @@ int timid_load_smf(Timid *tm, char *filename)
         close_file(tm->fp_midi);
         return 0;
     }
+    read_midi_text(tm);
     skip_to(tm, 0);
     return 1;
 }
@@ -1534,6 +1592,8 @@ void timid_unload_smf(Timid *tm)
     tm->events_midi = 0;
     tm->sample_count = 0;
     tm->current_sample = 0;
+    memset(tm->song_title, 0, sizeof(tm->song_title));
+    memset(tm->song_copyright, 0, sizeof(tm->song_copyright));
 }
 
 void timid_set_amplification(Timid *tm, int amplification)
@@ -1934,6 +1994,34 @@ int timid_get_bitrate(Timid *tm)
     fseek(tm->fp_midi, 0, SEEK_SET);
     if (!bitrate) bitrate = 1;
     return bitrate;
+}
+
+int timid_get_song_title(Timid *tm, char *buffer, int32 count)
+{
+    if (!tm || !buffer || !tm->fp_midi)
+    {
+        return 0;
+    }
+    if (strlen(tm->song_title))
+    {
+        strncpy(buffer, tm->song_title, count);
+        return 1;
+    }
+    return 0;
+}
+
+int timid_get_song_copyright(Timid *tm, char *buffer, int32 count)
+{
+    if (!tm || !buffer || !tm->fp_midi)
+    {
+        return 0;
+    }
+    if (strlen(tm->song_copyright))
+    {
+        strncpy(buffer, tm->song_copyright, count);
+        return 1;
+    }
+    return 0;
 }
 
 int timid_millis2samples(Timid *tm, int millis)

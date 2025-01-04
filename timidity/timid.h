@@ -244,6 +244,8 @@ typedef struct {
 	int32 current_sample;
 	FILE* fp_midi;
 	int32 events_midi;
+	char song_title[256];
+	char song_copyright[256];
 	MidiEventList *evlist;
 	int32 event_count;
 	FILE *fp;
@@ -345,6 +347,8 @@ int timid_get_duration(Timid *tm);
 int timid_get_current_time(Timid *tm);
 int timid_get_current_sample_position(Timid *tm);
 int timid_get_bitrate(Timid *tm);
+int timid_get_song_title(Timid *tm, char *buffer, int32 count);
+int timid_get_song_copyright(Timid *tm, char *buffer, int32 count);
 int timid_millis2samples(Timid *tm, int millis);
 int timid_samples2millis(Timid *tm, int samples);
 void timid_close(Timid *tm);
