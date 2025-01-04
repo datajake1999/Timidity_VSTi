@@ -324,7 +324,7 @@ void timid_set_default_program(Timid *tm, int program);
 void timid_set_drum_channel(Timid *tm, int c, int enable);
 int timid_set_default_instrument(Timid *tm, char *filename);
 void timid_free_default_instrument(Timid *tm);
-void timid_get_config_name(Timid *tm, char *buffer, int32 count);
+int timid_get_config_name(Timid *tm, char *buffer, int32 count);
 int timid_get_amplification(Timid *tm);
 int timid_get_active_voices(Timid *tm);
 int timid_get_max_voices(Timid *tm);
