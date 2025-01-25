@@ -580,7 +580,7 @@ bool Timidity::getParameterProperties (VstInt32 index, VstParameterProperties* p
 		p->minInteger = 1;
 		p->maxInteger = MAX_VOICES;
 		p->stepInteger = 1;
-		p->largeStepInteger = 2;
+		p->largeStepInteger = 50;
 		break;
 	case kFastDecay:
 		p->flags |= kVstParameterIsSwitch;
@@ -593,7 +593,7 @@ bool Timidity::getParameterProperties (VstInt32 index, VstParameterProperties* p
 		p->minInteger = (VstInt32)sampleRate/MAX_CONTROL_RATIO;
 		p->maxInteger = (VstInt32)sampleRate;
 		p->stepInteger = 1;
-		p->largeStepInteger = 10;
+		p->largeStepInteger = 100;
 		break;
 	case kPushMidi:
 		p->flags |= kVstParameterIsSwitch;
