@@ -808,8 +808,8 @@ int timid_load_config(Timid *tm, char *filename)
     timid_unload_config(tm);
     strncpy(directory, filename, 255);
     directory[255]='\0';
-    separator = strrchr(directory, PATH_SEP);
-    if (separator) *separator = '\0';
+    separator=strrchr(directory, PATH_SEP);
+    if (separator) *separator='\0';
     add_to_pathlist(tm, directory);
     if (read_config_file(tm, filename) == 0)
     {
@@ -920,8 +920,8 @@ void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
                 play_midi(tm, &ev);
                 break;
             }
-            tm->rpn_msb[channel]=0xff;
-            tm->rpn_lsb[channel]=0xff;
+            tm->rpn_msb[channel] = 0xff;
+            tm->rpn_lsb[channel] = 0xff;
             break;
         case 0x07:
             ev.type = ME_MAINVOLUME;
@@ -1505,7 +1505,7 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
         if (timid_get_active_voices(tm))
         {
             int j;
-            for (j = 0; j < 16; j++)
+            for (j=0; j<16; j++)
             {
                 drop_sustain(tm, j);
                 all_notes_off(tm, j);
@@ -1694,9 +1694,9 @@ void timid_set_sample_rate(Timid *tm, int rate)
     {
         tm->control_rate=tm->play_mode.rate;
     }
-    else if (tm->control_rate < tm->play_mode.rate / MAX_CONTROL_RATIO)
+    else if (tm->control_rate < tm->play_mode.rate/MAX_CONTROL_RATIO)
     {
-        tm->control_rate=tm->play_mode.rate / MAX_CONTROL_RATIO;
+        tm->control_rate=tm->play_mode.rate/MAX_CONTROL_RATIO;
     }
     tm->control_ratio = tm->play_mode.rate/tm->control_rate;
     if (tm->control_ratio > MAX_CONTROL_RATIO)
@@ -1722,9 +1722,9 @@ void timid_set_control_rate(Timid *tm, int rate)
     {
         tm->control_rate=tm->play_mode.rate;
     }
-    else if (tm->control_rate < tm->play_mode.rate / MAX_CONTROL_RATIO)
+    else if (tm->control_rate < tm->play_mode.rate/MAX_CONTROL_RATIO)
     {
-        tm->control_rate=tm->play_mode.rate / MAX_CONTROL_RATIO;
+        tm->control_rate=tm->play_mode.rate/MAX_CONTROL_RATIO;
     }
     tm->control_ratio = tm->play_mode.rate/tm->control_rate;
     if (tm->control_ratio > MAX_CONTROL_RATIO)
