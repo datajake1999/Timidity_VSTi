@@ -1893,13 +1893,21 @@ int timid_get_default_program(Timid *tm)
     return tm->default_program;
 }
 
-int timid_get_drum_channels(Timid *tm)
+int timid_get_drum_channel(Timid *tm, int c)
 {
     if (!tm)
     {
         return 0;
     }
-    return tm->drumchannels;
+    c = c & 0x0f;
+    if (ISDRUMCHANNEL(tm, c))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 int timid_get_lost_notes(Timid *tm)

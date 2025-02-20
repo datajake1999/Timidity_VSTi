@@ -337,7 +337,7 @@ int timid_get_antialiasing(Timid *tm);
 int timid_get_sample_rate(Timid *tm);
 int timid_get_control_rate(Timid *tm);
 int timid_get_default_program(Timid *tm);
-int timid_get_drum_channels(Timid *tm);
+int timid_get_drum_channel(Timid *tm, int c);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 int timid_get_current_program(Timid *tm, int c);
