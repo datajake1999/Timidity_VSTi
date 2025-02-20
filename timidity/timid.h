@@ -21,10 +21,10 @@
    timid.h
 */
 
-#include <stdio.h>
-
 #ifndef TIMID_H
 #define TIMID_H
+
+#include <stdio.h>
 
 #include "config.h"
 
