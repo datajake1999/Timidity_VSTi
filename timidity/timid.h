@@ -217,54 +217,54 @@ extern int16 _u2l[];
 #define AU_ULAW	7
 
 typedef struct {
-	char current_filename[1024];
-	PathList *pathlist;
-	ToneBank *tonebank[128];
-	ToneBank *drumset[128];
-	Instrument *default_instrument;
-	int default_program;
-	int antialiasing_allowed;
-	int fast_decay;
-	PlayMode play_mode;
-	Channel channel[16];
-	Voice voice[MAX_VOICES];
-	int32 control_rate;
-	int32 control_ratio;
-	FLOAT_T master_volume;
-	int32 drumchannels;
-	int32 lost_notes;
-	int32 cut_notes;
-	int adjust_panning_immediately;
-	int voices;
-	uint8 rpn_msb[16];
-	uint8 rpn_lsb[16];
-	MidiEvent *event_list;
-	MidiEvent *current_event;
-	int32 sample_count;
-	int32 current_sample;
-	FILE* fp_midi;
-	int32 events_midi;
-	char song_title[256];
-	char song_copyright[256];
-	MidiEventList *evlist;
-	int32 event_count;
-	FILE *fp;
-	int32 at;
-	int32 sample_increment;
-	int32 sample_correction;
-	sample_t resample_buffer[AUDIO_BUFFER_SIZE];
+  char current_filename[1024];
+  PathList *pathlist;
+  ToneBank *tonebank[128];
+  ToneBank *drumset[128];
+  Instrument *default_instrument;
+  int default_program;
+  int antialiasing_allowed;
+  int fast_decay;
+  PlayMode play_mode;
+  Channel channel[16];
+  Voice voice[MAX_VOICES];
+  int32 control_rate;
+  int32 control_ratio;
+  FLOAT_T master_volume;
+  int32 drumchannels;
+  int32 lost_notes;
+  int32 cut_notes;
+  int adjust_panning_immediately;
+  int voices;
+  uint8 rpn_msb[16];
+  uint8 rpn_lsb[16];
+  MidiEvent *event_list;
+  MidiEvent *current_event;
+  int32 sample_count;
+  int32 current_sample;
+  FILE* fp_midi;
+  int32 events_midi;
+  char song_title[256];
+  char song_copyright[256];
+  MidiEventList *evlist;
+  int32 event_count;
+  FILE *fp;
+  int32 at;
+  int32 sample_increment;
+  int32 sample_correction;
+  sample_t resample_buffer[AUDIO_BUFFER_SIZE];
 #ifdef LOOKUP_HACK
-	int32 *mixup;
+  int32 *mixup;
 #ifdef LOOKUP_INTERPOLATION
-	int8 *iplookup;
+  int8 *iplookup;
 #endif
 #endif
-	char def_instr_name[256];
-	char last_config[1024];
+  char def_instr_name[256];
+  char last_config[1024];
 } Timid;
 
 typedef struct {
-	int8 data[3];
+  int8 data[3];
 } int24;
 
 FILE *open_file(Timid *tm, char *name, int decompress, int noise_mode);
