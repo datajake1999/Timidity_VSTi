@@ -1784,16 +1784,17 @@ void timid_free_default_instrument(Timid *tm)
 
 int timid_get_config_name(Timid *tm, char *buffer, int32 count)
 {
-    if (!tm || !buffer)
+    int len;
+    if (!tm)
     {
         return 0;
     }
-    if (strlen(tm->last_config))
+    len = strlen(tm->last_config);
+    if (buffer)
     {
         strncpy(buffer, tm->last_config, count);
-        return 1;
     }
-    return 0;
+    return len;
 }
 
 int timid_get_amplification(Timid *tm)
@@ -2006,30 +2007,32 @@ int timid_get_bitrate(Timid *tm)
 
 int timid_get_song_title(Timid *tm, char *buffer, int32 count)
 {
-    if (!tm || !buffer || !tm->fp_midi)
+    int len;
+    if (!tm || !tm->fp_midi)
     {
         return 0;
     }
-    if (strlen(tm->song_title))
+    len = strlen(tm->song_title);
+    if (buffer)
     {
         strncpy(buffer, tm->song_title, count);
-        return 1;
     }
-    return 0;
+    return len;
 }
 
 int timid_get_song_copyright(Timid *tm, char *buffer, int32 count)
 {
-    if (!tm || !buffer || !tm->fp_midi)
+    int len;
+    if (!tm || !tm->fp_midi)
     {
         return 0;
     }
-    if (strlen(tm->song_copyright))
+    len = strlen(tm->song_copyright);
+    if (buffer)
     {
         strncpy(buffer, tm->song_copyright, count);
-        return 1;
     }
-    return 0;
+    return len;
 }
 
 int timid_millis2samples(Timid *tm, int millis)
