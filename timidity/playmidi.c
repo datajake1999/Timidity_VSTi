@@ -1498,11 +1498,7 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
             }
             break;
         }
-        tm->current_sample++;
-    }
-    if (tm->current_event->type == ME_EOT)
-    {
-        if (timid_get_active_voices(tm))
+        if (tm->current_sample == tm->sample_count)
         {
             int j;
             for (j=0; j<16; j++)
@@ -1510,12 +1506,12 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
                 drop_sustain(tm, j);
                 all_notes_off(tm, j);
             }
-            return 1;
         }
-        else
-        {
-            return 0;
-        }
+        tm->current_sample++;
+    }
+    if (tm->current_event->type == ME_EOT && !timid_get_active_voices(tm))
+    {
+        return 0;
     }
     return 1;
 }
