@@ -1387,11 +1387,13 @@ int timid_load_smf(Timid *tm, char *filename)
     timid_unload_smf(tm);
     tm->fp_midi = open_file(tm, filename, 1, OF_VERBOSE);
     if (!tm->fp_midi)
+    {
         return 0;
-    
+    }
     tm->event_list = read_midi_file(tm, tm->fp_midi, &tm->events_midi, &tm->sample_count);
-    if (!tm->event_list || !tm->events_midi || !tm->sample_count) {
-        close_file(tm->fp_midi);
+    if (!tm->event_list || !tm->events_midi || !tm->sample_count)
+    {
+        timid_unload_smf(tm);
         return 0;
     }
     read_midi_text(tm);
