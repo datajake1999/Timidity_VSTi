@@ -1404,7 +1404,7 @@ int timid_load_smf(Timid *tm, char *filename)
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
 {
     int i;
-    if (!tm || !buffer || !tm->current_event)
+    if (!tm || !buffer || !tm->current_event || (tm->current_event->type == ME_EOT && !timid_get_active_voices(tm)))
     {
         return 0;
     }
@@ -1510,10 +1510,6 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
             }
         }
         tm->current_sample++;
-    }
-    if (tm->current_event->type == ME_EOT && !timid_get_active_voices(tm))
-    {
-        return 0;
     }
     return 1;
 }
