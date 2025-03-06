@@ -308,7 +308,7 @@ void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count);
 void timid_panic(Timid *tm);
 void timid_reset(Timid *tm);
 int timid_load_smf(Timid *tm, char *filename);
-int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count);
+int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count); /* count is in samples */
 void timid_seek_smf(Timid *tm, int32 time);
 void timid_fast_forward_smf(Timid *tm, int32 time);
 void timid_rewind_smf(Timid *tm, int32 time);
