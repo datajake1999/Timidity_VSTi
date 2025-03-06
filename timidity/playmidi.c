@@ -779,6 +779,7 @@ void timid_init(Timid *tm)
     {
         return;
     }
+    memset(tm, 0, sizeof(Timid));
     tm->default_program=DEFAULT_PROGRAM;
     tm->antialiasing_allowed=1;
 #ifdef FAST_DECAY
@@ -2067,4 +2068,5 @@ void timid_close(Timid *tm)
     timid_unload_config(tm);
     free_default_instrument(tm);
     free_tables(tm);
+    memset(tm, 0, sizeof(Timid));
 }
