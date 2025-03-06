@@ -313,6 +313,7 @@ void timid_seek_smf(Timid *tm, int32 time);
 void timid_fast_forward_smf(Timid *tm, int32 time);
 void timid_rewind_smf(Timid *tm, int32 time);
 void timid_restart_smf(Timid *tm);
+void timid_stop_smf(Timid *tm);
 void timid_unload_smf(Timid *tm);
 void timid_set_amplification(Timid *tm, int amplification);
 void timid_set_max_voices(Timid *tm, int voices);

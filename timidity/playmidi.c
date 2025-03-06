@@ -1565,6 +1565,15 @@ void timid_restart_smf(Timid *tm)
     timid_seek_smf(tm, 0);
 }
 
+void timid_stop_smf(Timid *tm)
+{
+    if (!tm)
+    {
+        return;
+    }
+    timid_seek_smf(tm, timid_get_duration(tm));
+}
+
 void timid_unload_smf(Timid *tm)
 {
     if (!tm)
