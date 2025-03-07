@@ -21,6 +21,8 @@
    timid.h
 */
 
+/* Application developers wishing to intigrate this library can skip to the public API, which is in the "extern "C"" block */
+
 #ifndef TIMID_H
 #define TIMID_H
 
@@ -206,16 +208,6 @@ extern uint8 _l2u_[]; /* used in LOOKUP_HACK */
 extern int16 _u2l[];
 #endif
 
-/* Audio format identifiers for timid_play_smf */
-
-#define AU_CHAR	1
-#define AU_SHORT	2
-#define AU_24	3
-#define AU_LONG	4
-#define AU_FLOAT	5
-#define AU_DOUBLE	6
-#define AU_ULAW	7
-
 typedef struct {
   char current_filename[1024];
   PathList *pathlist;
@@ -291,13 +283,31 @@ int read_config_file(Timid *tm, char *name);
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* Audio format identifiers for timid_play_smf */
+
+#define AU_CHAR	1
+#define AU_SHORT	2
+#define AU_24	3
+#define AU_LONG	4
+#define AU_FLOAT	5
+#define AU_DOUBLE	6
+#define AU_ULAW	7
+
+/* Initialize an instance of Timidity. This should be called after allocating memory for a Timid struct, and before any other API function calls */
 void timid_init(Timid *tm);
+
+/* Manage Timidity configurations (sample sets) */
 int timid_load_config(Timid *tm, char *filename);
 void timid_unload_config(Timid *tm);
 void timid_reload_config(Timid *tm);
+
+/* Low level input API */
 void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3);
 void timid_write_midi_packed(Timid *tm, uint32 data);
 void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count);
+
+/* Audio output functions */
 void timid_render_char(Timid *tm, uint8 *buffer, int32 count);
 void timid_render_short(Timid *tm, int16 *buffer, int32 count);
 void timid_render_24(Timid *tm, int24 *buffer, int32 count);
@@ -305,16 +315,24 @@ void timid_render_long(Timid *tm, int32 *buffer, int32 count);
 void timid_render_float(Timid *tm, float *buffer, int32 count);
 void timid_render_double(Timid *tm, double *buffer, int32 count);
 void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count);
+
+/* Stop all notes immediately, and reset MIDI parameters */
 void timid_panic(Timid *tm);
 void timid_reset(Timid *tm);
+
+/* MIDI file player */
 int timid_load_smf(Timid *tm, char *filename);
+/* The following function will return 0 once all buffers have been rendered */
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count); /* count is in samples */
+/* For the following functions, time is represented in milliseconds */
 void timid_seek_smf(Timid *tm, int32 time);
 void timid_fast_forward_smf(Timid *tm, int32 time);
 void timid_rewind_smf(Timid *tm, int32 time);
 void timid_restart_smf(Timid *tm);
 void timid_stop_smf(Timid *tm);
 void timid_unload_smf(Timid *tm);
+
+/* Setters */
 void timid_set_amplification(Timid *tm, int amplification);
 void timid_set_max_voices(Timid *tm, int voices);
 void timid_set_immediate_panning(Timid *tm, int value);
@@ -325,8 +343,12 @@ void timid_set_sample_rate(Timid *tm, int rate);
 void timid_set_control_rate(Timid *tm, int rate);
 void timid_set_default_program(Timid *tm, int program);
 void timid_set_drum_channel(Timid *tm, int c, int enable);
+
+/* Manage default instruments */
 int timid_set_default_instrument(Timid *tm, char *filename);
 void timid_free_default_instrument(Timid *tm);
+
+/* Getters */
 int timid_get_config_name(Timid *tm, char *buffer, int32 count);
 int timid_get_amplification(Timid *tm);
 int timid_get_active_voices(Timid *tm);
@@ -342,6 +364,8 @@ int timid_get_drum_channel(Timid *tm, int c);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 int timid_get_current_program(Timid *tm, int c);
+
+/* These are for the MIDI file player */
 int timid_get_event_count(Timid *tm);
 int timid_get_sample_count(Timid *tm);
 int timid_get_duration(Timid *tm);
@@ -350,9 +374,14 @@ int timid_get_current_sample_position(Timid *tm);
 int timid_get_bitrate(Timid *tm);
 int timid_get_song_title(Timid *tm, char *buffer, int32 count);
 int timid_get_song_copyright(Timid *tm, char *buffer, int32 count);
+
+/* Utility functions */
 int timid_millis2samples(Timid *tm, int millis);
 int timid_samples2millis(Timid *tm, int samples);
+
+/* Close an instance of Timidity. This should be called after all other API function calls */
 void timid_close(Timid *tm);
+
 #ifdef __cplusplus
 }
 #endif
