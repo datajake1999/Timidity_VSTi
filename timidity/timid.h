@@ -21,7 +21,7 @@
    timid.h
 */
 
-/* Application developers wishing to intigrate this library can skip to the public API, which is in the "extern "C"" block */
+/* Application developers wishing to integrate this library can skip to the public API, which is in the "extern "C"" block */
 
 #ifndef TIMID_H
 #define TIMID_H
