@@ -1607,6 +1607,7 @@ void timid_set_amplification(Timid *tm, int amplification)
     {
         return;
     }
+    reset_voices(tm);
     if (amplification > MAX_AMPLIFICATION)
     {
         amplification = MAX_AMPLIFICATION;
@@ -1615,7 +1616,6 @@ void timid_set_amplification(Timid *tm, int amplification)
     {
         amplification = 0;
     }
-    reset_voices(tm);
     adjust_amplification(tm, amplification);
 }
 
@@ -1625,6 +1625,7 @@ void timid_set_max_voices(Timid *tm, int voices)
     {
         return;
     }
+    reset_voices(tm);
     if (voices > MAX_VOICES)
     {
         voices = MAX_VOICES;
@@ -1633,7 +1634,6 @@ void timid_set_max_voices(Timid *tm, int voices)
     {
         voices = 1;
     }
-    reset_voices(tm);
     tm->voices = voices;
 }
 
