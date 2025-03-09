@@ -841,19 +841,20 @@ void timid_unload_config(Timid *tm)
     memset(tm->def_instr_name, 0, sizeof(tm->def_instr_name));
 }
 
-void timid_reload_config(Timid *tm)
+int timid_reload_config(Timid *tm)
 {
     if (!tm)
     {
-        return;
+        return 0;
     }
     if (strlen(tm->last_config))
     {
         char temp[1024];
         strncpy(temp, tm->last_config, 1023);
         temp[1023]='\0';
-        timid_load_config(tm, temp);
+        return timid_load_config(tm, temp);
     }
+    return 0;
 }
 
 void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)

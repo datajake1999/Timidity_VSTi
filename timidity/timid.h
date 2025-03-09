@@ -300,7 +300,7 @@ void timid_init(Timid *tm);
 /* Manage Timidity configurations (sample sets) */
 int timid_load_config(Timid *tm, char *filename);
 void timid_unload_config(Timid *tm);
-void timid_reload_config(Timid *tm);
+int timid_reload_config(Timid *tm);
 
 /* Low level input API */
 void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3);
