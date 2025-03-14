@@ -1516,12 +1516,12 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
     return 1;
 }
 
-void timid_seek_smf(Timid *tm, int32 time)
+int timid_seek_smf(Timid *tm, int32 time)
 {
     int total_time;
     if (!tm || !tm->current_event)
     {
-        return;
+        return 0;
     }
     total_time = timid_get_duration(tm);
     if (time > total_time)
@@ -1534,46 +1534,47 @@ void timid_seek_smf(Timid *tm, int32 time)
     }
     skip_to(tm, 0);
     skip_to(tm, timid_millis2samples(tm, time));
+    return timid_get_current_time(tm);
 }
 
-void timid_fast_forward_smf(Timid *tm, int32 time)
+int timid_fast_forward_smf(Timid *tm, int32 time)
 {
     int new_time;
     if (!tm)
     {
-        return;
+        return 0;
     }
     new_time = timid_get_current_time(tm) + time;
-    timid_seek_smf(tm, new_time);
+    return timid_seek_smf(tm, new_time);
 }
 
-void timid_rewind_smf(Timid *tm, int32 time)
+int timid_rewind_smf(Timid *tm, int32 time)
 {
     int new_time;
     if (!tm)
     {
-        return;
+        return 0;
     }
     new_time = timid_get_current_time(tm) - time;
-    timid_seek_smf(tm, new_time);
+    return timid_seek_smf(tm, new_time);
 }
 
-void timid_restart_smf(Timid *tm)
+int timid_restart_smf(Timid *tm)
 {
     if (!tm)
     {
-        return;
+        return 0;
     }
-    timid_seek_smf(tm, 0);
+    return timid_seek_smf(tm, 0);
 }
 
-void timid_stop_smf(Timid *tm)
+int timid_stop_smf(Timid *tm)
 {
     if (!tm)
     {
-        return;
+        return 0;
     }
-    timid_seek_smf(tm, timid_get_duration(tm));
+    return timid_seek_smf(tm, timid_get_duration(tm));
 }
 
 void timid_unload_smf(Timid *tm)

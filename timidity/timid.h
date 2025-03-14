@@ -324,12 +324,12 @@ void timid_reset(Timid *tm);
 int timid_load_smf(Timid *tm, char *filename);
 /* The following function will return 0 once all buffers have been rendered */
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count); /* count is in samples */
-/* For the following functions, time is represented in milliseconds */
-void timid_seek_smf(Timid *tm, int32 time);
-void timid_fast_forward_smf(Timid *tm, int32 time);
-void timid_rewind_smf(Timid *tm, int32 time);
-void timid_restart_smf(Timid *tm);
-void timid_stop_smf(Timid *tm);
+/* For the following functions, time is represented in milliseconds. The return value is the new current time */
+int timid_seek_smf(Timid *tm, int32 time);
+int timid_fast_forward_smf(Timid *tm, int32 time);
+int timid_rewind_smf(Timid *tm, int32 time);
+int timid_restart_smf(Timid *tm);
+int timid_stop_smf(Timid *tm);
 void timid_unload_smf(Timid *tm);
 
 /* Setters */
