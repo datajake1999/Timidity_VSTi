@@ -558,13 +558,13 @@ void free_instruments(Timid *tm)
         {
             free_bank(tm, 0, i);
             free(tm->tonebank[i]);
-            tm->tonebank[i] = 0;
+            tm->tonebank[i]=0;
         }
         if (tm->drumset[i])
         {
             free_bank(tm, 1, i);
             free(tm->drumset[i]);
-            tm->drumset[i] = 0;
+            tm->drumset[i]=0;
         }
     }
 }

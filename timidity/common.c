@@ -186,13 +186,13 @@ void add_to_pathlist(Timid *tm, char *s)
 
 void free_pathlist(Timid *tm)
 {
-    PathList *plp = tm->pathlist;
+    PathList *plp=tm->pathlist;
     PathList *next;
     while (plp) {
-        next = (PathList *)plp->next;
+        next=(PathList *)plp->next;
         free(plp->path);
         free(plp);
-        plp = next;
+        plp=next;
     }
     tm->pathlist=0;
 }
