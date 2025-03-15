@@ -537,7 +537,7 @@ static int fill_bank(Timid *tm, int dr, int b)
 
 int load_instruments(Timid *tm)
 {
-    int errors;
+    int errors=0;
     int i;
     for (i=0; i<128; i++)
     {
