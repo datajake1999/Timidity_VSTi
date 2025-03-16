@@ -537,8 +537,7 @@ static int fill_bank(Timid *tm, int dr, int b)
 
 int load_instruments(Timid *tm)
 {
-    int errors=0;
-    int i;
+    int i, errors=0;
     for (i=0; i<128; i++)
     {
         if (tm->tonebank[i])
