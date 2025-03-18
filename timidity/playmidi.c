@@ -801,12 +801,13 @@ void timid_init(Timid *tm)
 int timid_load_config(Timid *tm, char *filename)
 {
     char directory[256];
-    char *separator;
+    char *separator=0;
     if (!tm || !filename)
     {
         return 0;
     }
     timid_unload_config(tm);
+    memset(directory, 0, sizeof(directory));
     strncpy(directory, filename, 255);
     directory[255]='\0';
     separator=strrchr(directory, PATH_SEP);
@@ -837,8 +838,8 @@ void timid_unload_config(Timid *tm)
     reset_voices(tm);
     free_instruments(tm);
     free_pathlist(tm);
-    memset(tm->last_config, 0, sizeof(tm->last_config));
     memset(tm->def_instr_name, 0, sizeof(tm->def_instr_name));
+    memset(tm->last_config, 0, sizeof(tm->last_config));
 }
 
 int timid_reload_config(Timid *tm)
@@ -850,6 +851,7 @@ int timid_reload_config(Timid *tm)
     if (strlen(tm->last_config))
     {
         char temp[1024];
+        memset(temp, 0, sizeof(temp));
         strncpy(temp, tm->last_config, 1023);
         temp[1023]='\0';
         return timid_load_config(tm, temp);
@@ -1414,6 +1416,7 @@ int timid_reload_smf(Timid *tm)
     if (strlen(tm->last_smf))
     {
         char temp[1024];
+        memset(temp, 0, sizeof(temp));
         strncpy(temp, tm->last_smf, 1023);
         temp[1023]='\0';
         return timid_load_smf(tm, temp);
