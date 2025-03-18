@@ -1400,7 +1400,25 @@ int timid_load_smf(Timid *tm, char *filename)
     }
     read_midi_text(tm);
     skip_to(tm, 0);
+    strncpy(tm->last_smf, filename, 1023);
+    tm->last_smf[1023]='\0';
     return 1;
+}
+
+int timid_reload_smf(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    if (strlen(tm->last_smf))
+    {
+        char temp[1024];
+        strncpy(temp, tm->last_smf, 1023);
+        temp[1023]='\0';
+        return timid_load_smf(tm, temp);
+    }
+    return 0;
 }
 
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
@@ -1600,6 +1618,7 @@ void timid_unload_smf(Timid *tm)
     tm->current_sample = 0;
     memset(tm->song_title, 0, sizeof(tm->song_title));
     memset(tm->song_copyright, 0, sizeof(tm->song_copyright));
+    memset(tm->last_smf, 0, sizeof(tm->last_smf));
 }
 
 void timid_set_amplification(Timid *tm, int amplification)
@@ -1950,6 +1969,21 @@ int timid_get_current_program(Timid *tm, int c)
     {
         return tm->channel[c].program;
     }
+}
+
+int timid_get_smf_name(Timid *tm, char *buffer, int32 count)
+{
+    int len;
+    if (!tm)
+    {
+        return 0;
+    }
+    len = strlen(tm->last_smf);
+    if (buffer)
+    {
+        strncpy(buffer, tm->last_smf, count);
+    }
+    return len;
 }
 
 int timid_get_event_count(Timid *tm)

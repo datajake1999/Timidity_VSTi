@@ -238,6 +238,7 @@ typedef struct {
   int32 events_midi;
   char song_title[256];
   char song_copyright[256];
+  char last_smf[1024];
   MidiEventList *evlist;
   int32 event_count;
   FILE *fp;
@@ -322,6 +323,7 @@ void timid_reset(Timid *tm);
 
 /* MIDI file player */
 int timid_load_smf(Timid *tm, char *filename);
+int timid_reload_smf(Timid *tm);
 /* The following function will return 0 once all buffers have been rendered */
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count); /* count is in samples */
 /* For the following functions, time is represented in milliseconds. The return value is the new current time */
@@ -366,6 +368,7 @@ int timid_get_cut_notes(Timid *tm);
 int timid_get_current_program(Timid *tm, int c);
 
 /* These are for the MIDI file player */
+int timid_get_smf_name(Timid *tm, char *buffer, int32 count);
 int timid_get_event_count(Timid *tm);
 int timid_get_sample_count(Timid *tm);
 int timid_get_duration(Timid *tm);
