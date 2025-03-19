@@ -727,7 +727,7 @@ static void read_midi_text(Timid *tm)
 
     fseek(tm->fp_midi, 0, SEEK_SET);
 
-	if (fread(&buff, 1, 4, tm->fp_midi) != 4 || buff != 0x6468544d) {
+    if (fread(&buff, 1, 4, tm->fp_midi) != 4 || buff != 0x6468544d) {
         fseek(tm->fp_midi, 0, SEEK_SET);
         return;
     }
