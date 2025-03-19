@@ -722,7 +722,15 @@ static void read_midi_text(Timid *tm)
     uint32 buff;
     uint32 read;
 
+    if (!tm->fp_midi)
+        return;
+
     fseek(tm->fp_midi, 0, SEEK_SET);
+
+	if (fread(&buff, 1, 4, tm->fp_midi) != 4 || buff != 0x6468544d) {
+        fseek(tm->fp_midi, 0, SEEK_SET);
+        return;
+    }
 
     while (fread(&buff, 1, 4, tm->fp_midi) == 4)
     {
@@ -730,6 +738,11 @@ static void read_midi_text(Timid *tm)
             break;
 
         fseek(tm->fp_midi, -3, SEEK_CUR);
+    }
+
+    if (buff != 0x6B72544D) {
+        fseek(tm->fp_midi, 0, SEEK_SET);
+        return;
     }
 
     fseek(tm->fp_midi, 4, SEEK_CUR);
