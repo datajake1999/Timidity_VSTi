@@ -1818,7 +1818,7 @@ int timid_get_config_name(Timid *tm, char *buffer, int32 count)
         return 0;
     }
     len = strlen(tm->last_config);
-    if (buffer)
+    if (buffer && len)
     {
         strncpy(buffer, tm->last_config, count);
     }
@@ -1982,7 +1982,7 @@ int timid_get_smf_name(Timid *tm, char *buffer, int32 count)
         return 0;
     }
     len = strlen(tm->last_smf);
-    if (buffer)
+    if (buffer && len)
     {
         strncpy(buffer, tm->last_smf, count);
     }
@@ -2056,7 +2056,7 @@ int timid_get_song_title(Timid *tm, char *buffer, int32 count)
         return 0;
     }
     len = strlen(tm->song_title);
-    if (buffer)
+    if (buffer && len)
     {
         strncpy(buffer, tm->song_title, count);
     }
@@ -2071,7 +2071,7 @@ int timid_get_song_copyright(Timid *tm, char *buffer, int32 count)
         return 0;
     }
     len = strlen(tm->song_copyright);
-    if (buffer)
+    if (buffer && len)
     {
         strncpy(buffer, tm->song_copyright, count);
     }
