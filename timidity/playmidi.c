@@ -259,7 +259,7 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
     }
     else
     {
-        if (!tm->tonebank[tm->channel[e->channel].bank] && !tm->tonebank[0])
+        if (!tm->tonebank[tm->channel[e->channel].bank] && !tm->tonebank[0] && tm->channel[e->channel].program!=SPECIAL_PROGRAM)
         return; /* No tonebank? Then we can't play. */
         if (tm->channel[e->channel].program==SPECIAL_PROGRAM)
         ip=tm->default_instrument;
