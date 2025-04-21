@@ -28,6 +28,35 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "timid.h"
 
+static int set_channel_flag(int32 *flags, int32 i, char *name)
+{
+    if (i==0) *flags=0;
+    else if ((i<1 || i>16) && (i<-16 || i>-1))
+    {
+        fprintf(stderr,
+        "%s must be between 1 and 16, or between -1 and -16, or 0\n",
+        name);
+        return -1;
+    }
+    else
+    {
+        if (i>0) *flags |= (1<<(i-1));
+        else *flags &= ~ ((1<<(-1-i)));
+    }
+    return 0;
+}
+
+static int set_value(int32 *param, int32 i, int32 low, int32 high, char *name)
+{
+    if (i<low || i > high)
+    {
+        fprintf(stderr, "%s must be between %ld and %ld\n", name, low, high);
+        return -1;
+    }
+    else *param=i;
+    return 0;
+}
+
 #define MAXWORDS 10
 
 int read_config_file(Timid *tm, char *name)
