@@ -2064,7 +2064,7 @@ int timid_get_bitrate(Timid *tm)
 int timid_get_song_title(Timid *tm, char *buffer, int32 count)
 {
     int len;
-    if (!tm || !tm->fp_midi)
+    if (!tm)
     {
         return 0;
     }
@@ -2079,7 +2079,7 @@ int timid_get_song_title(Timid *tm, char *buffer, int32 count)
 int timid_get_song_copyright(Timid *tm, char *buffer, int32 count)
 {
     int len;
-    if (!tm || !tm->fp_midi)
+    if (!tm)
     {
         return 0;
     }
