@@ -537,21 +537,22 @@ static int fill_bank(Timid *tm, int dr, int b)
 
 int load_instruments(Timid *tm)
 {
-    int i, errors=0;
-    for (i=0; i<128; i++)
+    int i=128,errors=0;
+    while (i--)
     {
         if (tm->tonebank[i])
-            errors += fill_bank(tm, 0, i);
+        errors+=fill_bank(tm,0,i);
         if (tm->drumset[i])
-            errors += fill_bank(tm, 1, i);
+        errors+=fill_bank(tm,1,i);
     }
     return errors;
 }
 
 void free_instruments(Timid *tm)
 {
-    int i;
-    for (i=0; i<128; i++)
+    int i=128;
+
+    while (i--) 
     {
         if (tm->tonebank[i])
         {
