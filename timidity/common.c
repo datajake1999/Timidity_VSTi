@@ -188,7 +188,8 @@ void free_pathlist(Timid *tm)
 {
     PathList *plp=tm->pathlist;
     PathList *next;
-    while (plp) {
+    while (plp)
+    {
         next=(PathList *)plp->next;
         free(plp->path);
         free(plp);

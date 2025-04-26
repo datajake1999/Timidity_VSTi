@@ -55,7 +55,8 @@ static void free_bank(Timid *tm, int dr, int b)
 {
     int i;
     ToneBank *bank=((dr) ? tm->drumset[b] : tm->tonebank[b]);
-    for (i=0; i<128; i++) {
+    for (i=0; i<128; i++)
+    {
         if (bank->tone[i].instrument)
         {
             free_instrument(bank->tone[i].instrument);
