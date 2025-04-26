@@ -877,6 +877,8 @@ void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
     uint8 type = byte1 & 0xf0;
     uint8 channel = byte1 & 0x0f;
     MidiEvent ev;
+    byte2 = byte2 & 0x7f;
+    byte3 = byte3 & 0x7f;
     if (!tm)
     {
         return;
