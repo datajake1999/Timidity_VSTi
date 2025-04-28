@@ -68,12 +68,14 @@
 #define MAX_OUTPUT_RATE 	1000000
 
 /* In percent. */
+//#define DEFAULT_AMPLIFICATION 	70
 #define DEFAULT_AMPLIFICATION 	50
 
 /* Default sampling rate, default polyphony, and maximum polyphony.
    All but the last can be overridden from the command line. */
 #define DEFAULT_RATE	44100
 #define DEFAULT_VOICES	32
+//#define MAX_VOICES	48
 #define MAX_VOICES	1024
 
 /* The size of the internal buffer is 2^AUDIO_BUFFER_BITS samples.
