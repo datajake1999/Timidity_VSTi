@@ -356,6 +356,9 @@ void timid_set_control_rate(Timid *tm, int rate);
 void timid_set_default_program(Timid *tm, int program);
 void timid_set_drum_channel(Timid *tm, int c, int enable);
 
+/* Restore default settings */
+void timid_restore_defaults(Timid *tm);
+
 /* Manage default instruments. These functions take effect on the next MIDI reset */
 int timid_set_default_instrument(Timid *tm, char *filename);
 void timid_free_default_instrument(Timid *tm);
