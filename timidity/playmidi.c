@@ -962,6 +962,12 @@ void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
             ev.a = byte3;
             play_midi(tm, &ev);
             break;
+        case 0x62:
+            tm->rpn_msb[channel] = 0xff;
+            break;
+        case 0x63:
+            tm->rpn_lsb[channel] = 0xff;
+            break;
         case 0x64:
             tm->rpn_msb[channel] = byte3;
             break;
