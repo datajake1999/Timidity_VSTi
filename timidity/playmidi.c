@@ -937,10 +937,10 @@ void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
                 ev.type = ME_PITCH_SENS;
                 ev.a = 2;
                 play_midi(tm, &ev);
+                tm->rpn_msb[channel] = 0xff;
+                tm->rpn_lsb[channel] = 0xff;
                 break;
             }
-            tm->rpn_msb[channel] = 0xff;
-            tm->rpn_lsb[channel] = 0xff;
             break;
         case 0x07:
             ev.type = ME_MAINVOLUME;
