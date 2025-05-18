@@ -1050,338 +1050,272 @@ void timid_write_sysex(Timid *tm, uint8 *buffer, int32 count)
 
 void timid_render_char(Timid *tm, uint8 *buffer, int32 count)
 {
-    int i;
+    int curframes, cursamples, i;
     if (!tm || !buffer)
     {
         return;
     }
-    if (!(tm->play_mode.encoding & PE_MONO))
+    while (count > 0)
     {
-        for (i=0; i<count; i++)
+        if (count < AUDIO_BUFFER_SIZE)
         {
-            int32 temp[2];
-            do_compute_data(tm, &temp[0], 1);
-            temp[0] = temp[0] >> (32 - 8 - GUARD_BITS);
-            if (temp[0] > 127)
-            {
-                temp[0] = 127;
-            }
-            else if (temp[0] < -128)
-            {
-                temp[0] = -128;
-            }
-            buffer[i*2+0] = (uint8)temp[0] + 128;
-            temp[1] = temp[1] >> (32 - 8 - GUARD_BITS);
-            if (temp[1] > 127)
-            {
-                temp[1] = 127;
-            }
-            else if (temp[1] < -128)
-            {
-                temp[1] = -128;
-            }
-            buffer[i*2+1] = (uint8)temp[1] + 128;
+            curframes = count;
         }
-    }
-    else
-    {
-        for (i=0; i<count; i++)
+        else
         {
-            int32 temp;
-            do_compute_data(tm, &temp, 1);
-            temp = temp >> (32 - 8 - GUARD_BITS);
-            if (temp > 127)
-            {
-                temp = 127;
-            }
-            else if (temp < -128)
-            {
-                temp = -128;
-            }
-            buffer[i] = (uint8)temp + 128;
+            curframes = AUDIO_BUFFER_SIZE;
         }
+        do_compute_data(tm, tm->common_buffer, curframes);
+        cursamples = curframes;
+        if (!(tm->play_mode.encoding & PE_MONO))
+        {
+            cursamples *= 2;
+        }
+        for (i=0; i<cursamples; i++)
+        {
+            tm->common_buffer[i] = tm->common_buffer[i] >> (32 - 8 - GUARD_BITS);
+            if (tm->common_buffer[i] > 127)
+            {
+                tm->common_buffer[i] = 127;
+            }
+            else if (tm->common_buffer[i] < -128)
+            {
+                tm->common_buffer[i] = -128;
+            }
+            buffer[i] = (uint8)tm->common_buffer[i] + 128;
+        }
+        buffer += cursamples;
+        count -= curframes;
     }
 }
 
 void timid_render_short(Timid *tm, int16 *buffer, int32 count)
 {
-    int i;
+    int curframes, cursamples, i;
     if (!tm || !buffer)
     {
         return;
     }
-    if (!(tm->play_mode.encoding & PE_MONO))
+    while (count > 0)
     {
-        for (i=0; i<count; i++)
+        if (count < AUDIO_BUFFER_SIZE)
         {
-            int32 temp[2];
-            do_compute_data(tm, &temp[0], 1);
-            temp[0] = temp[0] >> (32 - 16 - GUARD_BITS);
-            if (temp[0] > 32767)
-            {
-                temp[0] = 32767;
-            }
-            else if (temp[0] < -32768)
-            {
-                temp[0] = -32768;
-            }
-            buffer[i*2+0] = (int16)temp[0];
-            temp[1] = temp[1] >> (32 - 16 - GUARD_BITS);
-            if (temp[1] > 32767)
-            {
-                temp[1] = 32767;
-            }
-            else if (temp[1] < -32768)
-            {
-                temp[1] = -32768;
-            }
-            buffer[i*2+1] = (int16)temp[1];
+            curframes = count;
         }
-    }
-    else
-    {
-        for (i=0; i<count; i++)
+        else
         {
-            int32 temp;
-            do_compute_data(tm, &temp, 1);
-            temp = temp >> (32 - 16 - GUARD_BITS);
-            if (temp > 32767)
-            {
-                temp = 32767;
-            }
-            else if (temp < -32768)
-            {
-                temp = -32768;
-            }
-            buffer[i] = (int16)temp;
+            curframes = AUDIO_BUFFER_SIZE;
         }
+        do_compute_data(tm, tm->common_buffer, curframes);
+        cursamples = curframes;
+        if (!(tm->play_mode.encoding & PE_MONO))
+        {
+            cursamples *= 2;
+        }
+        for (i=0; i<cursamples; i++)
+        {
+            tm->common_buffer[i] = tm->common_buffer[i] >> (32 - 16 - GUARD_BITS);
+            if (tm->common_buffer[i] > 32767)
+            {
+                tm->common_buffer[i] = 32767;
+            }
+            else if (tm->common_buffer[i] < -32768)
+            {
+                tm->common_buffer[i] = -32768;
+            }
+            buffer[i] = (int16)tm->common_buffer[i];
+        }
+        buffer += cursamples;
+        count -= curframes;
     }
 }
 
 void timid_render_24(Timid *tm, int24 *buffer, int32 count)
 {
-    int i;
+    int curframes, cursamples, i;
     if (!tm || !buffer)
     {
         return;
     }
-    if (!(tm->play_mode.encoding & PE_MONO))
+    while (count > 0)
     {
-        for (i=0; i<count; i++)
+        if (count < AUDIO_BUFFER_SIZE)
         {
-            int32 temp[2];
-            do_compute_data(tm, &temp[0], 1);
-            temp[0] = temp[0] >> (32 - 24 - GUARD_BITS);
-            if (temp[0] > 8388607)
-            {
-                temp[0] = 8388607;
-            }
-            else if (temp[0] < -8388608)
-            {
-                temp[0] = -8388608;
-            }
-            buffer[i*2+0].data[0] = temp[0] & 0xff;
-            buffer[i*2+0].data[1] = (temp[0] >> 8) & 0xff;
-            buffer[i*2+0].data[2] = (temp[0] >> 16) & 0xff;
-            temp[1] = temp[1] >> (32 - 24 - GUARD_BITS);
-            if (temp[1] > 8388607)
-            {
-                temp[1] = 8388607;
-            }
-            else if (temp[1] < -8388608)
-            {
-                temp[1] = -8388608;
-            }
-            buffer[i*2+1].data[0] = temp[1] & 0xff;
-            buffer[i*2+1].data[1] = (temp[1] >> 8) & 0xff;
-            buffer[i*2+1].data[2] = (temp[1] >> 16) & 0xff;
+            curframes = count;
         }
-    }
-    else
-    {
-        for (i=0; i<count; i++)
+        else
         {
-            int32 temp;
-            do_compute_data(tm, &temp, 1);
-            temp = temp >> (32 - 24 - GUARD_BITS);
-            if (temp > 8388607)
-            {
-                temp = 8388607;
-            }
-            else if (temp < -8388608)
-            {
-                temp = -8388608;
-            }
-            buffer[i].data[0] = temp & 0xff;
-            buffer[i].data[1] = (temp >> 8) & 0xff;
-            buffer[i].data[2] = (temp >> 16) & 0xff;
+            curframes = AUDIO_BUFFER_SIZE;
         }
+        do_compute_data(tm, tm->common_buffer, curframes);
+        cursamples = curframes;
+        if (!(tm->play_mode.encoding & PE_MONO))
+        {
+            cursamples *= 2;
+        }
+        for (i=0; i<cursamples; i++)
+        {
+            tm->common_buffer[i] = tm->common_buffer[i] >> (32 - 24 - GUARD_BITS);
+            if (tm->common_buffer[i] > 8388607)
+            {
+                tm->common_buffer[i] = 8388607;
+            }
+            else if (tm->common_buffer[i] < -8388608)
+            {
+                tm->common_buffer[i] = -8388608;
+            }
+            buffer[i].data[0] = tm->common_buffer[i] & 0xff;
+            buffer[i].data[1] = (tm->common_buffer[i] >> 8) & 0xff;
+            buffer[i].data[2] = (tm->common_buffer[i] >> 16) & 0xff;
+        }
+        buffer += cursamples;
+        count -= curframes;
     }
 }
 
 void timid_render_long(Timid *tm, int32 *buffer, int32 count)
 {
-    int i;
+    int curframes, cursamples, i;
     if (!tm || !buffer)
     {
         return;
     }
-    if (!(tm->play_mode.encoding & PE_MONO))
+    while (count > 0)
     {
-        for (i=0; i<count; i++)
+        if (count < AUDIO_BUFFER_SIZE)
         {
-            int32 temp[2];
-            do_compute_data(tm, &temp[0], 1);
-            if (temp[0] > 268435455)
-            {
-                temp[0] = 268435455;
-            }
-            else if (temp[0] < -268435456)
-            {
-                temp[0] = -268435456;
-            }
-            temp[0] = temp[0] << GUARD_BITS;
-            buffer[i*2+0] = temp[0];
-            if (temp[1] > 268435455)
-            {
-                temp[1] = 268435455;
-            }
-            else if (temp[1] < -268435456)
-            {
-                temp[1] = -268435456;
-            }
-            temp[1] = temp[1] << GUARD_BITS;
-            buffer[i*2+1] = temp[1];
+            curframes = count;
         }
-    }
-    else
-    {
-        for (i=0; i<count; i++)
+        else
         {
-            int32 temp;
-            do_compute_data(tm, &temp, 1);
-            if (temp > 268435455)
-            {
-                temp = 268435455;
-            }
-            else if (temp < -268435456)
-            {
-                temp = -268435456;
-            }
-            temp = temp << GUARD_BITS;
-            buffer[i] = temp;
+            curframes = AUDIO_BUFFER_SIZE;
         }
+        do_compute_data(tm, tm->common_buffer, curframes);
+        cursamples = curframes;
+        if (!(tm->play_mode.encoding & PE_MONO))
+        {
+            cursamples *= 2;
+        }
+        for (i=0; i<cursamples; i++)
+        {
+            if (tm->common_buffer[i] > 268435455)
+            {
+                tm->common_buffer[i] = 268435455;
+            }
+            else if (tm->common_buffer[i] < -268435456)
+            {
+                tm->common_buffer[i] = -268435456;
+            }
+            tm->common_buffer[i] = tm->common_buffer[i] << GUARD_BITS;
+            buffer[i] = tm->common_buffer[i];
+        }
+        buffer += cursamples;
+        count -= curframes;
     }
 }
 
 void timid_render_float(Timid *tm, float *buffer, int32 count)
 {
-    int i;
+    int curframes, cursamples, i;
     if (!tm || !buffer)
     {
         return;
     }
-    if (!(tm->play_mode.encoding & PE_MONO))
+    while (count > 0)
     {
-        for (i=0; i<count; i++)
+        if (count < AUDIO_BUFFER_SIZE)
         {
-            int32 temp[2];
-            do_compute_data(tm, &temp[0], 1);
-            buffer[i*2+0] = temp[0] / (float)268435456;
-            buffer[i*2+1] = temp[1] / (float)268435456;
+            curframes = count;
         }
-    }
-    else
-    {
-        for (i=0; i<count; i++)
+        else
         {
-            int32 temp;
-            do_compute_data(tm, &temp, 1);
-            buffer[i] = temp / (float)268435456;
+            curframes = AUDIO_BUFFER_SIZE;
         }
+        do_compute_data(tm, tm->common_buffer, curframes);
+        cursamples = curframes;
+        if (!(tm->play_mode.encoding & PE_MONO))
+        {
+            cursamples *= 2;
+        }
+        for (i=0; i<cursamples; i++)
+        {
+            buffer[i] = tm->common_buffer[i] / (float)268435456;
+        }
+        buffer += cursamples;
+        count -= curframes;
     }
 }
 
 void timid_render_double(Timid *tm, double *buffer, int32 count)
 {
-    int i;
+    int curframes, cursamples, i;
     if (!tm || !buffer)
     {
         return;
     }
-    if (!(tm->play_mode.encoding & PE_MONO))
+    while (count > 0)
     {
-        for (i=0; i<count; i++)
+        if (count < AUDIO_BUFFER_SIZE)
         {
-            int32 temp[2];
-            do_compute_data(tm, &temp[0], 1);
-            buffer[i*2+0] = temp[0] / (double)268435456;
-            buffer[i*2+1] = temp[1] / (double)268435456;
+            curframes = count;
         }
-    }
-    else
-    {
-        for (i=0; i<count; i++)
+        else
         {
-            int32 temp;
-            do_compute_data(tm, &temp, 1);
-            buffer[i] = temp / (double)268435456;
+            curframes = AUDIO_BUFFER_SIZE;
         }
+        do_compute_data(tm, tm->common_buffer, curframes);
+        cursamples = curframes;
+        if (!(tm->play_mode.encoding & PE_MONO))
+        {
+            cursamples *= 2;
+        }
+        for (i=0; i<cursamples; i++)
+        {
+            buffer[i] = tm->common_buffer[i] / (double)268435456;
+        }
+        buffer += cursamples;
+        count -= curframes;
     }
 }
 
 void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count)
 {
-    int i;
+    int curframes, cursamples, i;
     if (!tm || !buffer)
     {
         return;
     }
-    if (!(tm->play_mode.encoding & PE_MONO))
+    while (count > 0)
     {
-        for (i=0; i<count; i++)
+        if (count < AUDIO_BUFFER_SIZE)
         {
-            int32 temp[2];
-            do_compute_data(tm, &temp[0], 1);
-            temp[0] = temp[0] >> (32 - 13 - GUARD_BITS);
-            if (temp[0] > 4095)
-            {
-                temp[0] = 4095;
-            }
-            else if (temp[0] < -4096)
-            {
-                temp[0] = -4096;
-            }
-            buffer[i*2+0] = _l2u[temp[0]];
-            temp[1] = temp[1] >> (32 - 13 - GUARD_BITS);
-            if (temp[1] > 4095)
-            {
-                temp[1] = 4095;
-            }
-            else if (temp[1] < -4096)
-            {
-                temp[1] = -4096;
-            }
-            buffer[i*2+1] = _l2u[temp[1]];
+            curframes = count;
         }
-    }
-    else
-    {
-        for (i=0; i<count; i++)
+        else
         {
-            int32 temp;
-            do_compute_data(tm, &temp, 1);
-            temp = temp >> (32 - 13 - GUARD_BITS);
-            if (temp > 4095)
-            {
-                temp = 4095;
-            }
-            else if (temp < -4096)
-            {
-                temp = -4096;
-            }
-            buffer[i] = _l2u[temp];
+            curframes = AUDIO_BUFFER_SIZE;
         }
+        do_compute_data(tm, tm->common_buffer, curframes);
+        cursamples = curframes;
+        if (!(tm->play_mode.encoding & PE_MONO))
+        {
+            cursamples *= 2;
+        }
+        for (i=0; i<cursamples; i++)
+        {
+            tm->common_buffer[i] = tm->common_buffer[i] >> (32 - 13 - GUARD_BITS);
+            if (tm->common_buffer[i] > 4095)
+            {
+                tm->common_buffer[i] = 4095;
+            }
+            else if (tm->common_buffer[i] < -4096)
+            {
+                tm->common_buffer[i] = -4096;
+            }
+            buffer[i] = _l2u[tm->common_buffer[i]];
+        }
+        buffer += cursamples;
+        count -= curframes;
     }
 }
 
