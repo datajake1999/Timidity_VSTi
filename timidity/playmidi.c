@@ -592,6 +592,18 @@ static void skip_to(Timid *tm, int32 until_time)
     seek_forward(tm, until_time);
 }
 
+static void do_compute_data(Timid *tm, int32 count)
+{
+    int i;
+    memset(tm->buffer_pointer, 0,
+    (tm->play_mode.encoding & PE_MONO) ? (count * 4) : (count * 8));
+    for (i=0; i<tm->voices; i++)
+    {
+        if(tm->voice[i].status != VOICE_FREE)
+			mix_voice(tm, tm->buffer_pointer, i, count);
+    }
+}
+
 static void play_midi(Timid *tm, MidiEvent *e)
 {
     if (e)
@@ -701,18 +713,6 @@ static void play_midi(Timid *tm, MidiEvent *e)
             }
             break;
         }
-    }
-}
-
-static void do_compute_data(Timid *tm, int32 *buffer, int32 count)
-{
-    int i;
-    memset(buffer, 0,
-    (tm->play_mode.encoding & PE_MONO) ? (count * 4) : (count * 8));
-    for (i=0; i<tm->voices; i++)
-    {
-        if(tm->voice[i].status != VOICE_FREE)
-			mix_voice(tm, buffer, i, count);
     }
 }
 
@@ -1065,7 +1065,8 @@ void timid_render_char(Timid *tm, uint8 *buffer, int32 count)
         {
             curframes = AUDIO_BUFFER_SIZE;
         }
-        do_compute_data(tm, tm->common_buffer, curframes);
+        tm->buffer_pointer = tm->common_buffer;
+        do_compute_data(tm, curframes);
         cursamples = curframes;
         if (!(tm->play_mode.encoding & PE_MONO))
         {
@@ -1106,7 +1107,8 @@ void timid_render_short(Timid *tm, int16 *buffer, int32 count)
         {
             curframes = AUDIO_BUFFER_SIZE;
         }
-        do_compute_data(tm, tm->common_buffer, curframes);
+        tm->buffer_pointer = tm->common_buffer;
+        do_compute_data(tm, curframes);
         cursamples = curframes;
         if (!(tm->play_mode.encoding & PE_MONO))
         {
@@ -1147,7 +1149,8 @@ void timid_render_24(Timid *tm, int24 *buffer, int32 count)
         {
             curframes = AUDIO_BUFFER_SIZE;
         }
-        do_compute_data(tm, tm->common_buffer, curframes);
+        tm->buffer_pointer = tm->common_buffer;
+        do_compute_data(tm, curframes);
         cursamples = curframes;
         if (!(tm->play_mode.encoding & PE_MONO))
         {
@@ -1190,7 +1193,8 @@ void timid_render_long(Timid *tm, int32 *buffer, int32 count)
         {
             curframes = AUDIO_BUFFER_SIZE;
         }
-        do_compute_data(tm, tm->common_buffer, curframes);
+        tm->buffer_pointer = tm->common_buffer;
+        do_compute_data(tm, curframes);
         cursamples = curframes;
         if (!(tm->play_mode.encoding & PE_MONO))
         {
@@ -1231,7 +1235,8 @@ void timid_render_float(Timid *tm, float *buffer, int32 count)
         {
             curframes = AUDIO_BUFFER_SIZE;
         }
-        do_compute_data(tm, tm->common_buffer, curframes);
+        tm->buffer_pointer = tm->common_buffer;
+        do_compute_data(tm, curframes);
         cursamples = curframes;
         if (!(tm->play_mode.encoding & PE_MONO))
         {
@@ -1263,7 +1268,8 @@ void timid_render_double(Timid *tm, double *buffer, int32 count)
         {
             curframes = AUDIO_BUFFER_SIZE;
         }
-        do_compute_data(tm, tm->common_buffer, curframes);
+        tm->buffer_pointer = tm->common_buffer;
+        do_compute_data(tm, curframes);
         cursamples = curframes;
         if (!(tm->play_mode.encoding & PE_MONO))
         {
@@ -1295,7 +1301,8 @@ void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count)
         {
             curframes = AUDIO_BUFFER_SIZE;
         }
-        do_compute_data(tm, tm->common_buffer, curframes);
+        tm->buffer_pointer = tm->common_buffer;
+        do_compute_data(tm, curframes);
         cursamples = curframes;
         if (!(tm->play_mode.encoding & PE_MONO))
         {

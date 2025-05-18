@@ -226,6 +226,7 @@ typedef struct {
   int fast_decay;
   PlayMode play_mode;
   int32 common_buffer[AUDIO_BUFFER_SIZE*2]; /* stereo samples */
+  int32 *buffer_pointer;
   Channel channel[16];
   Voice voice[MAX_VOICES];
   int32 control_rate;
