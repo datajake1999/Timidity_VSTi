@@ -1388,12 +1388,12 @@ int timid_reload_smf(Timid *tm)
 
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
 {
-    int i;
+    int convert;
     if (!tm || !buffer || !tm->current_event || (tm->current_event->type == ME_EOT && !timid_get_active_voices(tm)))
     {
         return 0;
     }
-    for (i=0; i<count; i++)
+    while (count > 0)
     {
         /* Handle all events that should happen at this time */
         while (tm->current_event->time <= tm->current_sample)
@@ -1405,96 +1405,102 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
             play_midi(tm, tm->current_event);
             tm->current_event++;
         }
+        convert = tm->current_event->time - tm->current_sample;
+        if (convert > count || convert <= 0)
+        {
+            convert = count;
+        }
         switch(type)
         {
         case AU_CHAR:
-            timid_render_char(tm, (uint8 *)buffer, 1);
+            timid_render_char(tm, (uint8 *)buffer, convert);
             if (!(tm->play_mode.encoding & PE_MONO))
             {
-                buffer += 2*sizeof(uint8);
+                buffer += convert*2*sizeof(uint8);
             }
             else
             {
-                buffer += sizeof(uint8);
+                buffer += convert*sizeof(uint8);
             }
             break;
         case AU_SHORT:
-            timid_render_short(tm, (int16 *)buffer, 1);
+            timid_render_short(tm, (int16 *)buffer, convert);
             if (!(tm->play_mode.encoding & PE_MONO))
             {
-                buffer += 2*sizeof(int16);
+                buffer += convert*2*sizeof(int16);
             }
             else
             {
-                buffer += sizeof(int16);
+                buffer += convert*sizeof(int16);
             }
             break;
         case AU_24:
-            timid_render_24(tm, (int24 *)buffer, 1);
+            timid_render_24(tm, (int24 *)buffer, convert);
             if (!(tm->play_mode.encoding & PE_MONO))
             {
-                buffer += 2*sizeof(int24);
+                buffer += convert*2*sizeof(int24);
             }
             else
             {
-                buffer += sizeof(int24);
+                buffer += convert*sizeof(int24);
             }
             break;
         case AU_LONG:
-            timid_render_long(tm, (int32 *)buffer, 1);
+            timid_render_long(tm, (int32 *)buffer, convert);
             if (!(tm->play_mode.encoding & PE_MONO))
             {
-                buffer += 2*sizeof(int32);
+                buffer += convert*2*sizeof(int32);
             }
             else
             {
-                buffer += sizeof(int32);
+                buffer += convert*sizeof(int32);
             }
             break;
         case AU_FLOAT:
-            timid_render_float(tm, (float *)buffer, 1);
+            timid_render_float(tm, (float *)buffer, convert);
             if (!(tm->play_mode.encoding & PE_MONO))
             {
-                buffer += 2*sizeof(float);
+                buffer += convert*2*sizeof(float);
             }
             else
             {
-                buffer += sizeof(float);
+                buffer += convert*sizeof(float);
             }
             break;
         case AU_DOUBLE:
-            timid_render_double(tm, (double *)buffer, 1);
+            timid_render_double(tm, (double *)buffer, convert);
             if (!(tm->play_mode.encoding & PE_MONO))
             {
-                buffer += 2*sizeof(double);
+                buffer += convert*2*sizeof(double);
             }
             else
             {
-                buffer += sizeof(double);
+                buffer += convert*sizeof(double);
             }
             break;
         case AU_ULAW:
-            timid_render_ulaw(tm, (uint8 *)buffer, 1);
+            timid_render_ulaw(tm, (uint8 *)buffer, convert);
             if (!(tm->play_mode.encoding & PE_MONO))
             {
-                buffer += 2*sizeof(uint8);
+                buffer += convert*2*sizeof(uint8);
             }
             else
             {
-                buffer += sizeof(uint8);
+                buffer += convert*sizeof(uint8);
             }
             break;
         }
         if (tm->current_sample == tm->sample_count)
         {
-            int j;
-            for (j=0; j<16; j++)
+            int i;
+            for (i=0; i<16; i++)
             {
-                drop_sustain(tm, j);
-                all_notes_off(tm, j);
+                drop_sustain(tm, i);
+                all_notes_off(tm, i);
             }
         }
-        tm->current_sample++;
+        tm->current_sample += convert;
+        count -= convert;
     }
     return 1;
 }
