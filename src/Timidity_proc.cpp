@@ -241,26 +241,54 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 	}
 
 	begin = GetCPUTime();
-	for (VstInt32 i = 0; i < sampleFrames; i++)
+	VstInt32 totalFrames = sampleFrames;
+	VstInt32 renderedFrames = 0;
+	float *bufferPointer = buffer;
+	while (totalFrames > 0)
 	{
-		while (MidiQueue.HasEvents() && MidiQueue.GetEventTime() <= i)
+		while (MidiQueue.HasEvents() && MidiQueue.GetEventTime() <= renderedFrames)
 		{
 			processEvent (MidiQueue.GetNextEvent());
 		}
+		VstInt32 currentFrames = MidiQueue.GetEventTime() -renderedFrames;
+		if (currentFrames > totalFrames || currentFrames <= 0)
+		{
+			currentFrames = totalFrames;
+		}
+		timid_render_float(&synth, bufferPointer, currentFrames);
+		if (Mono >= 0.5)
+		{
+			bufferPointer += currentFrames;
+		}
+		else
+		{
+			bufferPointer += 2*currentFrames;
+		}
+		renderedFrames += currentFrames;
+		totalFrames -= currentFrames;
+	}
+	while (MidiQueue.HasEvents())
+	{
+		processEvent (MidiQueue.GetNextEvent());
+	}
+	for (VstInt32 i = 0; i < sampleFrames; i++)
+	{
 #if REAPER_EXTENSIONS
 		while (ParameterQueue.HasEvents() && ParameterQueue.GetEventTime() <= i)
 		{
 			processEvent (ParameterQueue.GetNextEvent());
 		}
 #endif
-		timid_render_float(&synth, &buffer[i*2], 1);
-		if (Mono >= 0.5)
-		{
-			buffer[i*2+1] = buffer[i*2+0];
-		}
 		if (out1)
 		{
-			out1[i] = buffer[i*2+0];
+			if (Mono >= 0.5)
+			{
+				out1[i] = buffer[i];
+			}
+			else
+			{
+				out1[i] = buffer[i*2+0];
+			}
 			out1[i] = out1[i] * Volume;
 #ifdef DEMO
 			if (time(NULL) >= startTime + 600)
@@ -276,7 +304,14 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 		}
 		if (out2)
 		{
-			out2[i] = buffer[i*2+1];
+			if (Mono >= 0.5)
+			{
+				out2[i] = buffer[i];
+			}
+			else
+			{
+				out2[i] = buffer[i*2+1];
+			}
 			out2[i] = out2[i] * Volume;
 #ifdef DEMO
 			if (time(NULL) >= startTime + 600)
@@ -290,10 +325,6 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 			}
 			vu[1] = out2[i];
 		}
-	}
-	while (MidiQueue.HasEvents())
-	{
-		processEvent (MidiQueue.GetNextEvent());
 	}
 #if REAPER_EXTENSIONS
 	while (ParameterQueue.HasEvents())
