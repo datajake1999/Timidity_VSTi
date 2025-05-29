@@ -307,6 +307,8 @@ extern "C" {
 #define AU_DOUBLE	6
 #define AU_ULAW	7
 
+/* General API notes: Unless otherwise indicated, functions that return a value will return non-0 on success, and 0 on failure. Time and duration is represented in milliseconds. API functions for getting strings return the length of the string */
+
 /* Initialize an instance of Timidity. This should be called after allocating memory for a Timid struct, and before any other API function calls */
 void timid_init(Timid *tm);
 
@@ -329,34 +331,44 @@ void timid_render_float(Timid *tm, float *buffer, int32 count);
 void timid_render_double(Timid *tm, double *buffer, int32 count);
 void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count);
 
-/* Stop all notes immediately, and reset MIDI parameters */
+/* Stop all notes immediately */
 void timid_panic(Timid *tm);
+/* Stop all notes immediately, and reset MIDI parameters */
 void timid_reset(Timid *tm);
 
-/* MIDI file player */
+/* MIDI file player, only supports standard MIDI files */
 int timid_load_smf(Timid *tm, char *filename);
 int timid_reload_smf(Timid *tm);
-/* The following function will return 0 once all buffers have been rendered */
+/* The following function returns 1 if more audio is to be rendered, and 0 once the track is finished and all notes have stopped */
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count); /* count is in samples */
-/* For the following functions, time is represented in milliseconds. The return value is the new current time */
+/* The return value for the following functions is the new current time */
+/* Absolute seeking */
 int timid_seek_smf(Timid *tm, int32 time);
+/* Relative seeking */
 int timid_fast_forward_smf(Timid *tm, int32 time);
 int timid_rewind_smf(Timid *tm, int32 time);
+/* Quick ways to restart or stop a track without reloading or unloading */
 int timid_restart_smf(Timid *tm);
 int timid_stop_smf(Timid *tm);
 void timid_unload_smf(Timid *tm);
 
 /* Setters */
+/* Amplification is represented in percent */
 void timid_set_amplification(Timid *tm, int amplification);
+/* The number of voices is clamped between 1 and MAX_VOICES */
 void timid_set_max_voices(Timid *tm, int voices);
+/* The value argument for the following functions should be treated as a boolean */
 void timid_set_immediate_panning(Timid *tm, int value);
+/* Renders mono audio buffers if enabled, interleaved stereo otherwise */
 void timid_set_mono(Timid *tm, int value);
+/* These next few functions reload the current sample bank before returning */
 void timid_set_fast_decay(Timid *tm, int value);
 void timid_set_antialiasing(Timid *tm, int value);
 void timid_set_sample_rate(Timid *tm, int rate);
 void timid_set_control_rate(Timid *tm, int rate);
+/* Sets the default MIDI program, takes effect on next MIDI reset */
 void timid_set_default_program(Timid *tm, int program);
-void timid_set_drum_channel(Timid *tm, int c, int enable);
+void timid_set_drum_channel(Timid *tm, int channel, int enable);
 
 /* Restore default settings */
 void timid_restore_defaults(Timid *tm);
@@ -377,10 +389,10 @@ int timid_get_antialiasing(Timid *tm);
 int timid_get_sample_rate(Timid *tm);
 int timid_get_control_rate(Timid *tm);
 int timid_get_default_program(Timid *tm);
-int timid_get_drum_channel(Timid *tm, int c);
+int timid_get_drum_channel_enabled(Timid *tm, int channel);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
-int timid_get_current_program(Timid *tm, int c);
+int timid_get_current_program(Timid *tm, int channel);
 
 /* These are for the MIDI file player */
 int timid_get_smf_name(Timid *tm, char *buffer, int32 count);

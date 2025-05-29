@@ -814,7 +814,7 @@ void timid_init(Timid *tm)
 int timid_load_config(Timid *tm, char *filename)
 {
     char directory[256];
-    char *separator=0;
+    char *separator;
     if (!tm || !filename)
     {
         return 0;
@@ -1743,15 +1743,15 @@ void timid_set_default_program(Timid *tm, int program)
     tm->default_program = program & 0x7f;
 }
 
-void timid_set_drum_channel(Timid *tm, int c, int enable)
+void timid_set_drum_channel(Timid *tm, int channel, int enable)
 {
     if (!tm)
     {
         return;
     }
-    c = c & 0x0f;
-    if (enable) tm->drumchannels |= (1<<c);
-    else tm->drumchannels &= ~(1<<c);
+    channel = channel & 0x0f;
+    if (enable) tm->drumchannels |= (1<<channel);
+    else tm->drumchannels &= ~(1<<channel);
 }
 
 void timid_restore_defaults(Timid *tm)
@@ -1915,14 +1915,14 @@ int timid_get_default_program(Timid *tm)
     return tm->default_program;
 }
 
-int timid_get_drum_channel(Timid *tm, int c)
+int timid_get_drum_channel_enabled(Timid *tm, int channel)
 {
     if (!tm)
     {
         return 0;
     }
-    c = c & 0x0f;
-    if (ISDRUMCHANNEL(tm, c))
+    channel = channel & 0x0f;
+    if (ISDRUMCHANNEL(tm, channel))
     {
         return 1;
     }
@@ -1950,20 +1950,20 @@ int timid_get_cut_notes(Timid *tm)
     return tm->cut_notes;
 }
 
-int timid_get_current_program(Timid *tm, int c)
+int timid_get_current_program(Timid *tm, int channel)
 {
     if (!tm)
     {
         return 0;
     }
-    c = c & 0x0f;
-    if (ISDRUMCHANNEL(tm, c))
+    channel = channel & 0x0f;
+    if (ISDRUMCHANNEL(tm, channel))
     {
-        return tm->channel[c].bank;
+        return tm->channel[channel].bank;
     }
     else
     {
-        return tm->channel[c].program;
+        return tm->channel[channel].program;
     }
 }
 
