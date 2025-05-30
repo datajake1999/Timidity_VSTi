@@ -331,6 +331,12 @@ void timid_render_float(Timid *tm, float *buffer, int32 count);
 void timid_render_double(Timid *tm, double *buffer, int32 count);
 void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count);
 
+/* Stop all notes with release */
+void timid_all_notes_off(Timid *tm);
+/* Stop all notes with quick fade out, helps avoid clicks */
+void timid_all_sounds_off(Timid *tm);
+/* Reset MIDI controllers */
+void timid_reset_controllers(Timid *tm);
 /* Stop all notes immediately */
 void timid_panic(Timid *tm);
 /* Stop all notes immediately, and reset MIDI parameters */

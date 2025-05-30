@@ -1326,6 +1326,46 @@ void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count)
     }
 }
 
+void timid_all_notes_off(Timid *tm)
+{
+    int i;
+    if (!tm)
+    {
+        return;
+    }
+    for (i=0; i<16; i++)
+    {
+        drop_sustain(tm, i);
+        all_notes_off(tm, i);
+    }
+}
+
+void timid_all_sounds_off(Timid *tm)
+{
+    int i;
+    if (!tm)
+    {
+        return;
+    }
+    for (i=0; i<16; i++)
+    {
+        all_sounds_off(tm, i);
+    }
+}
+
+void timid_reset_controllers(Timid *tm)
+{
+    int i;
+    if (!tm)
+    {
+        return;
+    }
+    for (i=0; i<16; i++)
+    {
+        reset_controllers(tm, i);
+    }
+}
+
 void timid_panic(Timid *tm)
 {
     if (!tm)
@@ -1492,12 +1532,7 @@ int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
         }
         if (tm->current_sample == tm->sample_count)
         {
-            int i;
-            for (i=0; i<16; i++)
-            {
-                drop_sustain(tm, i);
-                all_notes_off(tm, i);
-            }
+            timid_all_notes_off(tm);
         }
         tm->current_sample += convert;
         count -= convert;
