@@ -2217,7 +2217,67 @@ int timid_get_cut_notes(Timid *tm)
     return tm->cut_notes;
 }
 
-int timid_get_current_program(Timid *tm, int channel)
+int timid_channel_get_volume(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].volume;
+}
+
+int timid_channel_get_pan(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].panning;
+}
+
+int timid_channel_get_expression(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].expression;
+}
+
+int timid_channel_get_sustain(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].sustain;
+}
+
+int timid_channel_get_pitch_wheel(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].pitchbend;
+}
+
+int timid_channel_get_pitch_range(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].pitchsens;
+}
+
+int timid_channel_get_program(Timid *tm, int channel)
 {
     if (!tm)
     {
@@ -2232,6 +2292,33 @@ int timid_get_current_program(Timid *tm, int channel)
     {
         return tm->channel[channel].program;
     }
+}
+
+int timid_channel_get_bank(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    if (!ISDRUMCHANNEL(tm, channel))
+    {
+        return tm->channel[channel].bank;
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+int timid_channel_get_mono(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].mono;
 }
 
 int timid_get_smf_name(Timid *tm, char *buffer, int32 count)

@@ -417,7 +417,18 @@ int timid_get_default_program(Timid *tm);
 int timid_get_drum_channel_enabled(Timid *tm, int channel);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
-int timid_get_current_program(Timid *tm, int channel);
+
+/* Get values from a particular MIDI channel */
+int timid_channel_get_volume(Timid *tm, int channel);
+int timid_channel_get_pan(Timid *tm, int channel);
+int timid_channel_get_expression(Timid *tm, int channel);
+int timid_channel_get_sustain(Timid *tm, int channel);
+int timid_channel_get_pitch_wheel(Timid *tm, int channel);
+int timid_channel_get_pitch_range(Timid *tm, int channel);
+int timid_channel_get_program(Timid *tm, int channel);
+/* The following function returns -1 for drum channels */
+int timid_channel_get_bank(Timid *tm, int channel);
+int timid_channel_get_mono(Timid *tm, int channel);
 
 /* These are for the MIDI file player */
 int timid_get_smf_name(Timid *tm, char *buffer, int32 count);
