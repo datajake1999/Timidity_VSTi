@@ -317,6 +317,25 @@ int timid_load_config(Timid *tm, char *filename);
 void timid_unload_config(Timid *tm);
 int timid_reload_config(Timid *tm);
 
+/* High level input API */
+void timid_channel_note_on(Timid *tm, uint8 channel, uint8 note, uint8 velocity);
+void timid_channel_note_off(Timid *tm, uint8 channel, uint8 note);
+void timid_channel_key_pressure(Timid *tm, uint8 channel, uint8 note, uint8 velocity);
+void timid_channel_set_volume(Timid *tm, uint8 channel, uint8 volume);
+void timid_channel_set_pan(Timid *tm, uint8 channel, uint8 pan);
+void timid_channel_set_expression(Timid *tm, uint8 channel, uint8 expression);
+void timid_channel_set_sustain(Timid *tm, uint8 channel, uint8 sustain);
+void timid_channel_set_pitch_wheel(Timid *tm, uint8 channel, uint16 pitch);
+void timid_channel_set_pitch_range(Timid *tm, uint8 channel, uint8 range);
+void timid_channel_set_program(Timid *tm, uint8 channel, uint8 program);
+void timid_channel_set_bank(Timid *tm, uint8 channel, uint8 bank);
+void timid_channel_mono_mode(Timid *tm, uint8 channel);
+void timid_channel_poly_mode(Timid *tm, uint8 channel);
+void timid_channel_all_notes_off(Timid *tm, uint8 channel);
+void timid_channel_all_sounds_off(Timid *tm, uint8 channel);
+void timid_channel_reset_controllers(Timid *tm, uint8 channel);
+void timid_channel_control_change(Timid *tm, uint8 channel, uint8 controller, uint8 value);
+
 /* Low level input API */
 void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3);
 void timid_write_midi_packed(Timid *tm, uint32 data);

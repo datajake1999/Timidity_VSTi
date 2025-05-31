@@ -872,6 +872,238 @@ int timid_reload_config(Timid *tm)
     return 0;
 }
 
+void timid_channel_note_on(Timid *tm, uint8 channel, uint8 note, uint8 velocity)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_NOTEON;
+    ev.a = note & 0x7f;
+    ev.b = velocity & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_note_off(Timid *tm, uint8 channel, uint8 note)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_NOTEOFF;
+    ev.a = note & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_key_pressure(Timid *tm, uint8 channel, uint8 note, uint8 velocity)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_KEYPRESSURE;
+    ev.a = note & 0x7f;
+    ev.b = velocity & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_set_volume(Timid *tm, uint8 channel, uint8 volume)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_MAINVOLUME;
+    ev.a = volume & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_set_pan(Timid *tm, uint8 channel, uint8 pan)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_PAN;
+    ev.a = pan & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_set_expression(Timid *tm, uint8 channel, uint8 expression)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_EXPRESSION;
+    ev.a = expression & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_set_sustain(Timid *tm, uint8 channel, uint8 sustain)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_SUSTAIN;
+    ev.a = sustain & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_set_pitch_wheel(Timid *tm, uint8 channel, uint16 pitch)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_PITCHWHEEL;
+    ev.a = pitch & 0x7f;
+    ev.b = (pitch >> 7) & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_set_pitch_range(Timid *tm, uint8 channel, uint8 range)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_PITCH_SENS;
+    ev.a = range & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_set_program(Timid *tm, uint8 channel, uint8 program)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_PROGRAM;
+    ev.a = program & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_set_bank(Timid *tm, uint8 channel, uint8 bank)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_TONE_BANK;
+    ev.a = bank & 0x7f;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_mono_mode(Timid *tm, uint8 channel)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_MONO;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_poly_mode(Timid *tm, uint8 channel)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_POLY;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_all_notes_off(Timid *tm, uint8 channel)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_ALL_NOTES_OFF;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_all_sounds_off(Timid *tm, uint8 channel)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_ALL_SOUNDS_OFF;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_reset_controllers(Timid *tm, uint8 channel)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_RESET_CONTROLLERS;
+    play_midi(tm, &ev);
+}
+
+void timid_channel_control_change(Timid *tm, uint8 channel, uint8 controller, uint8 value)
+{
+    if (!tm)
+    {
+        return;
+    }
+    channel = channel & 0x0f;
+    timid_write_midi(tm, 0xb0+channel, controller & 0x7f, value & 0x7f);
+}
+
 void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
 {
     uint8 type = byte1 & 0xf0;
