@@ -608,6 +608,10 @@ static void play_midi(Timid *tm, MidiEvent *e)
 {
     if (e)
     {
+        if (ISQUIETCHANNEL(tm, e->channel))
+        {
+            return;
+        }
         switch(e->type)
         {
             
@@ -2021,6 +2025,23 @@ void timid_set_drum_channel(Timid *tm, int channel, int enable)
     else tm->drumchannels &= ~(1<<channel);
 }
 
+void timid_set_quiet_channel(Timid *tm, int channel, int enable)
+{
+    if (!tm)
+    {
+        return;
+    }
+    channel = channel & 0x0f;
+    if (enable && !ISQUIETCHANNEL(tm, channel))
+    {
+        drop_sustain(tm, channel);
+        all_notes_off(tm, channel);
+        reset_controllers(tm, channel);
+    }
+    if (enable) tm->quietchannels |= (1<<channel);
+    else tm->quietchannels &= ~(1<<channel);
+}
+
 void timid_restore_defaults(Timid *tm)
 {
     if (!tm)
@@ -2041,6 +2062,7 @@ void timid_restore_defaults(Timid *tm)
     tm->control_rate=CONTROLS_PER_SECOND;
     tm->control_ratio = tm->play_mode.rate/tm->control_rate;
     tm->drumchannels=DEFAULT_DRUMCHANNELS;
+    tm->quietchannels=0;
     tm->adjust_panning_immediately=1;
     adjust_amplification(tm, DEFAULT_AMPLIFICATION);
     timid_reload_config(tm);
@@ -2190,6 +2212,23 @@ int timid_get_drum_channel_enabled(Timid *tm, int channel)
     }
     channel = channel & 0x0f;
     if (ISDRUMCHANNEL(tm, channel))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int timid_get_quiet_channel_enabled(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    if (ISQUIETCHANNEL(tm, channel))
     {
         return 1;
     }

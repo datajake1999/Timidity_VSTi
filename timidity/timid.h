@@ -188,6 +188,7 @@ typedef struct {
 /* Anything but PANNED_MYSTERY only uses the left volume */
 
 #define ISDRUMCHANNEL(tm, c) ((tm->drumchannels & (1<<(c))))
+#define ISQUIETCHANNEL(tm, c) ((tm->quietchannels & (1<<(c))))
 
 typedef struct {
   MidiEvent event;
@@ -233,6 +234,7 @@ typedef struct {
   int32 control_ratio;
   FLOAT_T master_volume;
   int32 drumchannels;
+  int32 quietchannels;
   int32 lost_notes;
   int32 cut_notes;
   int adjust_panning_immediately;
@@ -394,6 +396,7 @@ void timid_set_control_rate(Timid *tm, int rate);
 /* Sets the default MIDI program, takes effect on next MIDI reset */
 void timid_set_default_program(Timid *tm, int program);
 void timid_set_drum_channel(Timid *tm, int channel, int enable);
+void timid_set_quiet_channel(Timid *tm, int channel, int enable);
 
 /* Restore default settings */
 void timid_restore_defaults(Timid *tm);
@@ -415,6 +418,7 @@ int timid_get_sample_rate(Timid *tm);
 int timid_get_control_rate(Timid *tm);
 int timid_get_default_program(Timid *tm);
 int timid_get_drum_channel_enabled(Timid *tm, int channel);
+int timid_get_quiet_channel_enabled(Timid *tm, int channel);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 
