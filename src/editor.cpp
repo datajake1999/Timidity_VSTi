@@ -434,10 +434,13 @@ static BOOL LoadConfigurationDragDrop(HWND hWnd, WPARAM wParam, Timidity* effect
 	if (hWnd && effect)
 	{
 		char filename[MAX_PATH];
+		char title[MAX_PATH];
 		ZeroMemory(filename, sizeof(filename));
+		ZeroMemory(title, sizeof(title));
 		if (DragQueryFile(hDrop, 0, filename, MAX_PATH))
 		{
-			if (!effect->loadInstruments (filename, filename))
+			GetFileTitle(filename, title, MAX_PATH);
+			if (!effect->loadInstruments (filename, title))
 			{
 				char caption[MAX_PATH];
 				char temp[MAX_PATH];
@@ -452,7 +455,7 @@ static BOOL LoadConfigurationDragDrop(HWND hWnd, WPARAM wParam, Timidity* effect
 				DragFinish(hDrop);
 				return FALSE;
 			}
-			SetDlgItemText(hWnd, IDC_CURCFG, filename);
+			SetDlgItemText(hWnd, IDC_CURCFG, title);
 			DragFinish(hDrop);
 			return TRUE;
 		}
