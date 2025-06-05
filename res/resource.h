@@ -43,12 +43,12 @@
 #define IDC_ANTI                        417
 #define IDC_QUEUE                       418
 #define IDC_BYPASS                      419
-#define IDC_PANIC                       420
-#define IDC_RESET                       421
-#define IDC_VOICECOUNT                  422
-#define IDC_REFRESH                     423
-#define IDC_LOAD                        424
-#define IDC_CURCFG                      425
+#define IDC_REFRESH                     420
+#define IDC_LOAD                        421
+#define IDC_CURCFG                      422
+#define IDC_PANIC                       423
+#define IDC_RESET                       424
+#define IDC_VOICECOUNT                  425
 #define IDC_ABOUT                       426
 #define IDC_STATS                       427
 #define IDC_VU                          428
@@ -89,7 +89,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        602
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_CONTROL_VALUE         520
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
