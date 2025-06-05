@@ -122,6 +122,69 @@ static BOOL SetBypassState(HWND hWnd, AudioEffectX* effect)
 	return FALSE;
 }
 
+static void UpdateMeters(HWND hWnd, Timidity* effect, BOOL IdleCall)
+{
+	if (hWnd && effect)
+	{
+		if (IdleCall && IsDlgButtonChecked(hWnd, IDC_FREEZE))
+		{
+			return;
+		}
+		char text[MAX_PATH];
+		ZeroMemory(text, sizeof(text));
+		VstInt32 numvoices = effect->getActiveVoices ();
+		VstInt32 maxvoices = effect->getMaxVoices ();
+		VstInt32 voicealert = maxvoices - (maxvoices / 6);
+		sprintf(text, "%d/%d", numvoices, maxvoices);
+		SetDlgItemText(hWnd, IDC_VOICECOUNT, text);
+		float vu = effect->getVu ();
+		char vustr[kVstMaxParamStrLen*2];
+		ZeroMemory(vustr, sizeof(vustr));
+		effect->dB2string (vu, vustr, (kVstMaxParamStrLen*2)-1);
+		sprintf(text, "%s dB", vustr);
+		SetDlgItemText(hWnd, IDC_VU, text);
+		double cpu = effect->getCPULoad ();
+		sprintf(text, "%lf %%", cpu);
+		SetDlgItemText(hWnd, IDC_CPU, text);
+		COLORREF color = 0;
+		HDC hDc = GetDC(GetDlgItem(hWnd, IDC_VOICECOUNT));
+		if (hDc)
+		{
+			if (numvoices > voicealert)
+			{
+				color = RGB(255, 0, 0);
+			}
+			SetTextColor(hDc, color);
+			ReleaseDC(GetDlgItem(hWnd, IDC_VOICECOUNT), hDc);
+			hDc = NULL;
+		}
+		color = 0;
+		hDc = GetDC(GetDlgItem(hWnd, IDC_VU));
+		if (hDc)
+		{
+			if (vu > 1)
+			{
+				color = RGB(255, 0, 0);
+			}
+			SetTextColor(hDc, color);
+			ReleaseDC(GetDlgItem(hWnd, IDC_VU), hDc);
+			hDc = NULL;
+		}
+		color = 0;
+		hDc = GetDC(GetDlgItem(hWnd, IDC_CPU));
+		if (hDc)
+		{
+			if (cpu > 50)
+			{
+				color = RGB(255, 0, 0);
+			}
+			SetTextColor(hDc, color);
+			ReleaseDC(GetDlgItem(hWnd, IDC_CPU), hDc);
+			hDc = NULL;
+		}
+	}
+}
+
 static BOOL InitDialog(HWND hWnd)
 {
 	if (hWnd)
@@ -247,6 +310,7 @@ static BOOL RefreshDialog(HWND hWnd, Timidity* effect)
 		}
 		effect->getConfigName (text, MAX_PATH);
 		SetDlgItemText(hWnd, IDC_CURCFG, text);
+		UpdateMeters(hWnd, effect, FALSE);
 		return TRUE;
 	}
 	return FALSE;
@@ -1583,65 +1647,7 @@ void Editor::close ()
 
 void Editor::idle ()
 {
-	if (effect && dlg)
-	{
-		if (IsDlgButtonChecked((HWND)dlg, IDC_FREEZE))
-		{
-			return;
-		}
-		char text[MAX_PATH];
-		ZeroMemory(text, sizeof(text));
-		VstInt32 numvoices = ((Timidity*)effect)->getActiveVoices ();
-		VstInt32 maxvoices = ((Timidity*)effect)->getMaxVoices ();
-		VstInt32 voicealert = maxvoices - (maxvoices / 6);
-		sprintf(text, "%d/%d", numvoices, maxvoices);
-		SetDlgItemText((HWND)dlg, IDC_VOICECOUNT, text);
-		float vu = ((Timidity*)effect)->getVu ();
-		char vustr[kVstMaxParamStrLen*2];
-		ZeroMemory(vustr, sizeof(vustr));
-		effect->dB2string (vu, vustr, (kVstMaxParamStrLen*2)-1);
-		sprintf(text, "%s dB", vustr);
-		SetDlgItemText((HWND)dlg, IDC_VU, text);
-		double cpu = ((Timidity*)effect)->getCPULoad ();
-		sprintf(text, "%lf %%", cpu);
-		SetDlgItemText((HWND)dlg, IDC_CPU, text);
-		COLORREF color = 0;
-		HDC hDc = GetDC(GetDlgItem((HWND)dlg, IDC_VOICECOUNT));
-		if (hDc)
-		{
-			if (numvoices > voicealert)
-			{
-				color = RGB(255, 0, 0);
-			}
-			SetTextColor(hDc, color);
-			ReleaseDC(GetDlgItem((HWND)dlg, IDC_VOICECOUNT), hDc);
-			hDc = NULL;
-		}
-		color = 0;
-		hDc = GetDC(GetDlgItem((HWND)dlg, IDC_VU));
-		if (hDc)
-		{
-			if (vu > 1)
-			{
-				color = RGB(255, 0, 0);
-			}
-			SetTextColor(hDc, color);
-			ReleaseDC(GetDlgItem((HWND)dlg, IDC_VU), hDc);
-			hDc = NULL;
-		}
-		color = 0;
-		hDc = GetDC(GetDlgItem((HWND)dlg, IDC_CPU));
-		if (hDc)
-		{
-			if (cpu > 50)
-			{
-				color = RGB(255, 0, 0);
-			}
-			SetTextColor(hDc, color);
-			ReleaseDC(GetDlgItem((HWND)dlg, IDC_CPU), hDc);
-			hDc = NULL;
-		}
-	}
+	UpdateMeters((HWND)dlg, (Timidity*)effect, TRUE);
 }
 
 void Editor::refresh ()
