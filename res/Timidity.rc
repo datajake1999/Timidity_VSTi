@@ -53,7 +53,7 @@ BEGIN
             VALUE "FileDescription", "Timidity VSTi\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
             VALUE "InternalName", "Timidity\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024-2025\0"
             VALUE "LegalTrademarks", "VST is a trademark of Steinberg Media Technologies GmbH\0"
             VALUE "OriginalFilename", "Timidity.dll\0"
             VALUE "PrivateBuild", "\0"
@@ -242,7 +242,7 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_ABOUTCAP            "About Timidity VSTi"
-    IDS_ABOUTTXT            "Copyright (C) 2024 Datajake.\nBased on MIDI Plug-in for GSPlayer by Y.Nagamidori.\nVST PlugIn Interface Technology by Steinberg Media Technologies GmbH.\n\nTimidity credits:\nTimidity 0.2i by Tuukka Toivonen.\nTimidity Win32 by Davide Moretti.\nTimidity Win95 by Nicolas Witczak."
+    IDS_ABOUTTXT            "Copyright (C) 2024-2025 Datajake.\nBased on MIDI Plug-in for GSPlayer by Y.Nagamidori.\nVST PlugIn Interface Technology by Steinberg Media Technologies GmbH.\n\nTimidity credits:\nTimidity 0.2i by Tuukka Toivonen.\nTimidity Win32 by Davide Moretti.\nTimidity Win95 by Nicolas Witczak."
     IDS_STATSCAP            "VST Plug-in Statistics"
     IDS_STATSTXT            "Host sample rate: %d hZ\nBlock size: %d\nActive plug-in Instances: %d"
     IDS_HOSTCAP             "VST Host Information"
