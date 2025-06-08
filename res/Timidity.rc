@@ -243,8 +243,8 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_ABOUTCAP            "About Timidity VSTi"
     IDS_ABOUTTXT            "Copyright (C) 2024 Datajake.\nBased on MIDI Plug-in for GSPlayer by Y.Nagamidori.\nVST PlugIn Interface Technology by Steinberg Media Technologies GmbH.\n\nTimidity credits:\nTimidity 0.2i by Tuukka Toivonen.\nTimidity Win32 by Davide Moretti.\nTimidity Win95 by Nicolas Witczak."
-    IDS_STATSCAP            "VST Plugin Statistics"
-    IDS_STATSTXT            "Host sample rate: %d hZ\nBlock size: %d\nActive plugin Instances: %d"
+    IDS_STATSCAP            "VST Plug-in Statistics"
+    IDS_STATSTXT            "Host sample rate: %d hZ\nBlock size: %d\nActive plug-in Instances: %d"
     IDS_HOSTCAP             "VST Host Information"
     IDS_HOSTTXT             "Product name: %s\nProduct version: %f\nVendor: %s\nMaster version: %f"
     IDS_FILEFLT             "Timidity Configuration Files(*.CFG)\0*.CFG\0Everything (*.*)\0*.*\0\0"
