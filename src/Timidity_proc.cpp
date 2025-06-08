@@ -203,8 +203,7 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 	double begin;
 	double end;
 
-	lock.acquire();
-	if (bypassed || !buffer || !out1 || !out2)
+	if (bypassed || !buffer || !out1 || !out2 || !lock.tryAcquire())
 	{
 		begin = GetCPUTime();
 		if (out1)
@@ -243,7 +242,7 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 	begin = GetCPUTime();
 	VstInt32 totalFrames = sampleFrames;
 	VstInt32 renderedFrames = 0;
-	float *bufferPointer = buffer;
+	float* bufferPointer = buffer;
 	while (totalFrames > 0)
 	{
 		while (MidiQueue.HasEvents() && MidiQueue.GetEventTime() <= renderedFrames)
