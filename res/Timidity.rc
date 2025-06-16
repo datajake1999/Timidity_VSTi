@@ -192,7 +192,7 @@ BEGIN
     LTEXT           "Active Voices: ",IDC_STATIC,220,320,90,8
     LTEXT           "",IDC_VOICECOUNT,310,320,90,8
     PUSHBUTTON      "&About...",IDC_ABOUT,20,350,90,15,WS_TABSTOP
-    PUSHBUTTON      "Plug&in Statistics...",IDC_STATS,120,350,90,15,WS_TABSTOP
+    PUSHBUTTON      "Plug-&in Statistics...",IDC_STATS,120,350,90,15,WS_TABSTOP
     LTEXT           "Output Level: ",IDC_STATIC,220,350,90,8
     LTEXT           "",IDC_VU,310,350,90,8
     PUSHBUTTON      "&Host Info...",IDC_HOSTINFO,20,380,90,15,WS_TABSTOP
@@ -244,7 +244,7 @@ BEGIN
     IDS_ABOUTCAP            "About Timidity VSTi"
     IDS_ABOUTTXT            "Copyright (C) 2024-2025 Datajake.\nBased on MIDI Plug-in for GSPlayer by Y.Nagamidori.\nVST PlugIn Interface Technology by Steinberg Media Technologies GmbH.\n\nTimidity credits:\nTimidity 0.2i by Tuukka Toivonen.\nTimidity Win32 by Davide Moretti.\nTimidity Win95 by Nicolas Witczak."
     IDS_STATSCAP            "VST Plug-in Statistics"
-    IDS_STATSTXT            "Host sample rate: %d hZ\nBlock size: %d\nActive plug-in Instances: %d"
+    IDS_STATSTXT            "Host sample rate: %d hZ\nBlock size: %d\nActive plug-in instances: %d"
     IDS_HOSTCAP             "VST Host Information"
     IDS_HOSTTXT             "Product name: %s\nProduct version: %f\nVendor: %s\nMaster version: %f"
     IDS_FILEFLT             "Timidity Configuration Files(*.CFG)\0*.CFG\0Everything (*.*)\0*.*\0\0"
@@ -252,9 +252,9 @@ BEGIN
     IDS_FAILCAP             "Error"
     IDS_FAILTXT             "%s Failed to load!"
     IDS_HELPCAP             "Congratulations"
-    IDS_HELPTXT             "You pressed the help button! This feature Isn't particularly useful, so you might want to consult your favorite search engine If you have an Internet connection."
+    IDS_HELPTXT             "You pressed the help button! This feature isn't particularly useful, so you might want to consult your favorite search engine if you have an internet connection."
     IDS_WEBCAP              "Confirm"
-    IDS_WEBTXT              "Are you connected to the Internet?"
+    IDS_WEBTXT              "Are you connected to the internet?"
     IDS_REAPPROVE           "\nI approve!"
 END
 

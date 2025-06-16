@@ -1,25 +1,24 @@
 # Introduction
 This is a VST version of the Timidity MIDI player. The version of Timidity that is used in this project is based on the GSPlayer implementation, which is subsequently based on Timidity 0.2i by Tuukka Toivonen.
 
-# Usage notes
+# Usage Notes
 In order for the instrument to generate sound, it requires a set of Gravis Ultrasound patches to be loaded into the synth. There are several sets of instruments out there, and these include the original Gravis Ultrasound patch set, the instrument bank distributed with the GSPlayer MIDI plug-in, Pro Patches Lite, and EAWPATS. After downloading an instrument set, simply press the Load Configuration button in the plug-in's user interface, and browse to the appropriate Timidity configuration file. Note: some parameters require that instruments be reloaded in order for them to take effect, so some parameter changes can take slightly longer if a large instrument bank is being used.
 
-# Automatable parameters
+# Automatable Parameters
 
 * Volume: Synth master volume.
 * VolumeDisplay: Sets the unit for displaying the aforementioned Volume parameter, either dB or %.
 * ImmediatePan: Pans notes that are already playing. When this option is disabled, pan control messages won't take effect until the next note is played.
 * Mono: Generates mono audio output.
-* Transpose: Applies an offset to Incoming MIDI notes.
+* Transpose: Applies an offset to incoming MIDI notes.
 * Voices: the maximum number of notes that can simultaneously play at a time.
 * FastDecay: Makes notes decay slightly faster. When this option is enabled, the output can sound more like a Gravis Ultrasound.
 * Antialiasing: Runs samples through an antialiasing filter during the loading process.
 * ControlRate: The higher the value, the smoother envelopes and LFOs are rendered.
-* PushMidi: Queue's MIDI events Instead of processing them Immediately. Queued events have sample accurate timing, while immediate events can have jittery playback with large audio buffers.
+* PushMidi: Queue's MIDI events instead of processing them immediately. Queued events have sample accurate timing, while immediate events can have jittery playback with large audio buffers.
 
 # What's with the GUI?
-
-The User Interfaces of most audio plug-ins draw graphics directly to the screen. The problem with this approach Is that these controls aren't seen by assistive technology such as screen readers, which are designed to work with native Operating System controls. This project aims to change that. The UI has been programmed from the ground up using raw Win32 with mostly standard controls, The only exception being the Virtual MIDI Keyboard.
+The user interfaces of most audio plug-ins draw graphics directly to the screen. The problem with this approach is that these controls aren't seen by assistive technology such as screen readers, which are designed to work with native operating system controls. This project aims to change that. The UI has been programmed from the ground up using raw Win32 with mostly standard controls, the only exception being the virtual MIDI keyboard.
 
 ## Guide to the GUI
 
@@ -46,19 +45,19 @@ The User Interfaces of most audio plug-ins draw graphics directly to the screen.
 * Channel Mixer: brings up a dialog where MIDI channels can be enabled or disabled. When a channel is disabled from this dialog, all notes are stopped and various controllers are reset on the relevant channel. This dialog also has All and None buttons for quickly enabling or disabling all channels, and there is a Close button to go back to the main window.
 * Open Project Page: opens the project page in the user's default web browser. The user is asked if they are connected to the internet before attempting to load the browser.
 
-## Virtual MIDI Keyboard cheat sheet
+## Virtual MIDI Keyboard Cheat Sheet
 
-* Number row: Select octave.
-* Top row: Sharp notes.
-* Home row: Flat notes.
-* Bottom row: Select velocity.
+* Number Row: Select octave.
+* Top Row: Sharp notes.
+* Home Row: Flat notes.
+* Bottom Row: Select velocity.
 * Shift: Sustain.
-* Up arrow: Increase velocity.
-* Down arrow: Decrease velocity.
-* Right arrow: Increase octave.
-* Left arrow: Decrease octave.
-* Page down: Move to next Instrument.
-* Page up: Move to previous Instrument.
+* Up Arrow: Increase velocity.
+* Down Arrow: Decrease velocity.
+* Right Arrow: Increase octave.
+* Left Arrow: Decrease octave.
+* Page Down: Move to next instrument.
+* Page Up: Move to previous instrument.
 * End: Increase active channel.
 * Home: Decrease active channel.
 * =: Increase bend MSB.
@@ -68,17 +67,17 @@ The User Interfaces of most audio plug-ins draw graphics directly to the screen.
 * Backspace: Reset pitch bend and program to current keyboard state.
 * Space: Reset keyboard state.
 
-# Extra notes
+# Extra Notes
 
-* This is only a VST2 compatible plug-in. A VST3 version Is not planned for various reasons.
+* This is only a VST2 compatible plug-in. A VST3 version is not planned for various reasons.
 
-# Building from source
+# Building from Source
 In order to build Timidity VSTi you will need
 
 * Microsoft Visual Studio 2005
 * Windows Server 2003 Platform SDK
 * InnoSetup 5.4.3
-* 7-Zip
+* 7-Zip (any version)
 
 After installing, just run build.bat. You may need to change the paths defined in this script to correspond with your installation of the build tools.
 
@@ -102,3 +101,4 @@ After installing, just run build.bat. You may need to change the paths defined i
 * Gravis, for creating the Ultrasound series of sound cards back in the 90s.
 * Old blogs and forums, for tips on VST development.
 * Charles Petzold, for writing Programming Windows, Fifth Edition.
+* Veli-Pekka Tätilä, for writing a set of recommended accessibility practices to keep in mind when designing VST user interfaces.
