@@ -1,6 +1,7 @@
 Timidity_VSTi\.gitignore
 Timidity_VSTi\build.bat
 Timidity_VSTi\builddemo.bat
+Timidity_VSTi\gui_rules.txt
 Timidity_VSTi\include
 Timidity_VSTi\install.iss
 Timidity_VSTi\license.txt
