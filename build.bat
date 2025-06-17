@@ -1,5 +1,5 @@
-@ECHO OFF
-set path="C:\Program Files\7-Zip";"C:\Program Files\Inno Setup 5"
+@echo off
+set path="C:\Program Files\7-Zip";"C:\Program Files\Inno Setup 5";%path%
 cd..
 7z a -tzip Timidity_VSTi\output\Timidity_VSTi-src.zip @Timidity_VSTi\zip-src.lst
 cd Timidity_VSTi
