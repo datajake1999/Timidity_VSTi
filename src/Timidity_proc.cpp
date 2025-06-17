@@ -203,7 +203,7 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 	double begin;
 	double end;
 
-	if (bypassed || !buffer || !out1 || !out2 || !lock.tryAcquire())
+	if (bypassed || !buffer || !lock.tryAcquire())
 	{
 		begin = GetCPUTime();
 		if (out1)
