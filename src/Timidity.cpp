@@ -422,6 +422,8 @@ VstInt32 Timidity::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	{
 		enableChannel (i, chunkData->ChannelEnabled[i]);
 	}
+	setFreezeMeters (chunkData->FreezeMeters);
+	setHideParameters (chunkData->HideParameters);
 #ifdef GUI
 	if (editor)
 	{
@@ -451,6 +453,8 @@ VstInt32 Timidity::getChunk (void** data, bool isPreset)
 	{
 		chunk.ChannelEnabled[i] = ChannelEnabled[i];
 	}
+	chunk.FreezeMeters = FreezeMeters;
+	chunk.HideParameters = HideParameters;
 	*data = &chunk;
 	return sizeof(TimidityChunk);
 }

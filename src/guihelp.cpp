@@ -40,6 +40,8 @@ void Timidity::initializeSettings (bool resetSynth)
 	{
 		ChannelEnabled[i] = true;
 	}
+	FreezeMeters = false;
+	HideParameters = false;
 	if (resetSynth)
 	{
 		suspend ();
@@ -150,6 +152,30 @@ bool Timidity::isChannelEnabled (VstInt32 channel)
 {
 	channel = channel & 0x0f;
 	return ChannelEnabled[channel];
+}
+
+void Timidity::setFreezeMeters (bool value)
+{
+	lock.acquire();
+	FreezeMeters = value;
+	lock.release();
+}
+
+bool Timidity::getFreezeMeters ()
+{
+	return FreezeMeters;
+}
+
+void Timidity::setHideParameters (bool value)
+{
+	lock.acquire();
+	HideParameters = value;
+	lock.release();
+}
+
+bool Timidity::getHideParameters ()
+{
+	return HideParameters;
 }
 
 void Timidity::hardReset ()

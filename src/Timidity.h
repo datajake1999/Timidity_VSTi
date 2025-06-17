@@ -22,6 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 //#define DEMO
 #ifdef DEMO
@@ -75,6 +76,8 @@ struct TimidityChunk
 	char ConfigFile[256];
 	char ConfigName[256];
 	bool ChannelEnabled[16];
+	bool FreezeMeters;
+	bool HideParameters;
 };
 
 class Timidity : public AudioEffectX
@@ -139,6 +142,10 @@ public:
 	virtual bool loadInstruments (char* filename, char* display);
 	virtual void enableChannel (VstInt32 channel, bool enable);
 	virtual bool isChannelEnabled (VstInt32 channel);
+	virtual void setFreezeMeters (bool value);
+	virtual bool getFreezeMeters ();
+	virtual void setHideParameters (bool value);
+	virtual bool getHideParameters ();
 	virtual void hardReset ();
 	virtual VstInt32 getActiveVoices ();
 	virtual VstInt32 getMaxVoices ();
@@ -186,6 +193,8 @@ private:
 	char ConfigFile[256];
 	char ConfigName[256];
 	bool ChannelEnabled[16];
+	bool FreezeMeters;
+	bool HideParameters;
 	TimidityChunk chunk;
 	HostInfo hi;
 	LockableObject lock;
