@@ -31,7 +31,7 @@ The user interfaces of most audio plug-ins draw graphics directly to the screen.
 
 ### Misc
 
-* Refresh: refreshes the user interface with the plug-in’s current settings and state.
+* Refresh: refreshes the user interface with the plug-in's current settings and state.
 * Load Configuration: loads a configuration file into the synth. The current configuration is shown to the right of this control.
 * Panic Synth: stops all notes immediately.
 * Reset Synth: stops all notes immediately and resets MIDI parameters. The number of currently active voices is shown to the right of this control.
