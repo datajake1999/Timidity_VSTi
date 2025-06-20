@@ -249,7 +249,7 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 		{
 			processEvent (MidiQueue.GetNextEvent());
 		}
-		VstInt32 currentFrames = MidiQueue.GetEventTime() -renderedFrames;
+		VstInt32 currentFrames = MidiQueue.GetEventTime() - renderedFrames;
 		if (currentFrames > totalFrames || currentFrames <= 0)
 		{
 			currentFrames = totalFrames;
@@ -440,7 +440,7 @@ void Timidity::sendMidi (char* data)
 	}
 	if (Transpose >= 1 || Transpose <= -1)
 	{
-		if (type == 0x80 || type == 0x90)
+		if (type == 0x80 || type == 0x90 || type == 0xa0)
 		{
 			if (channel != 9)
 			{
