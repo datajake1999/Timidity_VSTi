@@ -165,6 +165,28 @@ void Timidity::setParameter (VstInt32 index, float value)
 			timid_set_antialiasing(&synth, 0);
 		}
 		break;
+	case kPreResample:
+		PreResample = value;
+		if (PreResample >= 0.5)
+		{
+			timid_set_pre_resample(&synth, 1);
+		}
+		else
+		{
+			timid_set_pre_resample(&synth, 0);
+		}
+		break;
+	case kDynamicLoad:
+		DynamicLoad = value;
+		if (DynamicLoad >= 0.5)
+		{
+			timid_set_dynamic_instrument_load(&synth, 1);
+		}
+		else
+		{
+			timid_set_dynamic_instrument_load(&synth, 0);
+		}
+		break;
 	case kControlRate:
 		ControlRate = value*sampleRate;
 		if (ControlRate > sampleRate)
@@ -219,6 +241,12 @@ float Timidity::getParameter (VstInt32 index)
 		break;
 	case kAntialiasing:
 		value = Antialiasing;
+		break;
+	case kPreResample:
+		value = PreResample;
+		break;
+	case kDynamicLoad:
+		value = DynamicLoad;
 		break;
 	case kControlRate:
 		value = ControlRate/sampleRate;
@@ -311,6 +339,26 @@ void Timidity::getParameterDisplay (VstInt32 index, char* text)
 			vst_strncpy (text, "OFF", (kVstMaxParamStrLen*2)-1);
 		}
 		break;
+	case kPreResample:
+		if (PreResample >= 0.5)
+		{
+			vst_strncpy (text, "ON", (kVstMaxParamStrLen*2)-1);
+		}
+		else
+		{
+			vst_strncpy (text, "OFF", (kVstMaxParamStrLen*2)-1);
+		}
+		break;
+	case kDynamicLoad:
+		if (DynamicLoad >= 0.5)
+		{
+			vst_strncpy (text, "ON", (kVstMaxParamStrLen*2)-1);
+		}
+		else
+		{
+			vst_strncpy (text, "OFF", (kVstMaxParamStrLen*2)-1);
+		}
+		break;
 	case kControlRate:
 		int2string ((VstInt32)ControlRate, text, (kVstMaxParamStrLen*2)-1);
 		break;
@@ -389,6 +437,12 @@ void Timidity::getParameterName (VstInt32 index, char* name)
 		break;
 	case kAntialiasing:
 		vst_strncpy (name, "Antialiasing", (kVstMaxParamStrLen*2)-1);
+		break;
+	case kPreResample:
+		vst_strncpy (name, "PreResample", (kVstMaxParamStrLen*2)-1);
+		break;
+	case kDynamicLoad:
+		vst_strncpy (name, "DynamicLoad", (kVstMaxParamStrLen*2)-1);
 		break;
 	case kControlRate:
 		vst_strncpy (name, "ControlRate", (kVstMaxParamStrLen*2)-1);
@@ -590,6 +644,12 @@ bool Timidity::getParameterProperties (VstInt32 index, VstParameterProperties* p
 		p->flags |= kVstParameterIsSwitch;
 		break;
 	case kAntialiasing:
+		p->flags |= kVstParameterIsSwitch;
+		break;
+	case kPreResample:
+		p->flags |= kVstParameterIsSwitch;
+		break;
+	case kDynamicLoad:
 		p->flags |= kVstParameterIsSwitch;
 		break;
 	case kControlRate:

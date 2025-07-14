@@ -96,6 +96,22 @@ void Timidity::initSynth ()
 	{
 		timid_set_antialiasing(&synth, 0);
 	}
+	if (PreResample >= 0.5)
+	{
+		timid_set_pre_resample(&synth, 1);
+	}
+	else
+	{
+		timid_set_pre_resample(&synth, 0);
+	}
+	if (DynamicLoad >= 0.5)
+	{
+		timid_set_dynamic_instrument_load(&synth, 1);
+	}
+	else
+	{
+		timid_set_dynamic_instrument_load(&synth, 0);
+	}
 	if (ControlRate > sampleRate)
 	{
 		ControlRate = sampleRate;

@@ -103,6 +103,26 @@ bool Timidity::getParameterDisplayValue (VstInt32 index, char* text, float value
 			vst_strncpy (text, "OFF", (kVstMaxParamStrLen*2)-1);
 		}
 		break;
+	case kPreResample:
+		if (value >= 0.5)
+		{
+			vst_strncpy (text, "ON", (kVstMaxParamStrLen*2)-1);
+		}
+		else
+		{
+			vst_strncpy (text, "OFF", (kVstMaxParamStrLen*2)-1);
+		}
+		break;
+	case kDynamicLoad:
+		if (value >= 0.5)
+		{
+			vst_strncpy (text, "ON", (kVstMaxParamStrLen*2)-1);
+		}
+		else
+		{
+			vst_strncpy (text, "OFF", (kVstMaxParamStrLen*2)-1);
+		}
+		break;
 	case kControlRate:
 		value = value*sampleRate;
 		int2string ((VstInt32)value, text, (kVstMaxParamStrLen*2)-1);
@@ -193,6 +213,10 @@ bool Timidity::isEnumParameter (VstInt32 index)
 	case kFastDecay:
 		return true;
 	case kAntialiasing:
+		return true;
+	case kPreResample:
+		return true;
+	case kDynamicLoad:
 		return true;
 	case kControlRate:
 		return true;

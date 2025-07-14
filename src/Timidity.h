@@ -52,6 +52,8 @@ enum
 	kVoices,
 	kFastDecay,
 	kAntialiasing,
+	kPreResample,
+	kDynamicLoad,
 	kControlRate,
 	kPushMidi,
 
@@ -187,6 +189,8 @@ private:
 	float Voices;
 	float FastDecay;
 	float Antialiasing;
+	float PreResample;
+	float DynamicLoad;
 	float ControlRate;
 	float PushMidi;
 	bool bypassed;
