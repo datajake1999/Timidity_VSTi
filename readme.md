@@ -14,6 +14,8 @@ In order for the instrument to generate sound, it requires a set of Gravis Ultra
 * Voices: the maximum number of notes that can simultaneously play at a time.
 * FastDecay: Makes notes decay slightly faster. When this option is enabled, the output can sound more like a Gravis Ultrasound.
 * Antialiasing: Runs samples through an antialiasing filter during the loading process.
+* PreResample: Resamples fixed pitch instruments during the loading process.
+* DynamicLoad: Dynamically loads instruments as they are needed.
 * ControlRate: The higher the value, the smoother envelopes and LFOs are rendered.
 * PushMidi: Queue's MIDI events instead of processing them immediately. Queued events have sample accurate timing, while immediate events can have jittery playback with large audio buffers.
 
