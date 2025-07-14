@@ -291,6 +291,24 @@ static BOOL RefreshDialog(HWND hWnd, Timidity* effect)
 		{
 			CheckDlgButton(hWnd, IDC_ANTI, BST_UNCHECKED);
 		}
+		ParamValue = effect->getParameter (kPreResample);
+		if (ParamValue >= 0.5)
+		{
+			CheckDlgButton(hWnd, IDC_PRERES, BST_CHECKED);
+		}
+		else
+		{
+			CheckDlgButton(hWnd, IDC_PRERES, BST_UNCHECKED);
+		}
+		ParamValue = effect->getParameter (kDynamicLoad);
+		if (ParamValue >= 0.5)
+		{
+			CheckDlgButton(hWnd, IDC_DYNALOAD, BST_CHECKED);
+		}
+		else
+		{
+			CheckDlgButton(hWnd, IDC_DYNALOAD, BST_UNCHECKED);
+		}
 		ParamValue = effect->getParameter (kPushMidi);
 		if (ParamValue >= 0.5)
 		{
@@ -927,6 +945,24 @@ static BOOL WINAPI DialogProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			else
 			{
 				return SetParameterValue(effect, kAntialiasing, 0);
+			}
+		case IDC_PRERES:
+			if (IsDlgButtonChecked(hWnd, IDC_PRERES))
+			{
+				return SetParameterValue(effect, kPreResample, 1);
+			}
+			else
+			{
+				return SetParameterValue(effect, kPreResample, 0);
+			}
+		case IDC_DYNALOAD:
+			if (IsDlgButtonChecked(hWnd, IDC_DYNALOAD))
+			{
+				return SetParameterValue(effect, kDynamicLoad, 1);
+			}
+			else
+			{
+				return SetParameterValue(effect, kDynamicLoad, 0);
 			}
 		case IDC_QUEUE:
 			if (IsDlgButtonChecked(hWnd, IDC_QUEUE))
