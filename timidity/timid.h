@@ -87,6 +87,10 @@ typedef struct {
   int note, amp, pan, strip_loop, strip_envelope, strip_tail;
 } ToneBankElement;
 
+/* A hack to delay instrument loading until after reading the
+   entire MIDI file. */
+#define MAGIC_LOAD_INSTRUMENT ((Instrument *)(-1))
+
 typedef struct {
   ToneBankElement tone[128];
 } ToneBank;
@@ -224,7 +228,9 @@ typedef struct {
   /* This is only used for tracks that don't specify a program */
   int default_program;
   int antialiasing_allowed;
+  int pre_resampling_allowed;
   int fast_decay;
+  int dynamic_loading;
   PlayMode play_mode;
   int32 common_buffer[AUDIO_BUFFER_SIZE*2]; /* stereo samples */
   int32 *buffer_pointer;
@@ -356,11 +362,11 @@ void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count);
 void timid_all_notes_off(Timid *tm);
 /* Stop all notes with quick fade out, helps avoid clicks */
 void timid_all_sounds_off(Timid *tm);
-/* Reset MIDI controllers */
+/* Reset all MIDI controllers */
 void timid_reset_controllers(Timid *tm);
 /* Stop all notes immediately */
 void timid_panic(Timid *tm);
-/* Stop all notes immediately, and reset MIDI parameters */
+/* Stop all notes immediately, and reset all MIDI parameters */
 void timid_reset(Timid *tm);
 
 /* MIDI file player, only supports standard MIDI files */
@@ -391,6 +397,8 @@ void timid_set_mono(Timid *tm, int value);
 /* These next few functions reload the current sample bank before returning */
 void timid_set_fast_decay(Timid *tm, int value);
 void timid_set_antialiasing(Timid *tm, int value);
+void timid_set_pre_resample(Timid *tm, int value);
+void timid_set_dynamic_instrument_load(Timid *tm, int value);
 void timid_set_sample_rate(Timid *tm, int rate);
 void timid_set_control_rate(Timid *tm, int rate);
 /* Sets the default MIDI program, takes effect on next MIDI reset */
@@ -400,6 +408,9 @@ void timid_set_quiet_channel(Timid *tm, int channel, int enable);
 
 /* Restore default settings */
 void timid_restore_defaults(Timid *tm);
+
+/* Force all instruments to be loaded */
+int timid_force_instrument_load(Timid *tm);
 
 /* Manage default instruments. These functions take effect on the next MIDI reset */
 int timid_set_default_instrument(Timid *tm, char *filename);
@@ -414,6 +425,8 @@ int timid_get_immediate_panning(Timid *tm);
 int timid_get_mono(Timid *tm);
 int timid_get_fast_decay(Timid *tm);
 int timid_get_antialiasing(Timid *tm);
+int timid_get_pre_resample(Timid *tm);
+int timid_get_dynamic_instrument_load(Timid *tm);
 int timid_get_sample_rate(Timid *tm);
 int timid_get_control_rate(Timid *tm);
 int timid_get_default_program(Timid *tm);

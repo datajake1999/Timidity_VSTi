@@ -317,7 +317,7 @@ static void free_midi_list(Timid *tm)
 }
 
 /* Allocate an array of MidiEvents and fill it from the linked list of
-events. Convert event times to
+events, marking used instruments for loading. Convert event times to
 samples: handle tempo changes. Strip unnecessary events from the list.
 Free the linked list. */
 static MidiEvent *groom_list(Timid *tm, int32 divisions,int32 *eventsp,int32 *samplesp)
@@ -386,6 +386,26 @@ static MidiEvent *groom_list(Timid *tm, int32 divisions,int32 *eventsp,int32 *sa
         case ME_NOTEON:
             if (counting_time)
             counting_time=1;
+            if (ISDRUMCHANNEL(tm, meep->event.channel) && tm->drumset[current_set[meep->event.channel]])
+            {
+                /* Mark this instrument to be loaded */
+                if (!(tm->drumset[current_set[meep->event.channel]]
+                ->tone[meep->event.a].instrument))
+                tm->drumset[current_set[meep->event.channel]]
+                ->tone[meep->event.a].instrument=
+                MAGIC_LOAD_INSTRUMENT;
+            }
+            else if (tm->tonebank[current_bank[meep->event.channel]])
+            {
+                if (current_program[meep->event.channel]==SPECIAL_PROGRAM)
+                break;
+                /* Mark this instrument to be loaded */
+                if (!(tm->tonebank[current_bank[meep->event.channel]]
+                ->tone[current_program[meep->event.channel]].instrument))
+                tm->tonebank[current_bank[meep->event.channel]]
+                ->tone[current_program[meep->event.channel]].instrument=
+                MAGIC_LOAD_INSTRUMENT;
+            }
             break;
             
         case ME_TONE_BANK:

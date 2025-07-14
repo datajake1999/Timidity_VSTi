@@ -59,6 +59,8 @@ static void free_bank(Timid *tm, int dr, int b)
     {
         if (bank->tone[i].instrument)
         {
+            /* Not that this could ever happen, of course */
+            if (bank->tone[i].instrument != MAGIC_LOAD_INSTRUMENT)
             free_instrument(bank->tone[i].instrument);
             bank->tone[i].instrument=0;
         }
@@ -472,7 +474,7 @@ int strip_tail)
         
         /* If this instrument will always be played on the same note,
         and it's not looped, we can resample it now. */
-        if (sp->note_to_use && !(sp->modes & MODES_LOOPING))
+        if (tm->pre_resampling_allowed && sp->note_to_use && !(sp->modes & MODES_LOOPING))
         pre_resample(tm, sp);
         
 #ifdef LOOKUP_HACK
@@ -511,7 +513,7 @@ static int fill_bank(Timid *tm, int dr, int b)
     }
     for (i=0; i<128; i++)
     {
-        if ((bank->tone[i].name))
+        if (bank->tone[i].instrument==MAGIC_LOAD_INSTRUMENT && (bank->tone[i].name))
         {
             if (!(bank->tone[i].instrument=
             load_instrument(tm, bank->tone[i].name,

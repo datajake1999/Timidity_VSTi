@@ -243,6 +243,16 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
     {
         if (!tm->drumset[tm->channel[e->channel].bank] && !tm->drumset[0])
         return; /* No drumset? Then we can't play. */
+        if (!tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument)
+        {
+            tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument=MAGIC_LOAD_INSTRUMENT;
+            load_instruments(tm);
+        }
+        if (!tm->drumset[0]->tone[e->a].instrument)
+        {
+            tm->drumset[0]->tone[e->a].instrument=MAGIC_LOAD_INSTRUMENT;
+            load_instruments(tm);
+        }
         if (!(ip=tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument))
         {
             if (!(ip=tm->drumset[0]->tone[e->a].instrument))
@@ -261,6 +271,19 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
     {
         if (!tm->tonebank[tm->channel[e->channel].bank] && !tm->tonebank[0] && tm->channel[e->channel].program!=SPECIAL_PROGRAM)
         return; /* No tonebank? Then we can't play. */
+        if (tm->channel[e->channel].program!=SPECIAL_PROGRAM)
+        {
+            if (!tm->tonebank[tm->channel[e->channel].bank]->tone[tm->channel[e->channel].program].instrument)
+            {
+                tm->tonebank[tm->channel[e->channel].bank]->tone[tm->channel[e->channel].program].instrument=MAGIC_LOAD_INSTRUMENT;
+                load_instruments(tm);
+            }
+            if (!tm->tonebank[0]->tone[tm->channel[e->channel].program].instrument)
+            {
+                tm->tonebank[0]->tone[tm->channel[e->channel].program].instrument=MAGIC_LOAD_INSTRUMENT;
+                load_instruments(tm);
+            }
+        }
         if (tm->channel[e->channel].program==SPECIAL_PROGRAM)
         ip=tm->default_instrument;
         else if (!(ip=tm->tonebank[tm->channel[e->channel].bank]->
@@ -799,6 +822,7 @@ void timid_init(Timid *tm)
     memset(tm, 0, sizeof(Timid));
     tm->default_program=DEFAULT_PROGRAM;
     tm->antialiasing_allowed=1;
+    tm->pre_resampling_allowed=1;
 #ifdef FAST_DECAY
     tm->fast_decay=1;
 #else
@@ -834,13 +858,13 @@ int timid_load_config(Timid *tm, char *filename)
     {
         if (*tm->def_instr_name)
         set_default_instrument(tm, tm->def_instr_name);
-        if (load_instruments(tm) == 0)
+        if (!tm->dynamic_loading)
         {
-            return 1;
+            return timid_force_instrument_load(tm);
         }
         else
         {
-            return 2;
+            return 1;
         }
     }
     return 0;
@@ -1638,6 +1662,10 @@ int timid_load_smf(Timid *tm, char *filename)
         timid_unload_smf(tm);
         return 0;
     }
+    if (tm->dynamic_loading)
+    {
+        load_instruments(tm);
+    }
     read_midi_text(tm);
     skip_to(tm, 0);
     strncpy(tm->last_smf, filename, 1023);
@@ -1941,6 +1969,28 @@ void timid_set_antialiasing(Timid *tm, int value)
     timid_reload_config(tm);
 }
 
+void timid_set_pre_resample(Timid *tm, int value)
+{
+    if (!tm)
+    {
+        return;
+    }
+    reset_voices(tm);
+    tm->pre_resampling_allowed = value;
+    timid_reload_config(tm);
+}
+
+void timid_set_dynamic_instrument_load(Timid *tm, int value)
+{
+    if (!tm)
+    {
+        return;
+    }
+    reset_voices(tm);
+    tm->dynamic_loading = value;
+    timid_reload_config(tm);
+}
+
 void timid_set_sample_rate(Timid *tm, int rate)
 {
     if (!tm)
@@ -2051,11 +2101,13 @@ void timid_restore_defaults(Timid *tm)
     reset_voices(tm);
     tm->default_program=DEFAULT_PROGRAM;
     tm->antialiasing_allowed=1;
+    tm->pre_resampling_allowed=1;
 #ifdef FAST_DECAY
     tm->fast_decay=1;
 #else
     tm->fast_decay=0;
 #endif
+    tm->dynamic_loading=0;
     tm->voices=DEFAULT_VOICES;
     tm->play_mode.rate=DEFAULT_RATE;
     tm->play_mode.encoding=0;
@@ -2066,6 +2118,46 @@ void timid_restore_defaults(Timid *tm)
     tm->adjust_panning_immediately=1;
     adjust_amplification(tm, DEFAULT_AMPLIFICATION);
     timid_reload_config(tm);
+}
+
+int timid_force_instrument_load(Timid *tm)
+{
+    int i;
+    if (!tm)
+    {
+        return 0;
+    }
+    reset_voices(tm);
+    for (i=0; i<128; i++)
+    {
+        if (tm->tonebank[i])
+        {
+            int j;
+            for (j=0; j<128; j++)
+            {
+                if (!tm->tonebank[i]->tone[j].instrument)
+                {
+                    tm->tonebank[i]->tone[j].instrument=MAGIC_LOAD_INSTRUMENT;
+                }
+            }
+        }
+        if (tm->drumset[i])
+        {
+            int j;
+            for (j=0; j<128; j++)
+            {
+                if (!tm->drumset[i]->tone[j].instrument)
+                {
+                    tm->drumset[i]->tone[j].instrument=MAGIC_LOAD_INSTRUMENT;
+                }
+            }
+        }
+    }
+    if (load_instruments(tm) == 0)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 int timid_set_default_instrument(Timid *tm, char *filename)
@@ -2175,6 +2267,24 @@ int timid_get_antialiasing(Timid *tm)
         return 0;
     }
     return tm->antialiasing_allowed;
+}
+
+int timid_get_pre_resample(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->pre_resampling_allowed;
+}
+
+int timid_get_dynamic_instrument_load(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->dynamic_loading;
 }
 
 int timid_get_sample_rate(Timid *tm)
