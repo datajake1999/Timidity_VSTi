@@ -513,9 +513,14 @@ static int fill_bank(Timid *tm, int dr, int b)
     }
     for (i=0; i<128; i++)
     {
-        if (bank->tone[i].instrument==MAGIC_LOAD_INSTRUMENT && (bank->tone[i].name))
+        if (bank->tone[i].instrument==MAGIC_LOAD_INSTRUMENT)
         {
-            if (!(bank->tone[i].instrument=
+            if (!(bank->tone[i].name))
+            {
+                bank->tone[i].instrument=0;
+                errors++;
+            }
+            else if (!(bank->tone[i].instrument=
             load_instrument(tm, bank->tone[i].name,
             (dr) ? 1 : 0,
             bank->tone[i].pan,

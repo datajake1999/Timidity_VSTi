@@ -2135,7 +2135,7 @@ int timid_force_instrument_load(Timid *tm)
             int j;
             for (j=0; j<128; j++)
             {
-                if (!tm->tonebank[i]->tone[j].instrument)
+                if (tm->tonebank[i]->tone[j].name && !tm->tonebank[i]->tone[j].instrument)
                 {
                     tm->tonebank[i]->tone[j].instrument=MAGIC_LOAD_INSTRUMENT;
                 }
@@ -2146,7 +2146,7 @@ int timid_force_instrument_load(Timid *tm)
             int j;
             for (j=0; j<128; j++)
             {
-                if (!tm->drumset[i]->tone[j].instrument)
+                if (tm->drumset[i]->tone[j].name && !tm->drumset[i]->tone[j].instrument)
                 {
                     tm->drumset[i]->tone[j].instrument=MAGIC_LOAD_INSTRUMENT;
                 }
