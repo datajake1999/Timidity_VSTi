@@ -1442,6 +1442,7 @@ void timid_render_24(Timid *tm, int24 *buffer, int32 count)
 void timid_render_long(Timid *tm, int32 *buffer, int32 count)
 {
     int curframes, cursamples, i;
+    int32 maxval = 1 << (31 - GUARD_BITS);
     if (!tm || !buffer)
     {
         return;
@@ -1465,13 +1466,13 @@ void timid_render_long(Timid *tm, int32 *buffer, int32 count)
         }
         for (i=0; i<cursamples; i++)
         {
-            if (tm->common_buffer[i] > 268435455)
+            if (tm->common_buffer[i] > maxval-1)
             {
-                tm->common_buffer[i] = 268435455;
+                tm->common_buffer[i] = maxval-1;
             }
-            else if (tm->common_buffer[i] < -268435456)
+            else if (tm->common_buffer[i] < maxval * -1)
             {
-                tm->common_buffer[i] = -268435456;
+                tm->common_buffer[i] = maxval * -1;
             }
             tm->common_buffer[i] = tm->common_buffer[i] << GUARD_BITS;
             buffer[i] = tm->common_buffer[i];
@@ -1484,6 +1485,7 @@ void timid_render_long(Timid *tm, int32 *buffer, int32 count)
 void timid_render_float(Timid *tm, float *buffer, int32 count)
 {
     int curframes, cursamples, i;
+    int32 maxval = 1 << (31 - GUARD_BITS);
     if (!tm || !buffer)
     {
         return;
@@ -1507,7 +1509,7 @@ void timid_render_float(Timid *tm, float *buffer, int32 count)
         }
         for (i=0; i<cursamples; i++)
         {
-            buffer[i] = tm->common_buffer[i] / (float)268435456;
+            buffer[i] = tm->common_buffer[i] / (float)maxval;
         }
         buffer += cursamples;
         count -= curframes;
@@ -1517,6 +1519,7 @@ void timid_render_float(Timid *tm, float *buffer, int32 count)
 void timid_render_double(Timid *tm, double *buffer, int32 count)
 {
     int curframes, cursamples, i;
+    int32 maxval = 1 << (31 - GUARD_BITS);
     if (!tm || !buffer)
     {
         return;
@@ -1540,7 +1543,7 @@ void timid_render_double(Timid *tm, double *buffer, int32 count)
         }
         for (i=0; i<cursamples; i++)
         {
-            buffer[i] = tm->common_buffer[i] / (double)268435456;
+            buffer[i] = tm->common_buffer[i] / (double)maxval;
         }
         buffer += cursamples;
         count -= curframes;
