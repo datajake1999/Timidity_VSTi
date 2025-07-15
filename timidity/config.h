@@ -64,6 +64,8 @@
 /* A somewhat arbitrary frequency range. The low end of this will
    sound terrible as no lowpass filtering is performed on most
    instruments before resampling. */
+//#define MIN_OUTPUT_RATE 	4000
+//#define MAX_OUTPUT_RATE 	65000
 #define MIN_OUTPUT_RATE 	1000
 #define MAX_OUTPUT_RATE 	1000000
 
