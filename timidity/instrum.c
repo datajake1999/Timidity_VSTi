@@ -543,7 +543,7 @@ static int fill_bank(Timid *tm, int dr, int b)
     return errors;
 }
 
-int load_instruments(Timid *tm)
+int load_missing_instruments(Timid *tm)
 {
     int i=128,errors=0;
     while (i--)

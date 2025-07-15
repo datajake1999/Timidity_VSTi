@@ -287,7 +287,7 @@ void close_file(FILE *fp);
 void skip(FILE *fp, size_t len);
 void *safe_malloc(size_t count);
 void antialiasing(Sample *sp, int32 output_rate);
-int load_instruments(Timid *tm);
+int load_missing_instruments(Timid *tm);
 void free_instruments(Timid *tm);
 int set_default_instrument(Timid *tm, char *name);
 void free_default_instrument(Timid *tm);

@@ -246,12 +246,12 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
         if (!tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument)
         {
             tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument=MAGIC_LOAD_INSTRUMENT;
-            load_instruments(tm);
+            load_missing_instruments(tm);
         }
         if (!tm->drumset[0]->tone[e->a].instrument)
         {
             tm->drumset[0]->tone[e->a].instrument=MAGIC_LOAD_INSTRUMENT;
-            load_instruments(tm);
+            load_missing_instruments(tm);
         }
         if (!(ip=tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument))
         {
@@ -276,12 +276,12 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
             if (!tm->tonebank[tm->channel[e->channel].bank]->tone[tm->channel[e->channel].program].instrument)
             {
                 tm->tonebank[tm->channel[e->channel].bank]->tone[tm->channel[e->channel].program].instrument=MAGIC_LOAD_INSTRUMENT;
-                load_instruments(tm);
+                load_missing_instruments(tm);
             }
             if (!tm->tonebank[0]->tone[tm->channel[e->channel].program].instrument)
             {
                 tm->tonebank[0]->tone[tm->channel[e->channel].program].instrument=MAGIC_LOAD_INSTRUMENT;
-                load_instruments(tm);
+                load_missing_instruments(tm);
             }
         }
         if (tm->channel[e->channel].program==SPECIAL_PROGRAM)
@@ -1665,10 +1665,7 @@ int timid_load_smf(Timid *tm, char *filename)
         timid_unload_smf(tm);
         return 0;
     }
-    if (tm->dynamic_loading)
-    {
-        load_instruments(tm);
-    }
+    load_missing_instruments(tm);
     read_midi_text(tm);
     skip_to(tm, 0);
     strncpy(tm->last_smf, filename, 1023);
@@ -2156,7 +2153,7 @@ int timid_force_instrument_load(Timid *tm)
             }
         }
     }
-    if (load_instruments(tm) == 0)
+    if (load_missing_instruments(tm) == 0)
     {
         return 1;
     }
