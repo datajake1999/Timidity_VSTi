@@ -828,11 +828,14 @@ void timid_init(Timid *tm)
 #else
     tm->fast_decay=0;
 #endif
+    tm->dynamic_loading=0;
     tm->voices=DEFAULT_VOICES;
     tm->play_mode.rate=DEFAULT_RATE;
+    tm->play_mode.encoding=0;
     tm->control_rate=CONTROLS_PER_SECOND;
     tm->control_ratio = tm->play_mode.rate/tm->control_rate;
     tm->drumchannels=DEFAULT_DRUMCHANNELS;
+    tm->quietchannels=0;
     tm->adjust_panning_immediately=1;
     init_tables(tm);
     reset_midi(tm);
