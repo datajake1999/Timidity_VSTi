@@ -1346,7 +1346,7 @@ void timid_render_char(Timid *tm, uint8 *buffer, int32 count)
             {
                 tm->common_buffer[i] = -128;
             }
-            buffer[i] = (uint8)tm->common_buffer[i] + 128;
+            buffer[i] = (uint8)tm->common_buffer[i] ^ 0x80;
         }
         buffer += cursamples;
         count -= curframes;
