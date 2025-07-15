@@ -1,5 +1,5 @@
 # Introduction
-This is a VST version of the Timidity MIDI player. The version of Timidity that is used in this project is based on the GSPlayer implementation, which is subsequently based on Timidity 0.2i by Tuukka Toivonen.
+This is a VST version of the Timidity MIDI player. The version of Timidity that is used in this project is based on the Timidity implementation found in the GSPlayer MIDI plug-in, which is subsequently based on Timidity 0.2i by Tuukka Toivonen. GSPlayer was an open source media player that was primarily for Windows CE.
 
 # Usage Notes
 In order for the instrument to generate sound, it requires a set of Gravis Ultrasound patches to be loaded into the synth. There are several sets of instruments out there, and these include the original Gravis Ultrasound patch set, the instrument bank distributed with the GSPlayer MIDI plug-in, Pro Patches Lite, and EAWPATS. After downloading an instrument set, simply press the Load Configuration button in the plug-in's user interface, and browse to the appropriate Timidity configuration file. Note: some parameters require that instruments be reloaded in order for them to take effect, so some parameter changes can take slightly longer if a large instrument bank is being used.
