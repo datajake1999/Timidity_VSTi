@@ -28,8 +28,18 @@
 			<Entry name="OFF" value="[0, 0.5["/> 
 			<Entry name="ON" value="[0.5, 1]"/> 
 		</ValueType>
-		<Param name="ControlRate" id="8"/>
-		<Param name="PushMidi" id="9" numberOfStates="2"/>
+		<Param name="PreResample" id="8" numberOfStates="2"/>
+		<ValueType name="PreResample">
+			<Entry name="OFF" value="[0, 0.5["/> 
+			<Entry name="ON" value="[0.5, 1]"/> 
+		</ValueType>
+		<Param name="DynamicLoad" id="9" numberOfStates="2"/>
+		<ValueType name="DynamicLoad">
+			<Entry name="OFF" value="[0, 0.5["/> 
+			<Entry name="ON" value="[0.5, 1]"/> 
+		</ValueType>
+		<Param name="ControlRate" id="10"/>
+		<Param name="PushMidi" id="11" numberOfStates="2"/>
 		<ValueType name="PushMidi">
 			<Entry name="OFF" value="[0, 0.5["/> 
 			<Entry name="ON" value="[0.5, 1]"/> 
