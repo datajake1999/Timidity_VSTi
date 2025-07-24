@@ -517,6 +517,23 @@ static int fill_bank(Timid *tm, int dr, int b)
         {
             if (!(bank->tone[i].name))
             {
+                if (b!=0 && tm->tonebank[0] && tm->drumset[0])
+                {
+                    /* Mark the corresponding instrument in the default
+                    bank / drumset for loading (if it isn't already) */
+                    if (!dr)
+                    {
+                        if (!(tm->tonebank[0]->tone[i].instrument))
+                        tm->tonebank[0]->tone[i].instrument=
+                        MAGIC_LOAD_INSTRUMENT;
+                    }
+                    else
+                    {
+                        if (!(tm->drumset[0]->tone[i].instrument))
+                        tm->drumset[0]->tone[i].instrument=
+                        MAGIC_LOAD_INSTRUMENT;
+                    }
+                }
                 bank->tone[i].instrument=0;
                 errors++;
             }
