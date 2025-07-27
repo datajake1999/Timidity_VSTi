@@ -1957,7 +1957,8 @@ void timid_set_mono(Timid *tm, int value)
         return;
     }
     reset_voices(tm);
-    tm->play_mode.encoding = value;
+    if (value) tm->play_mode.encoding |= PE_MONO;
+    else tm->play_mode.encoding &= ~PE_MONO;
 }
 
 void timid_set_fast_decay(Timid *tm, int value)
@@ -2261,7 +2262,14 @@ int timid_get_mono(Timid *tm)
     {
         return 0;
     }
-    return tm->play_mode.encoding;
+    if (tm->play_mode.encoding & PE_MONO)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 int timid_get_fast_decay(Timid *tm)
