@@ -356,6 +356,8 @@ static MidiEvent *groom_list(Timid *tm, int32 divisions,int32 *eventsp,int32 *sa
         {
             skip_this_event=1;
         }
+        else if (ISQUIETCHANNEL(tm, meep->event.channel))
+            skip_this_event=1;
         else switch (meep->event.type)
         {
         case ME_PROGRAM:
