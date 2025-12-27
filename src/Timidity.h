@@ -140,7 +140,6 @@ public:
 	virtual bool hasMidiProgramsChanged (VstInt32 channel);
 	virtual bool getMidiKeyName (VstInt32 channel, MidiKeyName* keyName);
 	virtual void initializeSettings (bool resetSynth);
-	virtual bool getBypass ();
 	virtual bool loadInstruments (char* filename, char* display);
 	virtual void enableChannel (VstInt32 channel, bool enable);
 	virtual bool isChannelEnabled (VstInt32 channel);
@@ -152,6 +151,7 @@ public:
 	virtual VstInt32 getActiveVoices ();
 	virtual VstInt32 getMaxVoices ();
 	virtual void getConfigName (char* text, VstInt32 size);
+	virtual bool getBypass ();
 	virtual HostInfo* getHostInfo ();
 	virtual double getCPULoad ();
 private:

@@ -119,11 +119,6 @@ void Timidity::initializeSettings (bool resetSynth)
 	lock.release();
 }
 
-bool Timidity::getBypass ()
-{
-	return bypassed;
-}
-
 bool Timidity::loadInstruments (char* filename, char* display)
 {
 	if (!filename || !display)
@@ -223,6 +218,11 @@ void Timidity::getConfigName (char* text, VstInt32 size)
 		return;
 	}
 	strncpy(text, ConfigName, size);
+}
+
+bool Timidity::getBypass ()
+{
+	return bypassed;
 }
 
 HostInfo* Timidity::getHostInfo ()
