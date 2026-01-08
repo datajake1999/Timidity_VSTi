@@ -11,13 +11,13 @@ In order for the instrument to generate sound, it requires a set of Gravis Ultra
 * ImmediatePan: Pans notes that are already playing. When this option is disabled, pan control messages won't take effect until the next note is played.
 * Mono: Generates mono audio output.
 * Transpose: Applies an offset to incoming MIDI notes.
-* Voices: the maximum number of notes that can simultaneously play at a time.
+* Voices: The maximum number of notes that can simultaneously play at a time.
 * FastDecay: Makes notes decay slightly faster. When this option is enabled, the output can sound more like a Gravis Ultrasound.
 * Antialiasing: Runs samples through an antialiasing filter during the loading process.
 * PreResample: Resamples fixed pitch instruments during the loading process.
 * DynamicLoad: Dynamically loads instruments as they are needed.
 * ControlRate: The higher the value, the smoother envelopes and tremolo are rendered.
-* PushMidi: Queue's MIDI events instead of processing them immediately. Queued events have sample accurate timing, while immediate events can have jittery playback with large audio buffers.
+* PushMidi: Queues MIDI events instead of processing them immediately. Queued events have sample accurate timing, while immediate events can have jittery playback with large audio buffers.
 
 # What's with the GUI?
 The user interfaces of most audio plug-ins draw graphics directly to the screen. The problem with this approach is that these controls aren't seen by assistive technology such as screen readers, which are designed to work with native operating system controls. This project aims to change that. The UI has been programmed from the ground up using raw Win32 with mostly standard controls, the only exception being the virtual MIDI keyboard.
