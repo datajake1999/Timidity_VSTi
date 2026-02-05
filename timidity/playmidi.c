@@ -2595,7 +2595,7 @@ int timid_get_song_copyright(Timid *tm, char *buffer, int32 count)
     return len;
 }
 
-int timid_millis2samples(Timid *tm, int millis)
+int timid_millis2samples(Timid *tm, int32 millis)
 {
     if (!tm)
     {
@@ -2604,7 +2604,7 @@ int timid_millis2samples(Timid *tm, int millis)
     return (int)((millis/1000.0)*tm->play_mode.rate);
 }
 
-int timid_samples2millis(Timid *tm, int samples)
+int timid_samples2millis(Timid *tm, int32 samples)
 {
     if (!tm)
     {
