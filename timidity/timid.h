@@ -263,6 +263,7 @@ typedef struct {
   int32 at;
   /* These would both fit into 32 bits, but they are often added in
   large multiples, so it's simpler to have two roomy ints */
+  /* samples per MIDI delta-t */
   int32 sample_increment;
   int32 sample_correction;
   sample_t resample_buffer[AUDIO_BUFFER_SIZE];
