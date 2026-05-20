@@ -2536,7 +2536,7 @@ int timid_get_bitrate(Timid *tm)
         return 0;
     }
     fseek(tm->fp_midi, 0, SEEK_END);
-    bitrate = ftell(tm->fp_midi) * 8 / (timid_get_duration(tm));
+    bitrate = ftell(tm->fp_midi) * 8 / timid_get_duration(tm);
     fseek(tm->fp_midi, 0, SEEK_SET);
     if (!bitrate) bitrate = 1;
     return bitrate;
