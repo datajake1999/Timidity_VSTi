@@ -1137,142 +1137,119 @@ void timid_channel_reset_controllers(Timid *tm, uint8 channel)
 
 void timid_channel_control_change(Timid *tm, uint8 channel, uint8 controller, uint8 value)
 {
+    MidiEvent ev;
     if (!tm)
     {
         return;
     }
-    channel = channel & 0x0f;
-    timid_write_midi(tm, 0xb0+channel, controller & 0x7f, value & 0x7f);
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    switch(controller & 0x7f)
+    {
+    case 0x00:
+        ev.type = ME_TONE_BANK;
+        ev.a = value & 0x7f;
+        play_midi(tm, &ev);
+        break;
+    case 0x06:
+        switch((tm->rpn_msb[ev.channel]<<8) | tm->rpn_lsb[ev.channel])
+        {
+        case 0x0000:
+            ev.type = ME_PITCH_SENS;
+            ev.a = value & 0x7f;
+            play_midi(tm, &ev);
+            break;
+        case 0x7f7f:
+            ev.type = ME_PITCH_SENS;
+            ev.a = 2;
+            play_midi(tm, &ev);
+            tm->rpn_msb[ev.channel] = 0xff;
+            tm->rpn_lsb[ev.channel] = 0xff;
+            break;
+        }
+        break;
+    case 0x07:
+        ev.type = ME_MAINVOLUME;
+        ev.a = value & 0x7f;
+        play_midi(tm, &ev);
+        break;
+    case 0x0a:
+        ev.type = ME_PAN;
+        ev.a = value & 0x7f;
+        play_midi(tm, &ev);
+        break;
+    case 0x0b:
+        ev.type = ME_EXPRESSION;
+        ev.a = value & 0x7f;
+        play_midi(tm, &ev);
+        break;
+    case 0x40:
+        ev.type = ME_SUSTAIN;
+        ev.a = value & 0x7f;
+        play_midi(tm, &ev);
+        break;
+    case 0x62:
+        tm->rpn_lsb[ev.channel] = 0xff;
+        break;
+    case 0x63:
+        tm->rpn_msb[ev.channel] = 0xff;
+        break;
+    case 0x64:
+        tm->rpn_msb[ev.channel] = value & 0x7f;
+        break;
+    case 0x65:
+        tm->rpn_lsb[ev.channel] = value & 0x7f;
+        break;
+    case 0x78:
+        ev.type = ME_ALL_SOUNDS_OFF;
+        play_midi(tm, &ev);
+        break;
+    case 0x79:
+        ev.type = ME_RESET_CONTROLLERS;
+        play_midi(tm, &ev);
+        break;
+    case 0x7b:
+        ev.type = ME_ALL_NOTES_OFF;
+        play_midi(tm, &ev);
+        break;
+    case 0x7e:
+        ev.type = ME_MONO;
+        play_midi(tm, &ev);
+        break;
+    case 0x7f:
+        ev.type = ME_POLY;
+        play_midi(tm, &ev);
+        break;
+    }
 }
 
 void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
 {
     uint8 type = byte1 & 0xf0;
     uint8 channel = byte1 & 0x0f;
-    MidiEvent ev;
-    byte2 = byte2 & 0x7f;
-    byte3 = byte3 & 0x7f;
     if (!tm)
     {
         return;
     }
-    memset(&ev, 0, sizeof(ev));
-    ev.channel = channel;
     switch(type)
     {
     case 0x80:
-        ev.type = ME_NOTEOFF;
-        ev.a = byte2;
-        ev.b = byte3;
-        play_midi(tm, &ev);
+        timid_channel_note_off(tm, channel, byte2);
         break;
     case 0x90:
-        ev.type = ME_NOTEON;
-        ev.a = byte2;
-        ev.b = byte3;
-        play_midi(tm, &ev);
+        timid_channel_note_on(tm, channel, byte2, byte3);
         break;
     case 0xa0:
-        ev.type = ME_KEYPRESSURE;
-        ev.a = byte2;
-        ev.b = byte3;
-        play_midi(tm, &ev);
-        break;
-    case 0xc0:
-        ev.type = ME_PROGRAM;
-        ev.a = byte2;
-        ev.b = byte3;
-        play_midi(tm, &ev);
-        break;
-    case 0xe0:
-        ev.type = ME_PITCHWHEEL;
-        ev.a = byte2;
-        ev.b = byte3;
-        play_midi(tm, &ev);
+        timid_channel_key_pressure(tm, channel, byte2, byte3);
         break;
     case 0xb0:
-        switch(byte2)
-        {
-        case 0x00:
-            ev.type = ME_TONE_BANK;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x06:
-            switch((tm->rpn_msb[channel]<<8) | tm->rpn_lsb[channel])
-            {
-            case 0x0000:
-                ev.type = ME_PITCH_SENS;
-                ev.a = byte3;
-                play_midi(tm, &ev);
-                break;
-            case 0x7f7f:
-                ev.type = ME_PITCH_SENS;
-                ev.a = 2;
-                play_midi(tm, &ev);
-                tm->rpn_msb[channel] = 0xff;
-                tm->rpn_lsb[channel] = 0xff;
-                break;
-            }
-            break;
-        case 0x07:
-            ev.type = ME_MAINVOLUME;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x0a:
-            ev.type = ME_PAN;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x0b:
-            ev.type = ME_EXPRESSION;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x40:
-            ev.type = ME_SUSTAIN;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x62:
-            tm->rpn_lsb[channel] = 0xff;
-            break;
-        case 0x63:
-            tm->rpn_msb[channel] = 0xff;
-            break;
-        case 0x64:
-            tm->rpn_msb[channel] = byte3;
-            break;
-        case 0x65:
-            tm->rpn_lsb[channel] = byte3;
-            break;
-        case 0x78:
-            ev.type = ME_ALL_SOUNDS_OFF;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x79:
-            ev.type = ME_RESET_CONTROLLERS;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x7b:
-            ev.type = ME_ALL_NOTES_OFF;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x7e:
-            ev.type = ME_MONO;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        case 0x7f:
-            ev.type = ME_POLY;
-            ev.a = byte3;
-            play_midi(tm, &ev);
-            break;
-        }
+        timid_channel_control_change(tm, channel, byte2, byte3);
+        break;
+    case 0xc0:
+        timid_channel_set_program(tm, channel, byte2);
+        break;
+    case 0xe0:
+        timid_channel_set_pitch_wheel(tm, channel, (byte3 << 7) | byte2);
         break;
     }
 }
