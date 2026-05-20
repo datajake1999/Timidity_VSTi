@@ -372,6 +372,7 @@ void timid_reset(Timid *tm);
 
 /* MIDI file player, only supports standard MIDI files */
 int timid_load_smf(Timid *tm, char *filename);
+void timid_unload_smf(Timid *tm);
 int timid_reload_smf(Timid *tm);
 /* The following function returns 1 if more audio is to be rendered, and 0 once the track is finished and all notes have stopped */
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count); /* count is in samples */
@@ -384,7 +385,6 @@ int timid_rewind_smf(Timid *tm, int32 time);
 /* Quick ways to restart or stop a track without reloading or unloading */
 int timid_restart_smf(Timid *tm);
 int timid_stop_smf(Timid *tm);
-void timid_unload_smf(Timid *tm);
 
 /* Setters */
 /* Amplification is represented in percent */
@@ -452,9 +452,9 @@ int timid_channel_get_mono(Timid *tm, int channel);
 int timid_get_smf_name(Timid *tm, char *buffer, int32 count);
 int timid_get_event_count(Timid *tm);
 int timid_get_sample_count(Timid *tm);
+int timid_get_current_sample_position(Timid *tm);
 int timid_get_duration(Timid *tm);
 int timid_get_current_time(Timid *tm);
-int timid_get_current_sample_position(Timid *tm);
 int timid_get_bitrate(Timid *tm);
 int timid_get_song_title(Timid *tm, char *buffer, int32 count);
 int timid_get_song_copyright(Timid *tm, char *buffer, int32 count);

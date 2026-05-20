@@ -1663,6 +1663,32 @@ int timid_load_smf(Timid *tm, char *filename)
     return 1;
 }
 
+void timid_unload_smf(Timid *tm)
+{
+    if (!tm)
+    {
+        return;
+    }
+    reset_midi(tm);
+    if (tm->event_list)
+    {
+        free(tm->event_list);
+        tm->event_list = NULL;
+    }
+    tm->current_event = NULL;
+    if (tm->fp_midi)
+    {
+        close_file(tm->fp_midi);
+        tm->fp_midi = NULL;
+    }
+    tm->events_midi = 0;
+    tm->sample_count = 0;
+    tm->current_sample = 0;
+    memset(tm->song_title, 0, sizeof(tm->song_title));
+    memset(tm->song_copyright, 0, sizeof(tm->song_copyright));
+    memset(tm->last_smf, 0, sizeof(tm->last_smf));
+}
+
 int timid_reload_smf(Timid *tm)
 {
     if (!tm)
@@ -1853,32 +1879,6 @@ int timid_stop_smf(Timid *tm)
         return 0;
     }
     return timid_seek_smf(tm, timid_get_duration(tm));
-}
-
-void timid_unload_smf(Timid *tm)
-{
-    if (!tm)
-    {
-        return;
-    }
-    reset_midi(tm);
-    if (tm->event_list)
-    {
-        free(tm->event_list);
-        tm->event_list = NULL;
-    }
-    tm->current_event = NULL;
-    if (tm->fp_midi)
-    {
-        close_file(tm->fp_midi);
-        tm->fp_midi = NULL;
-    }
-    tm->events_midi = 0;
-    tm->sample_count = 0;
-    tm->current_sample = 0;
-    memset(tm->song_title, 0, sizeof(tm->song_title));
-    memset(tm->song_copyright, 0, sizeof(tm->song_copyright));
-    memset(tm->last_smf, 0, sizeof(tm->last_smf));
 }
 
 void timid_set_amplification(Timid *tm, int amplification)
@@ -2501,6 +2501,15 @@ int timid_get_sample_count(Timid *tm)
     return tm->sample_count;
 }
 
+int timid_get_current_sample_position(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->current_sample;
+}
+
 int timid_get_duration(Timid *tm)
 {
     if (!tm)
@@ -2517,15 +2526,6 @@ int timid_get_current_time(Timid *tm)
         return 0;
     }
     return timid_samples2millis(tm, tm->current_sample);
-}
-
-int timid_get_current_sample_position(Timid *tm)
-{
-    if (!tm)
-    {
-        return 0;
-    }
-    return tm->current_sample;
 }
 
 int timid_get_bitrate(Timid *tm)
