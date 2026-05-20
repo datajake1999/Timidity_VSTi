@@ -2578,7 +2578,7 @@ int timid_millis2samples(Timid *tm, int32 millis)
     {
         return 0;
     }
-    return (int)((millis*tm->play_mode.rate)/1000.0);
+    return (int)((double)tm->play_mode.rate * millis / 1000);
 }
 
 int timid_samples2millis(Timid *tm, int32 samples)
@@ -2587,7 +2587,7 @@ int timid_samples2millis(Timid *tm, int32 samples)
     {
         return 0;
     }
-    return (int)((samples*1000.0)/tm->play_mode.rate);
+    return (int)((double)samples * 1000 / tm->play_mode.rate);
 }
 
 void timid_close(Timid *tm)
