@@ -99,6 +99,10 @@ static void designfir(FLOAT_T *g , FLOAT_T fc)
 * Note that we simulate leading and trailing 0 at the border of the
 * data buffer
 */
+
+/* This is quick hack for antialiasing filter's bug fix. */
+#define sample_t int16
+
 static void filter(sample_t *result,sample_t *data, int32 length,FLOAT_T coef[])
 {
     int32 sample,i,sample_window;
