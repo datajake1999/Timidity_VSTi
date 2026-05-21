@@ -278,7 +278,12 @@ typedef char int8;
 #define PATCH_EXT_LIST { ".pat", 0 }
 
 /* The path separator (D.M.) */
+#ifdef _WIN32
 #  define PATH_SEP '\\'
 #  define PATH_STRING "\\"
+#else
+#  define PATH_SEP '/'
+#  define PATH_STRING "/"
+#endif
 
 #endif
