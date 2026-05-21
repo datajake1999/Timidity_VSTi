@@ -1137,88 +1137,69 @@ void timid_channel_reset_controllers(Timid *tm, uint8 channel)
 
 void timid_channel_control_change(Timid *tm, uint8 channel, uint8 controller, uint8 value)
 {
-    MidiEvent ev;
     if (!tm)
     {
         return;
     }
-    memset(&ev, 0, sizeof(ev));
-    ev.channel = channel & 0x0f;
-    switch(controller & 0x7f)
+    channel = channel & 0x0f;
+    controller = controller & 0x7f;
+    value = value & 0x7f;
+    switch(controller)
     {
     case 0x00:
-        ev.type = ME_TONE_BANK;
-        ev.a = value & 0x7f;
-        play_midi(tm, &ev);
+        timid_channel_set_bank(tm, channel, value);
         break;
     case 0x06:
-        switch((tm->rpn_msb[ev.channel]<<8) | tm->rpn_lsb[ev.channel])
+        switch((tm->rpn_msb[channel]<<8) | tm->rpn_lsb[channel])
         {
         case 0x0000:
-            ev.type = ME_PITCH_SENS;
-            ev.a = value & 0x7f;
-            play_midi(tm, &ev);
+            timid_channel_set_pitch_range(tm, channel, value);
             break;
         case 0x7f7f:
-            ev.type = ME_PITCH_SENS;
-            ev.a = 2;
-            play_midi(tm, &ev);
-            tm->rpn_msb[ev.channel] = 0xff;
-            tm->rpn_lsb[ev.channel] = 0xff;
+            timid_channel_set_pitch_range(tm, channel, 2);
+            tm->rpn_msb[channel] = 0xff;
+            tm->rpn_lsb[channel] = 0xff;
             break;
         }
         break;
     case 0x07:
-        ev.type = ME_MAINVOLUME;
-        ev.a = value & 0x7f;
-        play_midi(tm, &ev);
+        timid_channel_set_volume(tm, channel, value);
         break;
     case 0x0a:
-        ev.type = ME_PAN;
-        ev.a = value & 0x7f;
-        play_midi(tm, &ev);
+        timid_channel_set_pan(tm, channel, value);
         break;
     case 0x0b:
-        ev.type = ME_EXPRESSION;
-        ev.a = value & 0x7f;
-        play_midi(tm, &ev);
+        timid_channel_set_expression(tm, channel, value);
         break;
     case 0x40:
-        ev.type = ME_SUSTAIN;
-        ev.a = value & 0x7f;
-        play_midi(tm, &ev);
+        timid_channel_set_sustain(tm, channel, value);
         break;
     case 0x62:
-        tm->rpn_lsb[ev.channel] = 0xff;
+        tm->rpn_lsb[channel] = 0xff;
         break;
     case 0x63:
-        tm->rpn_msb[ev.channel] = 0xff;
+        tm->rpn_msb[channel] = 0xff;
         break;
     case 0x64:
-        tm->rpn_msb[ev.channel] = value & 0x7f;
+        tm->rpn_msb[channel] = value;
         break;
     case 0x65:
-        tm->rpn_lsb[ev.channel] = value & 0x7f;
+        tm->rpn_lsb[channel] = value;
         break;
     case 0x78:
-        ev.type = ME_ALL_SOUNDS_OFF;
-        play_midi(tm, &ev);
+        timid_channel_all_sounds_off(tm, channel);
         break;
     case 0x79:
-        ev.type = ME_RESET_CONTROLLERS;
-        play_midi(tm, &ev);
+        timid_channel_reset_controllers(tm, channel);
         break;
     case 0x7b:
-        ev.type = ME_ALL_NOTES_OFF;
-        play_midi(tm, &ev);
+        timid_channel_all_notes_off(tm, channel);
         break;
     case 0x7e:
-        ev.type = ME_MONO;
-        play_midi(tm, &ev);
+        timid_channel_mono_mode(tm, channel);
         break;
     case 0x7f:
-        ev.type = ME_POLY;
-        play_midi(tm, &ev);
+        timid_channel_poly_mode(tm, channel);
         break;
     }
 }
