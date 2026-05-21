@@ -1230,7 +1230,7 @@ void timid_write_midi(Timid *tm, uint8 byte1, uint8 byte2, uint8 byte3)
         timid_channel_set_program(tm, channel, byte2);
         break;
     case 0xe0:
-        timid_channel_set_pitch_wheel(tm, channel, (byte3 << 7) | byte2);
+        timid_channel_set_pitch_wheel(tm, channel, (uint16)((byte3 << 7) | byte2));
         break;
     }
 }
