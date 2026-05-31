@@ -243,12 +243,12 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
     {
         if (!tm->drumset[tm->channel[e->channel].bank] && !tm->drumset[0])
         return; /* No drumset? Then we can't play. */
-        if (!tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument)
+        if (tm->drumset[tm->channel[e->channel].bank]->tone[e->a].name && !tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument)
         {
             tm->drumset[tm->channel[e->channel].bank]->tone[e->a].instrument=MAGIC_LOAD_INSTRUMENT;
             load_missing_instruments(tm);
         }
-        if (!tm->drumset[0]->tone[e->a].instrument)
+        if (tm->drumset[0]->tone[e->a].name && !tm->drumset[0]->tone[e->a].instrument)
         {
             tm->drumset[0]->tone[e->a].instrument=MAGIC_LOAD_INSTRUMENT;
             load_missing_instruments(tm);
@@ -273,12 +273,12 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
         return; /* No tonebank? Then we can't play. */
         if (tm->channel[e->channel].program!=SPECIAL_PROGRAM)
         {
-            if (!tm->tonebank[tm->channel[e->channel].bank]->tone[tm->channel[e->channel].program].instrument)
+            if (tm->tonebank[tm->channel[e->channel].bank]->tone[tm->channel[e->channel].program].name && !tm->tonebank[tm->channel[e->channel].bank]->tone[tm->channel[e->channel].program].instrument)
             {
                 tm->tonebank[tm->channel[e->channel].bank]->tone[tm->channel[e->channel].program].instrument=MAGIC_LOAD_INSTRUMENT;
                 load_missing_instruments(tm);
             }
-            if (!tm->tonebank[0]->tone[tm->channel[e->channel].program].instrument)
+            if (tm->tonebank[0]->tone[tm->channel[e->channel].program].name && !tm->tonebank[0]->tone[tm->channel[e->channel].program].instrument)
             {
                 tm->tonebank[0]->tone[tm->channel[e->channel].program].instrument=MAGIC_LOAD_INSTRUMENT;
                 load_missing_instruments(tm);
