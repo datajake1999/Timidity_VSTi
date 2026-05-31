@@ -26,7 +26,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <string.h>
 #endif
 
-#include "timid.h"
+#include "internal.h"
 
 static int set_channel_flag(int32 *flags, int32 i, char *name)
 {

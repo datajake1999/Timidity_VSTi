@@ -268,10 +268,9 @@ typedef char int8;
 
 #define VIBRATO_SAMPLE_INCREMENTS 32
 
-#include <math.h>
-
-/* #  define PI M_PI -> this don't work */
+#ifndef PI
 #define PI 3.14159265358979323846 
+#endif
 
 #undef DECOMPRESSOR_LIST
 #undef PATCH_EXT_LIST

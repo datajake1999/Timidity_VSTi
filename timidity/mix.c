@@ -25,7 +25,7 @@ mix.c */
 #include <stdio.h>
 #include <malloc.h>
 
-#include "timid.h"
+#include "internal.h"
 
 /* Returns 1 if envelope runs out */
 int recompute_envelope(Timid *tm, int v)

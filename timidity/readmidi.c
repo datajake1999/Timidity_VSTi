@@ -29,7 +29,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <string.h>
 #endif
 
-#include "timid.h"
+#include "internal.h"
 
 /* Computes how many (fractional) samples one MIDI delta-time unit contains */
 static void compute_sample_increment(Timid *tm, int32 tempo, int32 divisions)

@@ -28,7 +28,7 @@ playmidi.c -- random stuff in need of rearrangement
 #include <string.h>
 #endif
 
-#include "timid.h"
+#include "internal.h"
 
 static void adjust_amplification(Timid *tm, int amplification)
 {
@@ -813,11 +813,12 @@ static void read_midi_text(Timid *tm)
     fseek(tm->fp_midi, 0, SEEK_SET);
 }
 
-void timid_init(Timid *tm)
+Timid *timid_init(void)
 {
+    Timid *tm = (Timid *)safe_malloc(sizeof(Timid));
     if (!tm)
     {
-        return;
+        return NULL;
     }
     memset(tm, 0, sizeof(Timid));
     tm->default_program=DEFAULT_PROGRAM;
@@ -840,6 +841,7 @@ void timid_init(Timid *tm)
     init_tables(tm);
     reset_midi(tm);
     adjust_amplification(tm, DEFAULT_AMPLIFICATION);
+    return tm;
 }
 
 int timid_load_config(Timid *tm, char *filename)
@@ -2583,4 +2585,5 @@ void timid_close(Timid *tm)
     free_default_instrument(tm);
     free_tables(tm);
     memset(tm, 0, sizeof(Timid));
+    free(tm);
 }

@@ -24,7 +24,7 @@ resample.c
 #include <stdio.h>
 #include <malloc.h>
 
-#include "timid.h"
+#include "internal.h"
 
 #ifdef LINEAR_INTERPOLATION
 # if defined(LOOKUP_HACK) && defined(LOOKUP_INTERPOLATION)

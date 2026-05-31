@@ -33,7 +33,7 @@ April 95
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include "timid.h"
+#include "internal.h"
 
 /*  bessel  function   */
 static FLOAT_T ino(float x)

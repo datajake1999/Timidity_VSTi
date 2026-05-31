@@ -31,7 +31,10 @@ void Timidity::setSampleRate (float sampleRate)
 	{
 		ControlRate = sampleRate/MAX_CONTROL_RATIO;
 	}
-	timid_set_sample_rate(&synth, (VstInt32)sampleRate);
+	if (synth)
+	{
+		timid_set_sample_rate(synth, (VstInt32)sampleRate);
+	}
 	lock.release();
 }
 
@@ -52,75 +55,77 @@ void Timidity::setBlockSizeAndSampleRate (VstInt32 blockSize, float sampleRate)
 
 void Timidity::initSynth ()
 {
-	memset(&synth, 0, sizeof(synth));
-	timid_init(&synth);
-	timid_set_sample_rate(&synth, (VstInt32)sampleRate);
-	if (Voices > MAX_VOICES)
+	synth = timid_init();
+	if (synth)
 	{
-		Voices = MAX_VOICES;
+		timid_set_sample_rate(synth, (VstInt32)sampleRate);
+		if (Voices > MAX_VOICES)
+		{
+			Voices = MAX_VOICES;
+		}
+		else if (Voices < 1)
+		{
+			Voices = 1;
+		}
+		timid_set_max_voices(synth, (VstInt32)Voices);
+		if (ImmediatePan >= 0.5)
+		{
+			timid_set_immediate_panning(synth, 1);
+		}
+		else
+		{
+			timid_set_immediate_panning(synth, 0);
+		}
+		if (Mono >= 0.5)
+		{
+			timid_set_mono(synth, 1);
+		}
+		else
+		{
+			timid_set_mono(synth, 0);
+		}
+		if (FastDecay >= 0.5)
+		{
+			timid_set_fast_decay(synth, 1);
+		}
+		else
+		{
+			timid_set_fast_decay(synth, 0);
+		}
+		if (Antialiasing >= 0.5)
+		{
+			timid_set_antialiasing(synth, 1);
+		}
+		else
+		{
+			timid_set_antialiasing(synth, 0);
+		}
+		if (PreResample >= 0.5)
+		{
+			timid_set_pre_resample(synth, 1);
+		}
+		else
+		{
+			timid_set_pre_resample(synth, 0);
+		}
+		if (DynamicLoad >= 0.5)
+		{
+			timid_set_dynamic_instrument_load(synth, 1);
+		}
+		else
+		{
+			timid_set_dynamic_instrument_load(synth, 0);
+		}
+		if (ControlRate > sampleRate)
+		{
+			ControlRate = sampleRate;
+		}
+		else if (ControlRate < sampleRate/MAX_CONTROL_RATIO)
+		{
+			ControlRate = sampleRate/MAX_CONTROL_RATIO;
+		}
+		timid_set_control_rate(synth, (VstInt32)ControlRate);
 	}
-	else if (Voices < 1)
-	{
-		Voices = 1;
-	}
-	timid_set_max_voices(&synth, (VstInt32)Voices);
-	if (ImmediatePan >= 0.5)
-	{
-		timid_set_immediate_panning(&synth, 1);
-	}
-	else
-	{
-		timid_set_immediate_panning(&synth, 0);
-	}
-	if (Mono >= 0.5)
-	{
-		timid_set_mono(&synth, 1);
-	}
-	else
-	{
-		timid_set_mono(&synth, 0);
-	}
-	if (FastDecay >= 0.5)
-	{
-		timid_set_fast_decay(&synth, 1);
-	}
-	else
-	{
-		timid_set_fast_decay(&synth, 0);
-	}
-	if (Antialiasing >= 0.5)
-	{
-		timid_set_antialiasing(&synth, 1);
-	}
-	else
-	{
-		timid_set_antialiasing(&synth, 0);
-	}
-	if (PreResample >= 0.5)
-	{
-		timid_set_pre_resample(&synth, 1);
-	}
-	else
-	{
-		timid_set_pre_resample(&synth, 0);
-	}
-	if (DynamicLoad >= 0.5)
-	{
-		timid_set_dynamic_instrument_load(&synth, 1);
-	}
-	else
-	{
-		timid_set_dynamic_instrument_load(&synth, 0);
-	}
-	if (ControlRate > sampleRate)
-	{
-		ControlRate = sampleRate;
-	}
-	else if (ControlRate < sampleRate/MAX_CONTROL_RATIO)
-	{
-		ControlRate = sampleRate/MAX_CONTROL_RATIO;
-	}
-	timid_set_control_rate(&synth, (VstInt32)ControlRate);
 	loadInstruments (ConfigFile, ConfigName);
 }
 
@@ -135,7 +140,11 @@ void Timidity::initBuffer ()
 
 void Timidity::clearSynth ()
 {
-	timid_close(&synth);
+	if (synth)
+	{
+		timid_close(synth);
+		synth = NULL;
+	}
 }
 
 void Timidity::clearBuffer ()
@@ -169,7 +178,10 @@ void Timidity::suspend ()
 #if REAPER_EXTENSIONS
 	ParameterQueue.Flush(true);
 #endif
-	timid_panic(&synth);
+	if (synth)
+	{
+		timid_panic(synth);
+	}
 	lock.release();
 }
 
@@ -177,7 +189,10 @@ void Timidity::resume ()
 {
 	lock.acquire();
 	AudioEffectX::resume ();
-	timid_reset(&synth);
+	if (synth)
+	{
+		timid_reset(synth);
+	}
 	lock.release();
 }
 
@@ -275,7 +290,10 @@ void Timidity::processTemplate (sampletype** inputs, sampletype** outputs, VstIn
 		{
 			currentFrames = totalFrames;
 		}
-		timid_render_float(&synth, bufferPointer, currentFrames);
+		if (synth)
+		{
+			timid_render_float(synth, bufferPointer, currentFrames);
+		}
 		if (Mono >= 0.5)
 		{
 			bufferPointer += currentFrames;
@@ -432,7 +450,10 @@ void Timidity::processEvent (VstEvent* ev)
 	else if (ev->type == kVstSysExType)
 	{
 		VstMidiSysexEvent* event = (VstMidiSysexEvent*)ev;
-		timid_write_sysex(&synth, (unsigned char*)event->sysexDump, event->dumpBytes);
+		if (synth)
+		{
+			timid_write_sysex(synth, (unsigned char*)event->sysexDump, event->dumpBytes);
+		}
 	}
 #endif
 #if REAPER_EXTENSIONS
@@ -478,7 +499,10 @@ void Timidity::sendMidi (char* data)
 			}
 		}
 	}
-	timid_write_midi(&synth, byte1, byte2, byte3);
+	if (synth)
+	{
+		timid_write_midi(synth, byte1, byte2, byte3);
+	}
 }
 
 VstInt32 Timidity::startProcess ()

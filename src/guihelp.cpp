@@ -47,74 +47,77 @@ void Timidity::initializeSettings (bool resetSynth)
 	if (resetSynth)
 	{
 		suspend ();
-		timid_unload_config(&synth);
-		timid_free_default_instrument(&synth);
-		if (Voices > MAX_VOICES)
+		if (synth)
 		{
-			Voices = MAX_VOICES;
+			timid_unload_config(synth);
+			timid_free_default_instrument(synth);
+			if (Voices > MAX_VOICES)
+			{
+				Voices = MAX_VOICES;
+			}
+			else if (Voices < 1)
+			{
+				Voices = 1;
+			}
+			timid_set_max_voices(synth, (VstInt32)Voices);
+			if (ImmediatePan >= 0.5)
+			{
+				timid_set_immediate_panning(synth, 1);
+			}
+			else
+			{
+				timid_set_immediate_panning(synth, 0);
+			}
+			if (Mono >= 0.5)
+			{
+				timid_set_mono(synth, 1);
+			}
+			else
+			{
+				timid_set_mono(synth, 0);
+			}
+			if (FastDecay >= 0.5)
+			{
+				timid_set_fast_decay(synth, 1);
+			}
+			else
+			{
+				timid_set_fast_decay(synth, 0);
+			}
+			if (Antialiasing >= 0.5)
+			{
+				timid_set_antialiasing(synth, 1);
+			}
+			else
+			{
+				timid_set_antialiasing(synth, 0);
+			}
+			if (PreResample >= 0.5)
+			{
+				timid_set_pre_resample(synth, 1);
+			}
+			else
+			{
+				timid_set_pre_resample(synth, 0);
+			}
+			if (DynamicLoad >= 0.5)
+			{
+				timid_set_dynamic_instrument_load(synth, 1);
+			}
+			else
+			{
+				timid_set_dynamic_instrument_load(synth, 0);
+			}
+			if (ControlRate > sampleRate)
+			{
+				ControlRate = sampleRate;
+			}
+			else if (ControlRate < sampleRate/MAX_CONTROL_RATIO)
+			{
+				ControlRate = sampleRate/MAX_CONTROL_RATIO;
+			}
+			timid_set_control_rate(synth, (VstInt32)ControlRate);
 		}
-		else if (Voices < 1)
-		{
-			Voices = 1;
-		}
-		timid_set_max_voices(&synth, (VstInt32)Voices);
-		if (ImmediatePan >= 0.5)
-		{
-			timid_set_immediate_panning(&synth, 1);
-		}
-		else
-		{
-			timid_set_immediate_panning(&synth, 0);
-		}
-		if (Mono >= 0.5)
-		{
-			timid_set_mono(&synth, 1);
-		}
-		else
-		{
-			timid_set_mono(&synth, 0);
-		}
-		if (FastDecay >= 0.5)
-		{
-			timid_set_fast_decay(&synth, 1);
-		}
-		else
-		{
-			timid_set_fast_decay(&synth, 0);
-		}
-		if (Antialiasing >= 0.5)
-		{
-			timid_set_antialiasing(&synth, 1);
-		}
-		else
-		{
-			timid_set_antialiasing(&synth, 0);
-		}
-		if (PreResample >= 0.5)
-		{
-			timid_set_pre_resample(&synth, 1);
-		}
-		else
-		{
-			timid_set_pre_resample(&synth, 0);
-		}
-		if (DynamicLoad >= 0.5)
-		{
-			timid_set_dynamic_instrument_load(&synth, 1);
-		}
-		else
-		{
-			timid_set_dynamic_instrument_load(&synth, 0);
-		}
-		if (ControlRate > sampleRate)
-		{
-			ControlRate = sampleRate;
-		}
-		else if (ControlRate < sampleRate/MAX_CONTROL_RATIO)
-		{
-			ControlRate = sampleRate/MAX_CONTROL_RATIO;
-		}
-		timid_set_control_rate(&synth, (VstInt32)ControlRate);
 	}
 	lock.release();
 }
@@ -126,12 +129,15 @@ bool Timidity::loadInstruments (char* filename, char* display)
 		return false;
 	}
 	lock.acquire();
-	if (timid_load_config(&synth, filename))
+	if (synth)
 	{
-		strncpy(ConfigFile, filename, sizeof(ConfigFile));
-		strncpy(ConfigName, display, sizeof(ConfigName));
-		lock.release();
-		return true;
+		if (timid_load_config(synth, filename))
+		{
+			strncpy(ConfigFile, filename, sizeof(ConfigFile));
+			strncpy(ConfigName, display, sizeof(ConfigName));
+			lock.release();
+			return true;
+		}
 	}
 	lock.release();
 	return false;
@@ -203,12 +209,20 @@ void Timidity::hardReset ()
 
 VstInt32 Timidity::getActiveVoices ()
 {
-	return timid_get_active_voices(&synth);
+	if (synth)
+	{
+		return timid_get_active_voices(synth);
+	}
+	return 0;
 }
 
 VstInt32 Timidity::getMaxVoices ()
 {
-	return timid_get_max_voices(&synth);
+	if (synth)
+	{
+		return timid_get_max_voices(synth);
+	}
+	return 0;
 }
 
 void Timidity::getConfigName (char* text, VstInt32 size)

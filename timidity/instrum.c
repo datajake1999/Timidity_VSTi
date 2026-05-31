@@ -35,7 +35,7 @@ Code to load and unload GUS-compatible instrument patches.
 #include <malloc.h>
 #endif
 
-#include "timid.h"
+#include "internal.h"
 
 static void free_instrument(Instrument *ip)
 {

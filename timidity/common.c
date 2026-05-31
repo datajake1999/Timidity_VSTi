@@ -32,7 +32,7 @@ common.c
 #include <errno.h>
 #endif
 
-#include "timid.h"
+#include "internal.h"
 
 /* I guess "rb" should be right for any libc */
 #define OPEN_MODE "rb"

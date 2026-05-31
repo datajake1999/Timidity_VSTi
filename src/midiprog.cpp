@@ -37,8 +37,12 @@ VstInt32 Timidity::getCurrentMidiProgram (VstInt32 channel, MidiProgramName* mpn
 {
 	if (channel < 0 || channel >= 16 || !mpn)
 	return -1;
-	VstInt32 prg = timid_channel_get_program(&synth, channel);
-	channelPrograms[channel] = prg;
+	VstInt32 prg = 0;
+	if (synth)
+	{
+		prg = timid_channel_get_program(synth, channel);
+		channelPrograms[channel] = prg;
+	}
 	mpn->thisProgramIndex = prg;
 	fillProgram (channel, prg, mpn);
 	return prg;
@@ -99,9 +103,12 @@ bool Timidity::hasMidiProgramsChanged (VstInt32 channel)
 {
 	if (channel < 0 || channel >= 16)
 	return false;
-	if (timid_channel_get_program(&synth, channel) != channelPrograms[channel])
+	if (synth)
 	{
-		return true;
+		if (timid_channel_get_program(synth, channel) != channelPrograms[channel])
+		{
+			return true;
+		}
 	}
 	return false;
 }

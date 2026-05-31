@@ -29,6 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 #endif
 #include "../timidity/timid.h"
+#include "../timidity/config.h"
 #include <public.sdk/source/vst2.x/audioeffectx.h>
 #include "queue.h"
 #define REAPER_EXTENSIONS 1
@@ -174,7 +175,7 @@ private:
 	void processEvent (VstEvent* event);
 	void sendMidi (char* data);
 	void fillProgram (VstInt32 channel, VstInt32 prg, MidiProgramName* mpn);
-	Timid synth;
+	Timid *synth;
 	float* buffer;
 	EventQueue MidiQueue;
 #if REAPER_EXTENSIONS

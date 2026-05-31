@@ -99,24 +99,30 @@ void Timidity::setParameter (VstInt32 index, float value)
 		break;
 	case kImmediatePan:
 		ImmediatePan = value;
-		if (ImmediatePan >= 0.5)
+		if (synth)
 		{
-			timid_set_immediate_panning(&synth, 1);
-		}
-		else
-		{
-			timid_set_immediate_panning(&synth, 0);
+			if (ImmediatePan >= 0.5)
+			{
+				timid_set_immediate_panning(synth, 1);
+			}
+			else
+			{
+				timid_set_immediate_panning(synth, 0);
+			}
 		}
 		break;
 	case kMono:
 		Mono = value;
-		if (Mono >= 0.5)
+		if (synth)
 		{
-			timid_set_mono(&synth, 1);
-		}
-		else
-		{
-			timid_set_mono(&synth, 0);
+			if (Mono >= 0.5)
+			{
+				timid_set_mono(synth, 1);
+			}
+			else
+			{
+				timid_set_mono(synth, 0);
+			}
 		}
 		break;
 	case kTranspose:
@@ -141,50 +147,65 @@ void Timidity::setParameter (VstInt32 index, float value)
 		{
 			Voices = 1;
 		}
-		timid_set_max_voices(&synth, (VstInt32)Voices);
+		if (synth)
+		{
+			timid_set_max_voices(synth, (VstInt32)Voices);
+		}
 		break;
 	case kFastDecay:
 		FastDecay = value;
-		if (FastDecay >= 0.5)
+		if (synth)
 		{
-			timid_set_fast_decay(&synth, 1);
-		}
-		else
-		{
-			timid_set_fast_decay(&synth, 0);
+			if (FastDecay >= 0.5)
+			{
+				timid_set_fast_decay(synth, 1);
+			}
+			else
+			{
+				timid_set_fast_decay(synth, 0);
+			}
 		}
 		break;
 	case kAntialiasing:
 		Antialiasing = value;
-		if (Antialiasing >= 0.5)
+		if (synth)
 		{
-			timid_set_antialiasing(&synth, 1);
-		}
-		else
-		{
-			timid_set_antialiasing(&synth, 0);
+			if (Antialiasing >= 0.5)
+			{
+				timid_set_antialiasing(synth, 1);
+			}
+			else
+			{
+				timid_set_antialiasing(synth, 0);
+			}
 		}
 		break;
 	case kPreResample:
 		PreResample = value;
-		if (PreResample >= 0.5)
+		if (synth)
 		{
-			timid_set_pre_resample(&synth, 1);
-		}
-		else
-		{
-			timid_set_pre_resample(&synth, 0);
+			if (PreResample >= 0.5)
+			{
+				timid_set_pre_resample(synth, 1);
+			}
+			else
+			{
+				timid_set_pre_resample(synth, 0);
+			}
 		}
 		break;
 	case kDynamicLoad:
 		DynamicLoad = value;
-		if (DynamicLoad >= 0.5)
+		if (synth)
 		{
-			timid_set_dynamic_instrument_load(&synth, 1);
-		}
-		else
-		{
-			timid_set_dynamic_instrument_load(&synth, 0);
+			if (DynamicLoad >= 0.5)
+			{
+				timid_set_dynamic_instrument_load(synth, 1);
+			}
+			else
+			{
+				timid_set_dynamic_instrument_load(synth, 0);
+			}
 		}
 		break;
 	case kControlRate:
@@ -197,7 +218,10 @@ void Timidity::setParameter (VstInt32 index, float value)
 		{
 			ControlRate = sampleRate/MAX_CONTROL_RATIO;
 		}
-		timid_set_control_rate(&synth, (VstInt32)ControlRate);
+		if (synth)
+		{
+			timid_set_control_rate(synth, (VstInt32)ControlRate);
+		}
 		break;
 	case kPushMidi:
 		PushMidi = value;
