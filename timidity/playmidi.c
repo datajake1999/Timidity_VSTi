@@ -1690,7 +1690,7 @@ int timid_reload_smf(Timid *tm)
 int timid_play_smf(Timid *tm, int32 type, uint8 *buffer, int32 count)
 {
     int convert;
-    if (!tm || !buffer || !tm->current_event || (tm->current_event->type == ME_EOT && !timid_get_active_voices(tm)))
+    if (!tm || !buffer || (type > AU_ULAW || type < AU_CHAR) || !tm->current_event || (tm->current_event->type == ME_EOT && !timid_get_active_voices(tm)))
     {
         return 0;
     }
