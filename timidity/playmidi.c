@@ -802,7 +802,7 @@ static void read_midi_text(Timid *tm)
         case 0x01FF00: //other text
         case 0x04FF00: //Instrument
         case 0x05FF00: //Lyrics
-        case 0x06FF00: //Maker
+        case 0x06FF00: //Marker
         case 0x07FF00: //Cue
         default:
             buff = (buff&0xFF000000) >> 24;
