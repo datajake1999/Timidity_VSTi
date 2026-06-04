@@ -41,6 +41,7 @@ Timidity::Timidity (audioMasterCallback audioMaster)
 	hasClip ();
 	canMono ();
 #endif
+	synth = NULL;
 	buffer = NULL;
 	initializeSettings (false);
 	memset(&chunk, 0, sizeof(chunk));
