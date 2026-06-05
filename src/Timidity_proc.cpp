@@ -163,6 +163,11 @@ bool Timidity::getErrorText (char* text)
 	{
 		return false;
 	}
+	if (!synth)
+	{
+		sprintf(text, "Error initializing synth.\n");
+		return true;
+	}
 	if (!buffer)
 	{
 		sprintf(text, "Error initializing buffer.\n");
