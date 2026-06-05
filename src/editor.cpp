@@ -142,7 +142,7 @@ static void UpdateMeters(HWND hWnd, EditorState* state, Timidity* effect, BOOL I
 		ZeroMemory(text, sizeof(text));
 		VstInt32 numvoices = effect->getActiveVoices ();
 		VstInt32 maxvoices = effect->getMaxVoices ();
-		VstInt32 voicealert = maxvoices - (maxvoices / 6);
+		VstInt32 voicealert = maxvoices-(maxvoices/6);
 		_stprintf(text, _T("%d/%d"), numvoices, maxvoices);
 		SetDlgItemText(hWnd, IDC_VOICECOUNT, text);
 		float vu = effect->getVu ();
@@ -760,7 +760,7 @@ static BOOL HostInfoBox(HWND hWnd, Timidity* effect)
 		{
 			TCHAR approve[32];
 			ZeroMemory(approve, sizeof(approve));
-			LoadString((HINSTANCE)hInstance, IDS_REAPPROVE, approve, sizeof(approve));
+			LoadString((HINSTANCE)hInstance, IDS_REAPPROVE, approve, sizeof(approve)/sizeof(TCHAR));
 			_tcsncat(text, approve, sizeof(approve)/sizeof(TCHAR));
 		}
 		MessageBox(hWnd, text, caption, MB_ICONINFORMATION);
@@ -1266,7 +1266,7 @@ static void KeyboardNoteOn(KeyboardInfo* info, VstInt32 note)
 	}
 	if (info)
 	{
-		KeyboardEvent(info->Effect, 0x90, info->Channel, (12 * info->Octave) + note, info->Velocity);
+		KeyboardEvent(info->Effect, 0x90, info->Channel, (12*info->Octave)+note, info->Velocity);
 	}
 }
 
@@ -1278,7 +1278,7 @@ static void KeyboardNoteOff(KeyboardInfo* info, VstInt32 note)
 	}
 	if (info)
 	{
-		KeyboardEvent(info->Effect, 0x80, info->Channel, (12 * info->Octave) + note, info->Velocity);
+		KeyboardEvent(info->Effect, 0x80, info->Channel, (12*info->Octave)+note, info->Velocity);
 	}
 }
 
@@ -1825,6 +1825,10 @@ Editor::Editor (AudioEffect* effect)
 			{
 				KeyboardClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 			}
+		}
+		else
+		{
+			KeyboardClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 		}
 		KeyboardClass.lpszClassName = _T(CLASSNAME);
 		RegisterClass(&KeyboardClass);
