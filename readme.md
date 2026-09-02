@@ -17,6 +17,7 @@ In order for the instrument to generate sound, it requires a set of Gravis Ultra
 * PreResample: Resamples fixed pitch instruments during the loading process.
 * DynamicLoad: Dynamically loads instruments as they are needed.
 * ControlRate: The higher the value, the smoother envelopes and tremolo are rendered.
+* ReverbEnable: Adds reverb to the audio output.
 * PushMidi: Queues MIDI events instead of processing them immediately. Queued events have sample accurate timing, while immediate events can have jittery playback with large audio buffers.
 
 # What's with the GUI?
@@ -97,6 +98,7 @@ After installing, just run build.bat. You may need to change the paths defined i
 # Credits
 
 * Tuukka Toivonen and other's, for writing the original version of Timidity.
+* The OpenALSoft project, for the EAXReverb implementation.
 * Y.Nagamidori, for creating GSPlayer.
 * HIMS, for using GSPlayer as the underlying playback engine for media files on their older Braille Sense note takers that ran Windows CE. This is how I was introduced to Timidity in the first place, however I didn't know it at the time.
 * Me (Datajake), for writing the VST interface for this synth. It is about time someone did so.
