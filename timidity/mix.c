@@ -500,6 +500,35 @@ static void ramp_out(Timid *tm, sample_t *sp, int32 *lp, int v, int32 c)
     }
 }
 
+static void mix_reverb_send(Timid *tm, sample_t *sp, int32 *lp, int v, int count)
+{
+    Voice *vp = tm->voice + v;
+    int32 channel_reverb = tm->channel[vp->channel].reverb;
+    final_volume_t gain;
+    sample_t s;
+    if (channel_reverb <= 0 || count <= 0)
+    {
+        return;
+    }
+    if (vp->panned == PANNED_MYSTERY)
+    {
+        gain = (vp->left_mix + vp->right_mix) / 2;
+    }
+    else
+    {
+        gain = vp->left_mix;
+    }
+    gain = (gain * channel_reverb) / 127;
+    if (!gain)
+    {
+        return;
+    }
+    while (count--)
+    {
+        s = *sp++;
+        MIXATION(gain);
+    }
+}
 
 /**************** interface function ******************/
 
@@ -554,6 +583,10 @@ void mix_voice(Timid *tm, int32 *buf, int v, int32 c)
                 else
                 mix_single(tm, sp, buf, v, c);
             }
+        }
+        if (tm->reverb_enabled)
+        {
+            mix_reverb_send(tm, sp, tm->reverb_send_buffer, v, c);
         }
     }
 }
