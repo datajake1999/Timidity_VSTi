@@ -127,6 +127,16 @@ bool Timidity::getParameterDisplayValue (VstInt32 index, char* text, float value
 		value = value*sampleRate;
 		int2string ((VstInt32)value, text, (kVstMaxParamStrLen*2)-1);
 		break;
+	case kReverbEnable:
+		if (value >= 0.5)
+		{
+			vst_strncpy (text, "ON", (kVstMaxParamStrLen*2)-1);
+		}
+		else
+		{
+			vst_strncpy (text, "OFF", (kVstMaxParamStrLen*2)-1);
+		}
+		break;
 	case kPushMidi:
 		if (value >= 0.5)
 		{
@@ -219,6 +229,8 @@ bool Timidity::isEnumParameter (VstInt32 index)
 	case kDynamicLoad:
 		return true;
 	case kControlRate:
+		return true;
+	case kReverbEnable:
 		return true;
 	case kPushMidi:
 		return true;
