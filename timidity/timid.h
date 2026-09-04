@@ -257,6 +257,7 @@ void timid_set_default_program(Timid *tm, int program);
 void timid_set_drum_channel(Timid *tm, int channel, int enable);
 void timid_set_quiet_channel(Timid *tm, int channel, int enable);
 void timid_set_reverb_enabled(Timid *tm, int enable);
+void timid_set_reverb_only(Timid *tm, int enable);
 void timid_set_reverb_level(Timid *tm, int percent);
 void timid_set_reverb_preset(Timid *tm, int preset);
 
@@ -287,6 +288,7 @@ int timid_get_default_program(Timid *tm);
 int timid_get_drum_channel_enabled(Timid *tm, int channel);
 int timid_get_quiet_channel_enabled(Timid *tm, int channel);
 int timid_get_reverb_enabled(Timid *tm);
+int timid_get_reverb_only(Timid *tm);
 int timid_get_reverb_level(Timid *tm);
 int timid_get_reverb_preset(Timid *tm);
 int timid_get_lost_notes(Timid *tm);

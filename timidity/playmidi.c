@@ -863,6 +863,7 @@ Timid *timid_init(void)
     reset_midi(tm);
     adjust_amplification(tm, DEFAULT_AMPLIFICATION);
     tm->reverb_enabled=0;
+    tm->reverb_only=0;
     tm->reverb_level=1.0;
     tm->reverb_preset=TIMID_REVERB_PRESET_GENERIC;
     init_reverb(tm);
@@ -2119,6 +2120,15 @@ void timid_set_reverb_enabled(Timid *tm, int enable)
     reset_reverb(tm);
 }
 
+void timid_set_reverb_only(Timid *tm, int enable)
+{
+    if (!tm)
+    {
+        return;
+    }
+    tm->reverb_only = enable;
+}
+
 void timid_set_reverb_level(Timid *tm, int percent)
 {
     if (!tm)
@@ -2171,6 +2181,7 @@ void timid_restore_defaults(Timid *tm)
     tm->adjust_panning_immediately=1;
     adjust_amplification(tm, DEFAULT_AMPLIFICATION);
     tm->reverb_enabled=0;
+    tm->reverb_only=0;
     tm->reverb_level=1.0;
     tm->reverb_preset=TIMID_REVERB_PRESET_GENERIC;
     reset_reverb(tm);
@@ -2419,6 +2430,15 @@ int timid_get_reverb_enabled(Timid *tm)
         return 0;
     }
     return tm->reverb_enabled;
+}
+
+int timid_get_reverb_only(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->reverb_only;
 }
 
 int timid_get_reverb_level(Timid *tm)

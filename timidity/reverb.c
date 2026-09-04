@@ -209,14 +209,29 @@ void process_reverb(Timid *tm, int32 *buf, int32 *send_buf, int32 count)
     {
         float wl = stereo_out[i*2+0] * (float)scale * (float)tm->reverb_level;
         float wr = stereo_out[i*2+1] * (float)scale * (float)tm->reverb_level;
-        if (!(tm->play_mode.encoding & PE_MONO))
+        if (tm->reverb_only)
         {
-            buf[i*2+0] += (int32)wl;
-            buf[i*2+1] += (int32)wr;
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buf[i*2+0] = (int32)wl;
+                buf[i*2+1] = (int32)wr;
+            }
+            else
+            {
+                buf[i] = (int32)((wl + wr) / 2);
+            }
         }
         else
         {
-            buf[i] += (int32)((wl + wr) / 2);
+            if (!(tm->play_mode.encoding & PE_MONO))
+            {
+                buf[i*2+0] += (int32)wl;
+                buf[i*2+1] += (int32)wr;
+            }
+            else
+            {
+                buf[i] += (int32)((wl + wr) / 2);
+            }
         }
     }
 }

@@ -279,6 +279,7 @@ struct Timid {
   char last_config[1024];
   ReverbEffect reverb;
   int reverb_enabled;
+  int reverb_only;
   int reverb_preset;
   FLOAT_T reverb_level;
 };
