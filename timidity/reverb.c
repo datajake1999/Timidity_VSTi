@@ -149,7 +149,12 @@ static const EFXEAXREVERBPROPERTIES reverb_presets[] = {
 
 static void apply_reverb_preset(Timid *tm)
 {
-    int preset = tm->reverb_preset;
+    int preset;
+    if (!tm->reverb_enabled)
+    {
+        return;
+    }
+    preset = tm->reverb_preset;
     if (preset >= REVERB_PRESET_COUNT || preset < 0)
     {
         preset = TIMID_REVERB_PRESET_GENERIC;
@@ -189,12 +194,13 @@ void process_reverb(Timid *tm, int32 *buf, int32 *send_buf, int32 count)
 {
     float mono_in[AUDIO_BUFFER_SIZE];
     float stereo_out[AUDIO_BUFFER_SIZE * 2];
-    int32 scale = 1 << (31 - GUARD_BITS);
+    int32 scale;
     int32 i;
     if (!tm->reverb_enabled || tm->reverb_level <= 0.0 || count <= 0)
     {
         return;
     }
+    scale = 1 << (31 - GUARD_BITS);
     if (count > AUDIO_BUFFER_SIZE)
     {
         count = AUDIO_BUFFER_SIZE;
