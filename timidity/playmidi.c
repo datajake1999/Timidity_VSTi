@@ -51,7 +51,7 @@ static void reset_controllers(Timid *tm, int c)
     tm->channel[c].mono=0;
     tm->channel[c].pitchbend=0x2000;
     tm->channel[c].pitchfactor=0; /* to be computed */
-    tm->channel[c].reverb=64;
+    tm->channel[c].reverb=40;
 }
 
 static void reset_midi(Timid *tm)
