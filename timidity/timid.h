@@ -177,6 +177,7 @@ int timid_reload_config(Timid *tm);
 void timid_channel_note_on(Timid *tm, unsigned char channel, unsigned char note, unsigned char velocity);
 void timid_channel_note_off(Timid *tm, unsigned char channel, unsigned char note);
 void timid_channel_key_pressure(Timid *tm, unsigned char channel, unsigned char note, unsigned char velocity);
+void timid_channel_set_modulation(Timid *tm, unsigned char channel, unsigned char amount);
 void timid_channel_set_volume(Timid *tm, unsigned char channel, unsigned char volume);
 void timid_channel_set_pan(Timid *tm, unsigned char channel, unsigned char pan);
 void timid_channel_set_expression(Timid *tm, unsigned char channel, unsigned char expression);
@@ -295,6 +296,7 @@ int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 
 /* Get values from a given MIDI channel */
+int timid_channel_get_modulation(Timid *tm, int channel);
 int timid_channel_get_volume(Timid *tm, int channel);
 int timid_channel_get_pan(Timid *tm, int channel);
 int timid_channel_get_expression(Timid *tm, int channel);

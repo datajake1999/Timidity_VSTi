@@ -135,7 +135,9 @@ typedef struct {
 
 #define ME_TEMPO	17
 
-#define ME_REVERB	18
+#define ME_MODULATION	18
+
+#define ME_REVERB	19
 
 #define ME_EOT		99
 
@@ -144,6 +146,7 @@ typedef struct {
     bank, program, volume, sustain, panning, pitchbend, expression, 
     mono, /* one note only on this channel */
     pitchsens,
+    modulation,
     reverb;
   /* chorus... Coming soon to a 300-MHz, eight-way superscalar
      processor near you */

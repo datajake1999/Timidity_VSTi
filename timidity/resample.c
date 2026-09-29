@@ -322,6 +322,8 @@ static int32 update_vibrato(Timid *tm, Voice *vp, int sign)
         }
     }
     
+    depth += tm->channel[vp->channel].modulation << MOD_VIBRATO_DEPTH_SHIFT;
+    
     a = FSCALE(((double)(vp->sample->sample_rate) *
     (double)(vp->frequency)) /
     ((double)(vp->sample->root_freq) *

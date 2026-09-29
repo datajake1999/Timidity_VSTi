@@ -167,6 +167,7 @@ static MidiEventList *read_midi_event(Timid *tm)
                     int control=255;
                     switch(a)
                     {
+                    case 1: control=ME_MODULATION; break;
                     case 7: control=ME_MAINVOLUME; break;
                     case 10: control=ME_PAN; break;
                     case 11: control=ME_EXPRESSION; break;

@@ -51,6 +51,7 @@ static void reset_controllers(Timid *tm, int c)
     tm->channel[c].mono=0;
     tm->channel[c].pitchbend=0x2000;
     tm->channel[c].pitchfactor=0; /* to be computed */
+    tm->channel[c].modulation=0;
     tm->channel[c].reverb=40;
 }
 
@@ -180,6 +181,17 @@ static void recompute_freq(Timid *tm, int v)
     a = -a; /* need to preserve the loop direction */
     
     tm->voice[v].sample_increment = (int32)(a);
+}
+
+static void compute_vibrato_ratio(Timid *tm, int v)
+{
+    int ratio=tm->voice[v].sample->vibrato_control_ratio;
+    if (!ratio && tm->voice[v].sample->sample_rate && tm->channel[tm->voice[v].channel].modulation > 0)
+    {
+        ratio=tm->play_mode.rate / (MOD_VIBRATO_HZ * 2 * VIBRATO_SAMPLE_INCREMENTS);
+        if (ratio<1) ratio=1;
+    }
+    tm->voice[v].vibrato_control_ratio=ratio;
 }
 
 static void recompute_amp(Timid *tm, int v)
@@ -321,7 +333,7 @@ static void start_note(Timid *tm, MidiEvent *e, int i)
     
     tm->voice[i].vibrato_sweep=tm->voice[i].sample->vibrato_sweep_increment;
     tm->voice[i].vibrato_sweep_position=0;
-    tm->voice[i].vibrato_control_ratio=tm->voice[i].sample->vibrato_control_ratio;
+    compute_vibrato_ratio(tm, i);
     tm->voice[i].vibrato_control_counter=tm->voice[i].vibrato_phase=0;
     for (j=0; j<VIBRATO_SAMPLE_INCREMENTS; j++)
     tm->voice[i].vibrato_sample_increment[j]=0;
@@ -522,6 +534,17 @@ static void adjust_pitchbend(Timid *tm, int c)
     }
 }
 
+static void adjust_modulation(Timid *tm, int c)
+{
+    int i=tm->voices;
+    while (i--)
+    if (tm->voice[i].status!=VOICE_FREE && tm->voice[i].channel==c)
+    {
+        compute_vibrato_ratio(tm, i);
+        recompute_freq(tm, i);
+    }
+}
+
 static void adjust_volume(Timid *tm, int c)
 {
     int i=tm->voices;
@@ -553,6 +576,10 @@ static void seek_forward(Timid *tm, int32 until_time)
             tm->channel[tm->current_event->channel].pitchbend=
             tm->current_event->a + tm->current_event->b * 128;
             tm->channel[tm->current_event->channel].pitchfactor=0;
+            break;
+            
+        case ME_MODULATION:
+            tm->channel[tm->current_event->channel].modulation=tm->current_event->a;
             break;
             
         case ME_MAINVOLUME:
@@ -686,6 +713,11 @@ static void play_midi(Timid *tm, MidiEvent *e)
             tm->channel[e->channel].pitchfactor=0;
             /* Adjust pitch for notes already playing */
             adjust_pitchbend(tm, e->channel);
+            break;
+            
+        case ME_MODULATION:
+            tm->channel[e->channel].modulation=e->a;
+            adjust_modulation(tm, e->channel);
             break;
             
         case ME_MAINVOLUME:
@@ -985,6 +1017,20 @@ void timid_channel_key_pressure(Timid *tm, uint8 channel, uint8 note, uint8 velo
     play_midi(tm, &ev);
 }
 
+void timid_channel_set_modulation(Timid *tm, uint8 channel, uint8 amount)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_MODULATION;
+    ev.a = amount & 0x7f;
+    play_midi(tm, &ev);
+}
+
 void timid_channel_set_volume(Timid *tm, uint8 channel, uint8 volume)
 {
     MidiEvent ev;
@@ -1190,6 +1236,9 @@ void timid_channel_control_change(Timid *tm, uint8 channel, uint8 controller, ui
     {
     case 0x00:
         timid_channel_set_bank(tm, channel, value);
+        break;
+    case 0x01:
+        timid_channel_set_modulation(tm, channel, value);
         break;
     case 0x06:
         switch((tm->rpn_msb[channel]<<8) | tm->rpn_lsb[channel])
@@ -2475,6 +2524,16 @@ int timid_get_cut_notes(Timid *tm)
         return 0;
     }
     return tm->cut_notes;
+}
+
+int timid_channel_get_modulation(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].modulation;
 }
 
 int timid_channel_get_volume(Timid *tm, int channel)

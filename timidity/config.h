@@ -268,6 +268,9 @@ typedef char int8;
 
 #define VIBRATO_SAMPLE_INCREMENTS 32
 
+#define MOD_VIBRATO_HZ 5
+#define MOD_VIBRATO_DEPTH_SHIFT 5
+
 #ifndef PI
 #define PI 3.14159265358979323846 
 #endif
