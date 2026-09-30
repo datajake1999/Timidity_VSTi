@@ -183,6 +183,7 @@ void timid_channel_set_pan(Timid *tm, unsigned char channel, unsigned char pan);
 void timid_channel_set_expression(Timid *tm, unsigned char channel, unsigned char expression);
 void timid_channel_set_sustain(Timid *tm, unsigned char channel, unsigned char sustain);
 void timid_channel_set_reverb(Timid *tm, unsigned char channel, unsigned char level);
+void timid_channel_set_chorus(Timid *tm, unsigned char channel, unsigned char level);
 void timid_channel_set_pitch_wheel(Timid *tm, unsigned char channel, unsigned short pitch);
 void timid_channel_set_pitch_range(Timid *tm, unsigned char channel, unsigned char range);
 void timid_channel_set_program(Timid *tm, unsigned char channel, unsigned char program);
@@ -261,6 +262,8 @@ void timid_set_reverb_enabled(Timid *tm, int enable);
 void timid_set_reverb_only(Timid *tm, int enable);
 void timid_set_reverb_level(Timid *tm, int percent);
 void timid_set_reverb_preset(Timid *tm, int preset);
+void timid_set_chorus_enabled(Timid *tm, int enable);
+void timid_set_chorus_depth(Timid *tm, int percent);
 
 /* Restore default settings */
 void timid_restore_defaults(Timid *tm);
@@ -292,6 +295,8 @@ int timid_get_reverb_enabled(Timid *tm);
 int timid_get_reverb_only(Timid *tm);
 int timid_get_reverb_level(Timid *tm);
 int timid_get_reverb_preset(Timid *tm);
+int timid_get_chorus_enabled(Timid *tm);
+int timid_get_chorus_depth(Timid *tm);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 
@@ -302,6 +307,7 @@ int timid_channel_get_pan(Timid *tm, int channel);
 int timid_channel_get_expression(Timid *tm, int channel);
 int timid_channel_get_sustain(Timid *tm, int channel);
 int timid_channel_get_reverb(Timid *tm, int channel);
+int timid_channel_get_chorus(Timid *tm, int channel);
 int timid_channel_get_pitch_wheel(Timid *tm, int channel);
 int timid_channel_get_pitch_range(Timid *tm, int channel);
 int timid_channel_get_program(Timid *tm, int channel);

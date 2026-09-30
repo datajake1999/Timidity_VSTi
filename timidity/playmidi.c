@@ -53,6 +53,7 @@ static void reset_controllers(Timid *tm, int c)
     tm->channel[c].pitchfactor=0; /* to be computed */
     tm->channel[c].modulation=0;
     tm->channel[c].reverb=40;
+    tm->channel[c].chorus=0;
 }
 
 static void reset_midi(Timid *tm)
@@ -75,6 +76,10 @@ static void reset_midi(Timid *tm)
     if (tm->reverb_enabled)
     {
         reset_reverb(tm);
+    }
+    if (tm->chorus_enabled)
+    {
+        reset_chorus(tm);
     }
 }
 
@@ -598,6 +603,10 @@ static void seek_forward(Timid *tm, int32 until_time)
             tm->channel[tm->current_event->channel].reverb=tm->current_event->a;
             break;
             
+        case ME_CHORUS:
+            tm->channel[tm->current_event->channel].chorus=tm->current_event->a;
+            break;
+            
         case ME_PROGRAM:
             if (ISDRUMCHANNEL(tm, tm->current_event->channel))
             /* Change drum set */
@@ -660,6 +669,10 @@ static void do_compute_data(Timid *tm, int32 count)
     {
         memset(tm->reverb_send_buffer, 0, count * 4);
     }
+    if (tm->chorus_enabled)
+    {
+        memset(tm->chorus_send_buffer, 0, count * 4);
+    }
     for (i=0; i<tm->voices; i++)
     {
         if(tm->voice[i].status != VOICE_FREE)
@@ -668,6 +681,10 @@ static void do_compute_data(Timid *tm, int32 count)
     if (tm->reverb_enabled)
     {
         process_reverb(tm, tm->buffer_pointer, tm->reverb_send_buffer, count);
+    }
+    if (tm->chorus_enabled)
+    {
+        process_chorus(tm, tm->buffer_pointer, tm->chorus_send_buffer, count);
     }
 }
 
@@ -738,6 +755,10 @@ static void play_midi(Timid *tm, MidiEvent *e)
             
         case ME_REVERB:
             tm->channel[e->channel].reverb=e->a;
+            break;
+            
+        case ME_CHORUS:
+            tm->channel[e->channel].chorus=e->a;
             break;
             
         case ME_PROGRAM:
@@ -899,6 +920,9 @@ Timid *timid_init(void)
     tm->reverb_level=1.0;
     tm->reverb_preset=TIMID_REVERB_PRESET_GENERIC;
     init_reverb(tm);
+    tm->chorus_enabled=0;
+    tm->chorus_depth=0.25;
+    reset_chorus(tm);
     return tm;
 }
 
@@ -1101,6 +1125,20 @@ void timid_channel_set_reverb(Timid *tm, uint8 channel, uint8 level)
     play_midi(tm, &ev);
 }
 
+void timid_channel_set_chorus(Timid *tm, uint8 channel, uint8 level)
+{
+    MidiEvent ev;
+    if (!tm)
+    {
+        return;
+    }
+    memset(&ev, 0, sizeof(ev));
+    ev.channel = channel & 0x0f;
+    ev.type = ME_CHORUS;
+    ev.a = level & 0x7f;
+    play_midi(tm, &ev);
+}
+
 void timid_channel_set_pitch_wheel(Timid *tm, uint8 channel, uint16 pitch)
 {
     MidiEvent ev;
@@ -1267,6 +1305,9 @@ void timid_channel_control_change(Timid *tm, uint8 channel, uint8 controller, ui
         break;
     case 0x5b:
         timid_channel_set_reverb(tm, channel, value);
+        break;
+    case 0x5d:
+        timid_channel_set_chorus(tm, channel, value);
         break;
     case 0x62:
         tm->rpn_lsb[channel] = 0xff;
@@ -2091,6 +2132,7 @@ void timid_set_sample_rate(Timid *tm, int rate)
         tm->control_ratio = 1;
     }
     reset_reverb(tm);
+    reset_chorus(tm);
     timid_reload_config(tm);
 }
 
@@ -2204,6 +2246,34 @@ void timid_set_reverb_preset(Timid *tm, int preset)
     set_reverb_preset(tm, preset);
 }
 
+void timid_set_chorus_enabled(Timid *tm, int enable)
+{
+    if (!tm)
+    {
+        return;
+    }
+    tm->chorus_enabled = enable;
+    reset_chorus(tm);
+}
+
+void timid_set_chorus_depth(Timid *tm, int percent)
+{
+    if (!tm)
+    {
+        return;
+    }
+    if (percent > 100)
+    {
+        percent = 100;
+    }
+    else if (percent < 0)
+    {
+        percent = 0;
+    }
+    tm->chorus_depth = (double)(percent) / 100.0L;
+    reset_chorus(tm);
+}
+
 void timid_restore_defaults(Timid *tm)
 {
     if (!tm)
@@ -2234,6 +2304,9 @@ void timid_restore_defaults(Timid *tm)
     tm->reverb_level=1.0;
     tm->reverb_preset=TIMID_REVERB_PRESET_GENERIC;
     reset_reverb(tm);
+    tm->chorus_enabled=0;
+    tm->chorus_depth=0.25;
+    reset_chorus(tm);
     timid_reload_config(tm);
 }
 
@@ -2508,6 +2581,24 @@ int timid_get_reverb_preset(Timid *tm)
     return tm->reverb_preset;
 }
 
+int timid_get_chorus_enabled(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->chorus_enabled;
+}
+
+int timid_get_chorus_depth(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return (int)(tm->chorus_depth * 100.0L);
+}
+
 int timid_get_lost_notes(Timid *tm)
 {
     if (!tm)
@@ -2584,6 +2675,16 @@ int timid_channel_get_reverb(Timid *tm, int channel)
     }
     channel = channel & 0x0f;
     return tm->channel[channel].reverb;
+}
+
+int timid_channel_get_chorus(Timid *tm, int channel)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    channel = channel & 0x0f;
+    return tm->channel[channel].chorus;
 }
 
 int timid_channel_get_pitch_wheel(Timid *tm, int channel)

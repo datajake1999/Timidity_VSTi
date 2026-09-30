@@ -27,6 +27,7 @@
 #include "config.h"
 #include "timid.h"
 #include "ReverbEffect.h"
+#include "skchorus.h"
 
 typedef struct {
   char *path;
@@ -139,6 +140,8 @@ typedef struct {
 
 #define ME_REVERB	19
 
+#define ME_CHORUS	20
+
 #define ME_EOT		99
 
 typedef struct {
@@ -147,8 +150,9 @@ typedef struct {
     mono, /* one note only on this channel */
     pitchsens,
     modulation,
-    reverb;
-  /* chorus... Coming soon to a 300-MHz, eight-way superscalar
+    reverb,
+    chorus;
+  /* chorus, reverb... Coming soon to a 300-MHz, eight-way superscalar
      processor near you */
   FLOAT_T
     pitchfactor; /* precomputed pitch bend factor to save some fdiv's */
@@ -239,6 +243,7 @@ struct Timid {
   int32 common_buffer[AUDIO_BUFFER_SIZE*2]; /* stereo samples */
   int32 *buffer_pointer;
   int32 reverb_send_buffer[AUDIO_BUFFER_SIZE];
+  int32 chorus_send_buffer[AUDIO_BUFFER_SIZE];
   Channel channel[16];
   Voice voice[MAX_VOICES];
   int32 control_rate;
@@ -285,6 +290,12 @@ struct Timid {
   int reverb_only;
   int reverb_preset;
   FLOAT_T reverb_level;
+  sk_chorus chorus_l;
+  sk_chorus chorus_r;
+  float chorus_buffer_l[AUDIO_BUFFER_SIZE];
+  float chorus_buffer_r[AUDIO_BUFFER_SIZE];
+  int chorus_enabled;
+  FLOAT_T chorus_depth;
 };
 
 FILE *open_file(Timid *tm, char *name, int decompress, int noise_mode);
@@ -312,5 +323,7 @@ void free_reverb(Timid *tm);
 void reset_reverb(Timid *tm);
 void set_reverb_preset(Timid *tm, int preset);
 void process_reverb(Timid *tm, int32 *buf, int32 *send_buf, int32 count);
+void reset_chorus(Timid *tm);
+void process_chorus(Timid *tm, int32 *buf, int32 *send_buf, int32 count);
 
 #endif

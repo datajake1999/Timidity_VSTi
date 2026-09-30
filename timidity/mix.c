@@ -530,6 +530,36 @@ static void mix_reverb_send(Timid *tm, sample_t *sp, int32 *lp, int v, int count
     }
 }
 
+static void mix_chorus_send(Timid *tm, sample_t *sp, int32 *lp, int v, int count)
+{
+    Voice *vp = tm->voice + v;
+    int32 channel_chorus = tm->channel[vp->channel].chorus;
+    final_volume_t gain;
+    sample_t s;
+    if (channel_chorus <= 0 || count <= 0)
+    {
+        return;
+    }
+    if (vp->panned == PANNED_MYSTERY)
+    {
+        gain = (vp->left_mix + vp->right_mix) / 2;
+    }
+    else
+    {
+        gain = vp->left_mix;
+    }
+    gain = (gain * channel_chorus) / 127;
+    if (!gain)
+    {
+        return;
+    }
+    while (count--)
+    {
+        s = *sp++;
+        MIXATION(gain);
+    }
+}
+
 /**************** interface function ******************/
 
 void mix_voice(Timid *tm, int32 *buf, int v, int32 c)
@@ -587,6 +617,10 @@ void mix_voice(Timid *tm, int32 *buf, int v, int32 c)
         if (tm->reverb_enabled)
         {
             mix_reverb_send(tm, sp, tm->reverb_send_buffer, v, c);
+        }
+        if (tm->chorus_enabled)
+        {
+            mix_chorus_send(tm, sp, tm->chorus_send_buffer, v, c);
         }
     }
 }

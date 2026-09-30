@@ -8,6 +8,7 @@
 ..\src\reaper.cpp
 ..\src\Timidity.cpp
 ..\src\Timidity_proc.cpp
+..\timidity\chorus.c
 ..\timidity\common.c
 ..\timidity\filter.c
 ..\timidity\instrum.c
@@ -18,6 +19,7 @@
 ..\timidity\resample.c
 ..\timidity\reverb.c
 ..\timidity\ReverbEffect.c
+..\timidity\skchorus.c
 ..\timidity\tables.c
 ..\VST2_SDK\public.sdk\source\vst2.x\audioeffect.cpp
 ..\VST2_SDK\public.sdk\source\vst2.x\audioeffectx.cpp
