@@ -34,7 +34,7 @@ void Timidity::initializeSettings (bool resetSynth)
 	PreResample = 1;
 	DynamicLoad = 0;
 	ControlRate = CONTROLS_PER_SECOND;
-	ReverbEnable = 0;
+	EffectsEnable = 0;
 	PushMidi = 1;
 	bypassed = false;
 	memset(ConfigFile, 0, sizeof(ConfigFile));
@@ -118,13 +118,15 @@ void Timidity::initializeSettings (bool resetSynth)
 				ControlRate = sampleRate/MAX_CONTROL_RATIO;
 			}
 			timid_set_control_rate(synth, (VstInt32)ControlRate);
-			if (ReverbEnable >= 0.5)
+			if (EffectsEnable >= 0.5)
 			{
 				timid_set_reverb_enabled(synth, 1);
+				timid_set_chorus_enabled(synth, 1);
 			}
 			else
 			{
 				timid_set_reverb_enabled(synth, 0);
+				timid_set_chorus_enabled(synth, 0);
 			}
 		}
 	}

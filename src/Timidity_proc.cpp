@@ -125,13 +125,15 @@ void Timidity::initSynth ()
 			ControlRate = sampleRate/MAX_CONTROL_RATIO;
 		}
 		timid_set_control_rate(synth, (VstInt32)ControlRate);
-		if (ReverbEnable >= 0.5)
+		if (EffectsEnable >= 0.5)
 		{
 			timid_set_reverb_enabled(synth, 1);
+			timid_set_chorus_enabled(synth, 1);
 		}
 		else
 		{
 			timid_set_reverb_enabled(synth, 0);
+			timid_set_chorus_enabled(synth, 0);
 		}
 	}
 	loadInstruments (ConfigFile, ConfigName);

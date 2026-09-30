@@ -224,17 +224,19 @@ void Timidity::setParameter (VstInt32 index, float value)
 			timid_set_control_rate(synth, (VstInt32)ControlRate);
 		}
 		break;
-	case kReverbEnable:
-		ReverbEnable = value;
+	case kEffectsEnable:
+		EffectsEnable = value;
 		if (synth)
 		{
-			if (ReverbEnable >= 0.5)
+			if (EffectsEnable >= 0.5)
 			{
 				timid_set_reverb_enabled(synth, 1);
+				timid_set_chorus_enabled(synth, 1);
 			}
 			else
 			{
 				timid_set_reverb_enabled(synth, 0);
+				timid_set_chorus_enabled(synth, 0);
 			}
 		}
 		break;
@@ -290,8 +292,8 @@ float Timidity::getParameter (VstInt32 index)
 	case kControlRate:
 		value = ControlRate/sampleRate;
 		break;
-	case kReverbEnable:
-		value = ReverbEnable;
+	case kEffectsEnable:
+		value = EffectsEnable;
 		break;
 	case kPushMidi:
 		value = PushMidi;
@@ -404,8 +406,8 @@ void Timidity::getParameterDisplay (VstInt32 index, char* text)
 	case kControlRate:
 		int2string ((VstInt32)ControlRate, text, (kVstMaxParamStrLen*2)-1);
 		break;
-	case kReverbEnable:
-		if (ReverbEnable >= 0.5)
+	case kEffectsEnable:
+		if (EffectsEnable >= 0.5)
 		{
 			vst_strncpy (text, "ON", (kVstMaxParamStrLen*2)-1);
 		}
@@ -499,8 +501,8 @@ void Timidity::getParameterName (VstInt32 index, char* name)
 	case kControlRate:
 		vst_strncpy (name, "ControlRate", (kVstMaxParamStrLen*2)-1);
 		break;
-	case kReverbEnable:
-		vst_strncpy (name, "ReverbEnable", (kVstMaxParamStrLen*2)-1);
+	case kEffectsEnable:
+		vst_strncpy (name, "EffectsEnable", (kVstMaxParamStrLen*2)-1);
 		break;
 	case kPushMidi:
 		vst_strncpy (name, "PushMidi", (kVstMaxParamStrLen*2)-1);
@@ -714,7 +716,7 @@ bool Timidity::getParameterProperties (VstInt32 index, VstParameterProperties* p
 		p->stepInteger = 1;
 		p->largeStepInteger = 100;
 		break;
-	case kReverbEnable:
+	case kEffectsEnable:
 		p->flags |= kVstParameterIsSwitch;
 		break;
 	case kPushMidi:

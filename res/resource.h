@@ -43,7 +43,7 @@
 #define IDC_ANTI                        417
 #define IDC_PRERES                      418
 #define IDC_DYNALOAD                    419
-#define IDC_REVERB                      420
+#define IDC_EFFECTS                     420
 #define IDC_QUEUE                       421
 #define IDC_BYPASS                      422
 #define IDC_REFRESH                     423

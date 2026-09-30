@@ -401,14 +401,14 @@ static BOOL RefreshDialog(HWND hWnd, EditorState* state, Timidity* effect)
 		{
 			CheckDlgButton(hWnd, IDC_DYNALOAD, BST_UNCHECKED);
 		}
-		ParamValue = effect->getParameter (kReverbEnable);
+		ParamValue = effect->getParameter (kEffectsEnable);
 		if (ParamValue >= 0.5)
 		{
-			CheckDlgButton(hWnd, IDC_REVERB, BST_CHECKED);
+			CheckDlgButton(hWnd, IDC_EFFECTS, BST_CHECKED);
 		}
 		else
 		{
-			CheckDlgButton(hWnd, IDC_REVERB, BST_UNCHECKED);
+			CheckDlgButton(hWnd, IDC_EFFECTS, BST_UNCHECKED);
 		}
 		ParamValue = effect->getParameter (kPushMidi);
 		if (ParamValue >= 0.5)
@@ -1116,14 +1116,14 @@ static BOOL WINAPI DialogProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			{
 				return SetParameterValue(effect, kDynamicLoad, 0);
 			}
-		case IDC_REVERB:
-			if (IsDlgButtonChecked(hWnd, IDC_REVERB))
+		case IDC_EFFECTS:
+			if (IsDlgButtonChecked(hWnd, IDC_EFFECTS))
 			{
-				return SetParameterValue(effect, kReverbEnable, 1);
+				return SetParameterValue(effect, kEffectsEnable, 1);
 			}
 			else
 			{
-				return SetParameterValue(effect, kReverbEnable, 0);
+				return SetParameterValue(effect, kEffectsEnable, 0);
 			}
 		case IDC_QUEUE:
 			if (IsDlgButtonChecked(hWnd, IDC_QUEUE))

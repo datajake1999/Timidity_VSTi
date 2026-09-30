@@ -56,7 +56,7 @@ enum
 	kPreResample,
 	kDynamicLoad,
 	kControlRate,
-	kReverbEnable,
+	kEffectsEnable,
 	kPushMidi,
 
 	kNumParams
@@ -194,7 +194,7 @@ private:
 	float PreResample;
 	float DynamicLoad;
 	float ControlRate;
-	float ReverbEnable;
+	float EffectsEnable;
 	float PushMidi;
 	bool bypassed;
 	char ConfigFile[256];
