@@ -290,10 +290,8 @@ struct Timid {
   int reverb_only;
   int reverb_preset;
   FLOAT_T reverb_level;
-  sk_chorus chorus_l;
-  sk_chorus chorus_r;
-  float chorus_buffer_l[AUDIO_BUFFER_SIZE];
-  float chorus_buffer_r[AUDIO_BUFFER_SIZE];
+  sk_chorus *chorus_l;
+  sk_chorus *chorus_r;
   int chorus_enabled;
   FLOAT_T chorus_depth;
 };
@@ -323,7 +321,10 @@ void free_reverb(Timid *tm);
 void reset_reverb(Timid *tm);
 void set_reverb_preset(Timid *tm, int preset);
 void process_reverb(Timid *tm, int32 *buf, int32 *send_buf, int32 count);
+void init_chorus(Timid *tm);
+void free_chorus(Timid *tm);
 void reset_chorus(Timid *tm);
+void apply_chorus_depth(Timid *tm);
 void process_chorus(Timid *tm, int32 *buf, int32 *send_buf, int32 count);
 
 #endif

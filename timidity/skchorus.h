@@ -20,6 +20,8 @@ typedef struct {
 extern "C" {
 #endif
 
+sk_chorus * sk_chorus_new(int sr, float delay);
+void sk_chorus_del(sk_chorus *c);
 void sk_chorus_init(sk_chorus *c, int sr, float *buf, long sz);
 void sk_chorus_rate(sk_chorus *c, float rate);
 void sk_chorus_depth(sk_chorus *c, float depth);

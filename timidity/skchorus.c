@@ -1,8 +1,30 @@
 #include "skchorus.h"
+#include <stdlib.h>
 #include <math.h>
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
+
+sk_chorus * sk_chorus_new(int sr, float delay)
+{
+	sk_chorus *c;
+	float *buf;
+	long sz;
+
+	c = malloc(sizeof(sk_chorus));
+	sz = floor(delay * sr);
+	buf = malloc(sizeof(float) * sz);
+	sk_chorus_init(c, sr, buf, sz);
+
+	return c;
+}
+
+void sk_chorus_del(sk_chorus *c)
+{
+	free(c->buf);
+	free(c);
+	c = NULL;
+}
 
 void sk_chorus_init(sk_chorus *c, int sr, float *buf, long sz)
 {
@@ -23,7 +45,9 @@ void sk_chorus_init(sk_chorus *c, int sr, float *buf, long sz)
 	{
 		float b;
 		float freq;
+
 		freq = 2020;
+
 		b = 2.0 - cos(freq * (2 * M_PI / sr));
 		c->a = b - sqrt(b*b - 1);
 	}

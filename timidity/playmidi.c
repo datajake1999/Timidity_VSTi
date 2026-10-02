@@ -922,7 +922,7 @@ Timid *timid_init(void)
     init_reverb(tm);
     tm->chorus_enabled=0;
     tm->chorus_depth=0.25;
-    reset_chorus(tm);
+    init_chorus(tm);
     return tm;
 }
 
@@ -2271,7 +2271,7 @@ void timid_set_chorus_depth(Timid *tm, int percent)
         percent = 0;
     }
     tm->chorus_depth = (double)(percent) / 100.0L;
-    reset_chorus(tm);
+    apply_chorus_depth(tm);
 }
 
 void timid_restore_defaults(Timid *tm)
@@ -2885,6 +2885,7 @@ void timid_close(Timid *tm)
     free_default_instrument(tm);
     free_tables(tm);
     free_reverb(tm);
+    free_chorus(tm);
     memset(tm, 0, sizeof(Timid));
     free(tm);
 }
