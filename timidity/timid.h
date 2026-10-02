@@ -264,6 +264,7 @@ void timid_set_reverb_level(Timid *tm, int percent);
 void timid_set_reverb_preset(Timid *tm, int preset);
 void timid_set_chorus_enabled(Timid *tm, int enable);
 void timid_set_chorus_depth(Timid *tm, int percent);
+void timid_set_dither_enabled(Timid *tm, int enable);
 
 /* Restore default settings */
 void timid_restore_defaults(Timid *tm);
@@ -297,6 +298,7 @@ int timid_get_reverb_level(Timid *tm);
 int timid_get_reverb_preset(Timid *tm);
 int timid_get_chorus_enabled(Timid *tm);
 int timid_get_chorus_depth(Timid *tm);
+int timid_get_dither_enabled(Timid *tm);
 int timid_get_lost_notes(Timid *tm);
 int timid_get_cut_notes(Timid *tm);
 

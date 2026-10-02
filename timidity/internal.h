@@ -28,6 +28,7 @@
 #include "timid.h"
 #include "ReverbEffect.h"
 #include "skchorus.h"
+#include "mtwister.h"
 
 typedef struct {
   char *path;
@@ -294,6 +295,8 @@ struct Timid {
   sk_chorus *chorus_r;
   int chorus_enabled;
   FLOAT_T chorus_depth;
+  MTRand prng;
+  int dither_enabled;
 };
 
 FILE *open_file(Timid *tm, char *name, int decompress, int noise_mode);

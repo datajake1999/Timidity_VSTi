@@ -13,6 +13,7 @@
 ..\timidity\filter.c
 ..\timidity\instrum.c
 ..\timidity\mix.c
+..\timidity\mtwister.c
 ..\timidity\playmidi.c
 ..\timidity\readcfg.c
 ..\timidity\readmidi.c

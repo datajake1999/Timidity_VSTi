@@ -81,6 +81,7 @@ static void reset_midi(Timid *tm)
     {
         reset_chorus(tm);
     }
+    tm->prng = seedRand(1);
 }
 
 static void select_sample(Timid *tm, int v, Instrument *ip)
@@ -688,6 +689,19 @@ static void do_compute_data(Timid *tm, int32 count)
     }
 }
 
+static int32 do_dither(Timid *tm, int32 sample, int32 depth)
+{
+    double r1, r2, n;
+    int32 scale;
+    if (depth > 32) depth = 32;
+    else if (depth < 1) depth = 1;
+    scale = 1 << (32 - depth - GUARD_BITS);
+    r1 = genRand(&tm->prng) - 0.5;
+    r2 = genRand(&tm->prng) - 0.5;
+    n = (r1 + r2) * (double)scale;
+    return sample + (int32)n;
+}
+
 static void play_midi(Timid *tm, MidiEvent *e)
 {
     if (e)
@@ -923,6 +937,7 @@ Timid *timid_init(void)
     tm->chorus_enabled=0;
     tm->chorus_depth=0.25;
     init_chorus(tm);
+    tm->dither_enabled=0;
     return tm;
 }
 
@@ -1440,6 +1455,10 @@ void timid_render_char(Timid *tm, uint8 *buffer, int32 count)
         }
         for (i=0; i<cursamples; i++)
         {
+            if (tm->dither_enabled)
+            {
+                tm->common_buffer[i] = do_dither(tm, tm->common_buffer[i], 8);
+            }
             tm->common_buffer[i] = tm->common_buffer[i] >> (32 - 8 - GUARD_BITS);
             if (tm->common_buffer[i] > 127)
             {
@@ -1482,6 +1501,10 @@ void timid_render_short(Timid *tm, int16 *buffer, int32 count)
         }
         for (i=0; i<cursamples; i++)
         {
+            if (tm->dither_enabled)
+            {
+                tm->common_buffer[i] = do_dither(tm, tm->common_buffer[i], 16);
+            }
             tm->common_buffer[i] = tm->common_buffer[i] >> (32 - 16 - GUARD_BITS);
             if (tm->common_buffer[i] > 32767)
             {
@@ -1524,6 +1547,10 @@ void timid_render_24(Timid *tm, int24 *buffer, int32 count)
         }
         for (i=0; i<cursamples; i++)
         {
+            if (tm->dither_enabled)
+            {
+                tm->common_buffer[i] = do_dither(tm, tm->common_buffer[i], 24);
+            }
             tm->common_buffer[i] = tm->common_buffer[i] >> (32 - 24 - GUARD_BITS);
             if (tm->common_buffer[i] > 8388607)
             {
@@ -1679,6 +1706,10 @@ void timid_render_ulaw(Timid *tm, uint8 *buffer, int32 count)
         }
         for (i=0; i<cursamples; i++)
         {
+            if (tm->dither_enabled)
+            {
+                tm->common_buffer[i] = do_dither(tm, tm->common_buffer[i], 13);
+            }
             tm->common_buffer[i] = tm->common_buffer[i] >> (32 - 13 - GUARD_BITS);
             if (tm->common_buffer[i] > 4095)
             {
@@ -2274,6 +2305,15 @@ void timid_set_chorus_depth(Timid *tm, int percent)
     apply_chorus_depth(tm);
 }
 
+void timid_set_dither_enabled(Timid *tm, int enable)
+{
+    if (!tm)
+    {
+        return;
+    }
+    tm->dither_enabled = enable;
+}
+
 void timid_restore_defaults(Timid *tm)
 {
     if (!tm)
@@ -2307,6 +2347,7 @@ void timid_restore_defaults(Timid *tm)
     tm->chorus_enabled=0;
     tm->chorus_depth=0.25;
     reset_chorus(tm);
+    tm->dither_enabled=0;
     timid_reload_config(tm);
 }
 
@@ -2597,6 +2638,15 @@ int timid_get_chorus_depth(Timid *tm)
         return 0;
     }
     return (int)(tm->chorus_depth * 100.0L);
+}
+
+int timid_get_dither_enabled(Timid *tm)
+{
+    if (!tm)
+    {
+        return 0;
+    }
+    return tm->dither_enabled;
 }
 
 int timid_get_lost_notes(Timid *tm)

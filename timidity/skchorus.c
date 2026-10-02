@@ -11,9 +11,9 @@ sk_chorus * sk_chorus_new(int sr, float delay)
 	float *buf;
 	long sz;
 
-	c = malloc(sizeof(sk_chorus));
+	c = (sk_chorus *)malloc(sizeof(sk_chorus));
 	sz = floor(delay * sr);
-	buf = malloc(sizeof(float) * sz);
+	buf = (float *)malloc(sizeof(float) * sz);
 	sk_chorus_init(c, sr, buf, sz);
 
 	return c;
