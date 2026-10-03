@@ -798,6 +798,8 @@ static void play_midi(Timid *tm, MidiEvent *e)
             
         case ME_RESET_CONTROLLERS:
             reset_controllers(tm, e->channel);
+            adjust_volume(tm, e->channel);
+            adjust_pitchbend(tm, e->channel);
             break;
             
         case ME_ALL_NOTES_OFF:
@@ -1763,6 +1765,8 @@ void timid_reset_controllers(Timid *tm)
     for (i=0; i<16; i++)
     {
         reset_controllers(tm, i);
+        adjust_volume(tm, i);
+        adjust_pitchbend(tm, i);
     }
 }
 
